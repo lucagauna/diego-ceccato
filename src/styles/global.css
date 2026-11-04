@@ -99,6 +99,17 @@ video {
 a {
   color: var(--azul);
   text-underline-offset: 0.15em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+/* Cross-document page fade, CSS only; browsers without support simply navigate. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
 }
 
 .tema-oscuro a {
@@ -161,6 +172,12 @@ a {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

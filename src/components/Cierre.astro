@@ -1,7 +1,7 @@
 ---
-/** Closing call to action shared by the service pages. */
+/** Closing call to action shared by the service pages: WhatsApp first, a phone call as the alternative. */
 import BotonWhatsApp from "./BotonWhatsApp.astro";
-import { HORARIO, TELEFONO } from "../data/contacto";
+import { HORARIO, TELEFONO, linkTelefono } from "../data/contacto";
 import type { Origen } from "../data/contacto";
 
 interface Props {
@@ -18,9 +18,10 @@ const { titulo, texto, origen } = Astro.props;
     <h2>{titulo}</h2>
     <p>{texto}</p>
     <p class="cierre__fila">
-      <BotonWhatsApp origen={origen}>{TELEFONO.visible}</BotonWhatsApp>
-      <span class="suave">{HORARIO}</span>
+      <BotonWhatsApp origen={origen}>Escribime por WhatsApp</BotonWhatsApp>
+      <span class="cierre__alt">o llamá al <a href={linkTelefono()}>{TELEFONO.visible}</a></span>
     </p>
+    <p class="suave">{HORARIO}.</p>
   </div>
 </section>
 
@@ -34,6 +35,11 @@ const { titulo, texto, origen } = Astro.props;
     flex-wrap: wrap;
     align-items: center;
     gap: 12px 20px;
-    margin-top: 20px;
+    margin: 20px 0 8px;
+  }
+
+  .cierre__alt a {
+    font-weight: 600;
+    white-space: nowrap;
   }
 </style>

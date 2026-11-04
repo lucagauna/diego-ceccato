@@ -8,11 +8,11 @@ import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Pendiente from "../components/Pendiente.astro";
 import Cierre from "../components/Cierre.astro";
 import AntesDespues from "../components/AntesDespues.astro";
-import { HORARIO, ZONAS } from "../data/contacto";
+import { HORARIO, listarZonas } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
 import { ruta } from "../data/sitio";
 
-const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
+const zonas = listarZonas("y");
 ---
 
 <Base
@@ -109,12 +109,7 @@ const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
     </div>
   </section>
 
-  <section class="seccion">
-    <div class="contenedor">
-      <h2>Opiniones</h2>
-      <Pendiente texto="Reseñas reales de clientes, tomadas del perfil de Google cuando estén cargadas." />
-    </div>
-  </section>
+  {/* TODO(task 7): "Opiniones" section with real Google reviews. Hidden until they exist: an empty promise reads worse than none. */}
 
   <Cierre
     titulo="¿Qué hay que pintar?"

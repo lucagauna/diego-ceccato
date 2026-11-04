@@ -1,9 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { RAIZ as SITIO, PREVIEW } from "./entorno.mjs";
-const dist = new URL("../dist/", import.meta.url);
-const leer = (ruta) => readFile(new URL(ruta, dist), "utf8");
+import { RAIZ as SITIO, PREVIEW, leer } from "./entorno.mjs";
 
 const paginas = ["", "pintura/", "arreglos-del-hogar/", "clases-de-bateria/"];
 

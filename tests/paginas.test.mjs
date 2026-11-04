@@ -1,11 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFile, access } from "node:fs/promises";
-import { BASE, rutaEnDist } from "./entorno.mjs";
-
-const dist = new URL("../dist/", import.meta.url);
-const leer = (ruta) => readFile(new URL(`${ruta}index.html`, dist), "utf8");
-const existe = (ruta) => access(new URL(ruta.endsWith("/") || ruta === "" ? `${ruta}index.html` : ruta, dist)).then(() => true, () => false);
+import { BASE, rutaEnDist, leer, existe } from "./entorno.mjs";
 
 /** Pages linked from shared chrome that a later task still has to build. Empty means every link resolves. */
 const todaviaNoConstruidas = new Set([]);
@@ -104,7 +99,7 @@ test("every page carries the phone-only WhatsApp bar with its own origin", async
 });
 
 test("the favicon is ours, not the Astro default", async () => {
-  const svg = await readFile(new URL("favicon.svg", dist), "utf8");
+  const svg = await leer("favicon.svg");
   assert.match(svg, /<title>Diego Ceccato<\/title>/);
   assert.doesNotMatch(svg, /astro/i);
   assert.equal(await existe("favicon.ico").catch(() => false), false, "the default favicon.ico must be gone");
@@ -120,4 +115,28 @@ test("service pages show the trust facts before the photo placeholder", async ()
     assert.ok(hechos !== -1 && foto !== -1, `${ruta} is missing facts or photo block`);
     assert.ok(hechos < foto, `${ruta}: facts (${hechos}) must come before the photo block (${foto}) in the DOM`);
   }
+});
+
+test("every page offers a phone call as well as WhatsApp, and the footer repeats phone and hours", async () => {
+  for (const ruta of ["", "pintura/", "arreglos-del-hogar/", "clases-de-bateria/"]) {
+    const html = await leer(ruta);
+    assert.match(html, /href="tel:\+5491134883317"/, `${ruta || "home"} has no tel: link`);
+    const pie = html.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
+    assert.match(pie, /11 3488 3317/, `${ruta || "home"} footer lacks the phone`);
+    assert.match(pie, /Lunes a viernes de 8 a 17/, `${ruta || "home"} footer lacks the hours`);
+  }
+});
+
+test("closing buttons name the action, not the phone number", async () => {
+  for (const ruta of ["pintura/", "arreglos-del-hogar/", "clases-de-bateria/"]) {
+    const html = await leer(ruta);
+    const botones = [...html.matchAll(/class="wa wa--lleno[^"]*"[^>]*>[\s\S]*?<\/svg>([^<]*)</g)].map((m) => m[1].trim());
+    assert.ok(botones.length >= 2, `${ruta} should have hero and closing buttons`);
+    for (const texto of botones) assert.doesNotMatch(texto, /^\d[\d ]+$/, `${ruta}: button text is a bare number: "${texto}"`);
+  }
+});
+
+test("no empty reviews section until real reviews exist", async () => {
+  const html = await leer("pintura/");
+  assert.doesNotMatch(html, /<h2[^>]*>Opiniones<\/h2>/);
 });

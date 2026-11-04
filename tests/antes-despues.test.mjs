@@ -1,9 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-
-const dist = new URL("../dist/", import.meta.url);
-const leer = (ruta) => readFile(new URL(`${ruta}index.html`, dist), "utf8");
+import { leer } from "./entorno.mjs";
 
 const figuras = (html) => [...html.matchAll(/<figure class="antes-despues"[^>]*>([\s\S]*?)<\/figure>/g)].map((m) => m[1]);
 const scriptsComparar = (html) => [...html.matchAll(/<script([^>]*data-antes-despues[^>]*)>([\s\S]*?)<\/script>/g)];

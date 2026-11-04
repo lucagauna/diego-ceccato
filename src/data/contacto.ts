@@ -21,6 +21,11 @@ export const ZONAS = [
   "Malvinas Argentinas",
 ] as const;
 
+/** The service areas as a sentence: "A, B y C" or "A, B o C". */
+export function listarZonas(conector: "y" | "o" = "y"): string {
+  return ZONAS.join(", ").replace(/, ([^,]*)$/, ` ${conector} $1`);
+}
+
 /**
  * Pre-filled WhatsApp message per origin.
  * Each one is different on purpose: it tells Diego where the chat came from.

@@ -7,11 +7,11 @@ import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Pendiente from "../components/Pendiente.astro";
 import Cierre from "../components/Cierre.astro";
-import { ZONAS } from "../data/contacto";
+import { listarZonas } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
 import { ruta } from "../data/sitio";
 
-const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
+const zonas = listarZonas("y");
 
 const rubros = [
   "Plomería",

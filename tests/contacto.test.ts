@@ -21,3 +21,9 @@ test("accents and spaces survive the round trip", () => {
   assert.ok(!/[áéíóúñ ]/.test(url), "raw accents or spaces would break on some clients");
   assert.equal(decodeURIComponent(url.split("text=")[1]), MENSAJES.bateria);
 });
+
+test("listarZonas joins the service areas as a sentence with the given connector", async () => {
+  const { listarZonas } = await import("../src/data/contacto.ts");
+  assert.equal(listarZonas("y"), "Vicente López, San Isidro, San Fernando, Tigre, Nordelta, Benavídez y Malvinas Argentinas");
+  assert.equal(listarZonas("o").endsWith(" o Malvinas Argentinas"), true);
+});

@@ -28,3 +28,9 @@ test("no external font request: Archivo is self-hosted", () => {
   assert.doesNotMatch(html + css, /fonts\.googleapis\.com|fonts\.gstatic\.com/);
   assert.match(css, /archivo-latin-wdth-normal[^"')]*\.woff2/);
 });
+
+test("motion only answers an action: button transitions and a CSS page fade, both reduced-motion aware", () => {
+  assert.match(css, /\.wa[^{]*\{[^}]*transition:[^}]*(150ms|\.15s)/);
+  assert.match(css, /@view-transition\s*\{\s*navigation:\s*auto/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce[\s\S]*::view-transition/);
+});

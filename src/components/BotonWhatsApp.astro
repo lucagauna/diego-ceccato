@@ -37,6 +37,11 @@ const { origen, variante = "lleno", class: extra = "" } = Astro.props;
     gap: 10px;
     font-weight: 600;
     text-decoration: none;
+    transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+  }
+
+  .wa--lleno:active {
+    transform: translateY(1px);
   }
 
   .wa--lleno {

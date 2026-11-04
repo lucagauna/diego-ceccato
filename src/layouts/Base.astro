@@ -6,7 +6,7 @@
 import "@fontsource-variable/archivo/wdth.css";
 import "../styles/global.css";
 import BarraWhatsApp from "../components/BarraWhatsApp.astro";
-import { NOMBRE, type Origen } from "../data/contacto";
+import { HORARIO, NOMBRE, TELEFONO, linkTelefono, type Origen } from "../data/contacto";
 import { PREVIEW, ruta } from "../data/sitio";
 
 interface Props {
@@ -69,8 +69,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </main>
 
     <footer class="pie">
-      <div class="contenedor">
-        <slot name="pie" />
+      <div class="contenedor pie__filas">
+        <p><slot name="pie" /></p>
+        <p>
+          <a href={linkTelefono()}>{TELEFONO.visible}</a> · {HORARIO}
+        </p>
       </div>
     </footer>
 
@@ -131,6 +134,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   :global(.tema-oscuro) .pie {
     border-top-color: var(--escenario-linea);
     color: var(--tiza-suave);
+  }
+
+  .pie__filas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 24px;
+  }
+
+  .pie__filas p {
+    margin: 0;
+  }
+
+  .pie a {
+    color: inherit;
+    font-weight: 600;
   }
 
   @media (max-width: 600px) {
