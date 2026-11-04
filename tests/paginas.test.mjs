@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile, access } from "node:fs/promises";
+import { BASE, rutaEnDist } from "./entorno.mjs";
 
 const dist = new URL("../dist/", import.meta.url);
 const leer = (ruta) => readFile(new URL(`${ruta}index.html`, dist), "utf8");
@@ -52,18 +53,20 @@ for (const [ruta, esperado] of Object.entries(paginas)) {
 
   test(`${ruta} internal links point to pages that exist in dist`, async () => {
     const html = await leer(ruta);
-    const internos = [...html.matchAll(/href="(\/[^"#]*)"/g)].map((m) => m[1]).filter((h) => !h.startsWith("/_astro/") && !h.endsWith(".svg"));
+    const internos = [...html.matchAll(/href="(\/[^"#]*)"/g)].map((m) => m[1]).filter((h) => !h.includes("/_astro/") && !h.endsWith(".svg"));
     for (const h of new Set(internos)) {
-      if (todaviaNoConstruidas.has(h)) continue;
-      assert.ok(await existe(h.replace(/^\//, "")), `${ruta} links to ${h}, which is not built`);
+      assert.ok(h.startsWith(BASE), `${ruta} links to ${h}, outside the base path ${BASE}`);
+      const local = rutaEnDist(h);
+      if (todaviaNoConstruidas.has(local)) continue;
+      assert.ok(await existe(local), `${ruta} links to ${h}, which is not built`);
     }
   });
 }
 
 test("the home page links to both businesses", async () => {
   const html = await leer("");
-  assert.match(html, /href="\/pintura\/"/);
-  assert.match(html, /href="\/clases-de-bateria\/"/);
+  assert.ok(html.includes(`href="${BASE}pintura/"`));
+  assert.ok(html.includes(`href="${BASE}clases-de-bateria/"`));
 });
 
 test("clases-de-bateria/ uses the dark theme and names the real stages", async () => {
@@ -77,7 +80,7 @@ test("clases-de-bateria/ uses the dark theme and names the real stages", async (
 
 test("clases-de-bateria/ links to the service pages of the other business", async () => {
   const html = await leer("clases-de-bateria/");
-  assert.match(html, /href="\/pintura\/"/);
+  assert.ok(html.includes(`href="${BASE}pintura/"`));
 });
 
 test("provisional content is marked visibly so nothing invented slips through", async () => {

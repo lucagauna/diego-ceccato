@@ -1,8 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-
-const SITIO = "https://diegoceccato.com.ar";
+import { RAIZ as SITIO, PREVIEW } from "./entorno.mjs";
 const dist = new URL("../dist/", import.meta.url);
 const leer = (ruta) => readFile(new URL(ruta, dist), "utf8");
 
@@ -25,6 +24,8 @@ for (const ruta of paginas) {
 
   test(`${nombre}: Open Graph tags and canonical are present`, async () => {
     const html = await leer(`${ruta}index.html`);
+    if (PREVIEW) assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
+    else assert.doesNotMatch(html, /noindex/);
     assert.match(html, /<meta property="og:title" content="[^"]+"/);
     assert.match(html, /<meta property="og:description" content="[^"]+"/);
     assert.match(html, new RegExp(`<meta property="og:url" content="${SITIO}/${ruta}"`));
@@ -73,7 +74,7 @@ test("home: Person JSON-LD for Diego", async () => {
   assert.equal(datos[0].name, "Diego Ceccato");
 });
 
-test("robots.txt allows search and AI crawlers and points to the sitemap", async () => {
+test("robots.txt allows search and AI crawlers and points to the sitemap", { skip: PREVIEW && "preview builds close robots.txt" }, async () => {
   const robots = await leer("robots.txt");
   assert.match(robots, /User-agent: \*\s+Allow: \//);
   for (const bot of ["GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"]) {
@@ -81,6 +82,11 @@ test("robots.txt allows search and AI crawlers and points to the sitemap", async
   }
   assert.doesNotMatch(robots, /Disallow: \/\s*$/m);
   assert.match(robots, new RegExp(`Sitemap: ${SITIO}/sitemap-index\\.xml`));
+});
+
+test("preview builds close robots.txt to every crawler", { skip: !PREVIEW && "only on preview builds" }, async () => {
+  const robots = await leer("robots.txt");
+  assert.match(robots, /User-agent: \*\s+Disallow: \//);
 });
 
 test("sitemap lists every built page with its canonical URL", async () => {
