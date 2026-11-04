@@ -8,6 +8,7 @@ import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import { HORARIO, TELEFONO } from "../data/contacto";
 import { personaDiego } from "../data/schema";
+import { ruta } from "../data/sitio";
 ---
 
 <Base
@@ -20,12 +21,12 @@ import { personaDiego } from "../data/schema";
     <p class="portada__sub suave">Pintor y baterista. Tigre, Zona Norte.</p>
 
     <div class="puertas">
-      <a class="puerta" href="/pintura/">
+      <a class="puerta" href={ruta("/pintura/")}>
         <h2>Pintura y arreglos para tu casa</h2>
         <p>Interiores, exteriores y frentes, hierro y madera. También plomería, carpintería, herrería y colocaciones. 30 años de oficio.</p>
         <span class="puerta__ir">Ver pintura y arreglos</span>
       </a>
-      <a class="puerta puerta--oscura" href="/clases-de-bateria/">
+      <a class="puerta puerta--oscura" href={ruta("/clases-de-bateria/")}>
         <h2>Clases de batería</h2>
         <p>Individuales, de una hora. A domicilio en Zona Norte u online desde cualquier lugar. 30 años tocando, 25 enseñando.</p>
         <span class="puerta__ir">Ver clases</span>

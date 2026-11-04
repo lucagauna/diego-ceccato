@@ -1,43 +1,29 @@
-# Astro Starter Kit: Minimal
+# Sitio de Diego Ceccato
 
-```sh
-npm create astro@latest -- --template minimal
+Static site for Diego Ceccato: house painting and repairs in Tigre and Zona Norte (Buenos Aires), and drum lessons at home or online.
+
+Built with [Astro](https://astro.build), hand-written CSS and no client-side JavaScript. All content lives in the HTML so search engines and AI crawlers can read it.
+
+## Commands
+
+```bash
+npm install
+npm run dev       # local dev server
+npm run build     # static output in dist/
+npm test          # checks the built HTML (run build first)
+npm run verify    # build + test
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Configuration
 
-## 🚀 Project Structure
+| Variable | Default | Purpose |
+|---|---|---|
+| `PUBLIC_SITE_URL` | `https://diegoceccato.com.ar` | Public origin used for canonical URLs, sitemap, robots and structured data |
+| `BASE_PATH` | `/` | Path prefix for internal links and assets (GitHub Pages project sites need `/<repo>/`) |
+| `PUBLIC_PREVIEW` | unset | Set to `1` to add `noindex` and close `robots.txt` on provisional deployments |
 
-Inside of your Astro project, you'll see the following folders and files:
+`src/data/contacto.ts` is the single source of truth for phone, hours, service areas and the pre-filled WhatsApp message of every page.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Deployment
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Pushing to `main` runs `.github/workflows/deploy.yml`, which builds, tests and publishes to GitHub Pages. The workflow currently targets the provisional URL; once the domain is live, update its environment variables as noted in the file.

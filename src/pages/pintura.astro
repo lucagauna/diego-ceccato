@@ -9,6 +9,7 @@ import Pendiente from "../components/Pendiente.astro";
 import Cierre from "../components/Cierre.astro";
 import { HORARIO, ZONAS } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
+import { ruta } from "../data/sitio";
 
 const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
 ---
@@ -72,7 +73,7 @@ const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
       <div>
         <h2>Otros arreglos</h2>
         <p>Si ya me conocés por la pintura, también te resuelvo plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas.</p>
-        <p><a href="/arreglos-del-hogar/">Ver los arreglos que hago</a></p>
+        <p><a href={ruta("/arreglos-del-hogar/")}>Ver los arreglos que hago</a></p>
       </div>
     </div>
   </section>

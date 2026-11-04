@@ -3,8 +3,9 @@
  * The home address is never published: the business is service-area only.
  */
 import { NOMBRE, TELEFONO, ZONAS } from "./contacto";
+import { urlAbsoluta } from "./sitio";
 
-const SITIO = "https://diegoceccato.com.ar";
+const SITIO = urlAbsoluta("/").replace(/\/$/, "");
 
 const areaServed = ZONAS.map((nombre) => ({
   "@type": "Place",

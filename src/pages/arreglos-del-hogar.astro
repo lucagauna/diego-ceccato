@@ -9,6 +9,7 @@ import Pendiente from "../components/Pendiente.astro";
 import Cierre from "../components/Cierre.astro";
 import { ZONAS } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
+import { ruta } from "../data/sitio";
 
 const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
 
@@ -60,7 +61,7 @@ const rubros = [
       <div>
         <h2>Lo que más hago es pintar</h2>
         <p>Interiores, exteriores y frentes, hierro y madera, con reparación de grietas y humedad antes de pintar.</p>
-        <p><a href="/pintura/">Ver pintura</a></p>
+        <p><a href={ruta("/pintura/")}>Ver pintura</a></p>
       </div>
     </div>
   </section>

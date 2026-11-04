@@ -6,6 +6,7 @@
 import "@fontsource-variable/archivo/wdth.css";
 import "../styles/global.css";
 import { NOMBRE } from "../data/contacto";
+import { PREVIEW, ruta } from "../data/sitio";
 
 interface Props {
   titulo: string;
@@ -30,7 +31,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={ruta("/favicon.svg")} type="image/svg+xml" />
+    {PREVIEW && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content={oscuro ? "#142033" : "#ffffff"} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={NOMBRE} />
@@ -46,12 +48,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
     <header class="cabecera">
       <div class="contenedor cabecera__fila">
-        <a class="cabecera__marca" href="/">{NOMBRE}</a>
+        <a class="cabecera__marca" href={ruta("/")}>{NOMBRE}</a>
         {
           seccion && (
             <nav aria-label="Secciones del sitio">
-              <a href="/pintura/" aria-current={seccion === "hogar" ? "page" : undefined}>Pintura y arreglos</a>
-              <a href="/clases-de-bateria/" aria-current={seccion === "bateria" ? "page" : undefined}>Clases de batería</a>
+              <a href={ruta("/pintura/")} aria-current={seccion === "hogar" ? "page" : undefined}>Pintura y arreglos</a>
+              <a href={ruta("/clases-de-bateria/")} aria-current={seccion === "bateria" ? "page" : undefined}>Clases de batería</a>
             </nav>
           )
         }
