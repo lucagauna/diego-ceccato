@@ -1,0 +1,57 @@
+---
+/**
+ * Visible marker for content we still owe Diego (a photo, an answer, a review).
+ * It ships in the HTML on purpose so gaps are obvious when the mockup is shown;
+ * task 7 removes every instance. Tests count them via data-pendiente.
+ */
+interface Props {
+  /** What is missing and who provides it. */
+  texto: string;
+  /** Render as a photo-sized block instead of a note. */
+  bloque?: boolean;
+}
+
+const { texto, bloque = false } = Astro.props;
+---
+
+<p class:list={["pendiente", { "pendiente--bloque": bloque }]} data-pendiente>
+  <span class="pendiente__rotulo">Pendiente</span>
+  {texto}
+</p>
+
+<style>
+  .pendiente {
+    max-width: var(--medida);
+    margin: 0 0 1em;
+    padding: 10px 14px;
+    border: 1px dashed var(--linea);
+    border-radius: var(--radio);
+    background: var(--imprimacion);
+    color: var(--tinta-suave);
+    font-size: var(--t-0);
+  }
+
+  .pendiente--bloque {
+    display: grid;
+    place-content: center;
+    text-align: center;
+    aspect-ratio: 4 / 3;
+    max-width: none;
+  }
+
+  .pendiente__rotulo {
+    display: block;
+    font-weight: 600;
+    color: var(--tinta);
+  }
+
+  :global(.tema-oscuro) .pendiente {
+    background: var(--escenario-2);
+    border-color: var(--escenario-linea);
+    color: var(--tiza-suave);
+  }
+
+  :global(.tema-oscuro) .pendiente__rotulo {
+    color: var(--tiza);
+  }
+</style>

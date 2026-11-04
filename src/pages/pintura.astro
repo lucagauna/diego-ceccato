@@ -1,0 +1,113 @@
+---
+/**
+ * Main landing page: where the Google Business Profile and future ads point to.
+ * Every sentence comes from Diego's form answers. Gaps are marked with <Pendiente>.
+ */
+import Base from "../layouts/Base.astro";
+import BotonWhatsApp from "../components/BotonWhatsApp.astro";
+import Pendiente from "../components/Pendiente.astro";
+import Cierre from "../components/Cierre.astro";
+import { HORARIO, ZONAS } from "../data/contacto";
+
+const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
+---
+
+<Base
+  titulo="Pintor en Tigre y Zona Norte · Diego Ceccato"
+  descripcion="Pintura de interiores, exteriores y frentes, hierro y madera en Tigre y Zona Norte. 30 años de oficio. Presupuesto por WhatsApp."
+  seccion="hogar"
+>
+  <section class="seccion hero">
+    <div class="contenedor hero__grilla">
+      <div>
+        <h1>Pintura de casas en Tigre y Zona Norte</h1>
+        <p class="hero__lead">
+          Hace 30 años que pinto casas, departamentos y locales. Trabajo solo: el que presupuesta y el que hace el trabajo soy yo.
+        </p>
+        <p class="suave">{zonas}.</p>
+        <BotonWhatsApp origen="pintura">Pedí presupuesto</BotonWhatsApp>
+      </div>
+      <Pendiente bloque texto="Foto de Diego pintando o de un trabajo terminado. Llega con las fotos de mañana." />
+    </div>
+    <dl class="contenedor hechos">
+      <div><dt>30 años</dt><dd>de oficio</dd></div>
+      <div><dt>Trabajo solo</dt><dd>sin intermediarios</dd></div>
+      <div><dt>{HORARIO}</dt><dd>horario de atención</dd></div>
+      <div><dt>Por WhatsApp</dt><dd>mandá una foto y te paso presupuesto</dd></div>
+    </dl>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <h2>Pintura</h2>
+        <p>Interiores y exteriores en casas, departamentos y locales. También pinto rejas, portones, puertas y aberturas de hierro y madera.</p>
+        <p>Antes de pintar, reparo grietas y manchas de humedad para que la pintura dure.</p>
+      </div>
+      <ul class="lista">
+        <li><strong>Interiores</strong><span>Paredes, techos y aberturas</span></li>
+        <li><strong>Exteriores y frentes</strong><span>Frentes, medianeras y muros</span></li>
+        <li><strong>Hierro y madera</strong><span>Rejas, portones, puertas y ventanas</span></li>
+        <li><strong>Grietas y humedad</strong><span>Reparación antes de pintar</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <h2>Trabajos terminados</h2>
+      <p>Cada foto va con la localidad donde se hizo el trabajo.</p>
+      <div class="galeria">
+        <Pendiente bloque texto="Antes y después de un interior" />
+        <Pendiente bloque texto="Frente de casa" />
+        <Pendiente bloque texto="Reja o portón" />
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <h2>Otros arreglos</h2>
+        <p>Si ya me conocés por la pintura, también te resuelvo plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas.</p>
+        <p><a href="/arreglos-del-hogar/">Ver los arreglos que hago</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <h2>Preguntas frecuentes</h2>
+      <dl class="faq">
+        <div>
+          <dt>¿Cómo pido presupuesto?</dt>
+          <dd>Mandame una foto de lo que hay que pintar por WhatsApp y te paso presupuesto.</dd>
+        </div>
+        <div>
+          <dt>¿En qué zonas trabajás?</dt>
+          <dd>{zonas}.</dd>
+        </div>
+        <div>
+          <dt>¿Qué días atendés?</dt>
+          <dd>{HORARIO}.</dd>
+        </div>
+      </dl>
+      <Pendiente texto="Las preguntas sobre el trabajo en sí (cuánto tarda, quién compra la pintura, si hay que mover muebles, garantía) esperan la respuesta de Diego." />
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <h2>Opiniones</h2>
+      <Pendiente texto="Reseñas reales de clientes, tomadas del perfil de Google cuando estén cargadas." />
+    </div>
+  </section>
+
+  <Cierre
+    titulo="¿Qué hay que pintar?"
+    texto="Mandame una foto por WhatsApp y te paso presupuesto."
+    origen="pintura"
+  />
+
+  <Fragment slot="pie">Diego Ceccato · Pintura y arreglos · Tigre y Zona Norte, Buenos Aires</Fragment>
+</Base>

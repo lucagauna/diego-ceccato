@@ -1,0 +1,73 @@
+---
+/**
+ * Secondary services: sold to people who already trust Diego for painting.
+ * Only the trades he ticked in the form appear here. Examples per trade await his confirmation.
+ */
+import Base from "../layouts/Base.astro";
+import BotonWhatsApp from "../components/BotonWhatsApp.astro";
+import Pendiente from "../components/Pendiente.astro";
+import Cierre from "../components/Cierre.astro";
+import { ZONAS } from "../data/contacto";
+
+const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
+
+const rubros = [
+  "Plomería",
+  "Carpintería",
+  "Herrería",
+  "Puertas, ventanas y cerraduras",
+  "Colocaciones",
+  "Quinchos y parrillas",
+];
+---
+
+<Base
+  titulo="Arreglos para tu casa en Tigre y Zona Norte · Diego Ceccato"
+  descripcion="Plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas en Tigre y Zona Norte. 30 años de oficio."
+  seccion="hogar"
+>
+  <section class="seccion hero">
+    <div class="contenedor hero__grilla">
+      <div>
+        <h1>Arreglos para tu casa en Tigre y Zona Norte</h1>
+        <p class="hero__lead">
+          Si ya me conocés por la pintura, también te resuelvo esto. Trabajo solo: el que presupuesta y el que hace el trabajo soy yo.
+        </p>
+        <p class="suave">{zonas}.</p>
+        <BotonWhatsApp origen="arreglos">Contame qué hay que arreglar</BotonWhatsApp>
+      </div>
+      <Pendiente bloque texto="Foto de un arreglo terminado o de Diego trabajando." />
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <h2>Lo que hago</h2>
+        <p>Arreglos de casa, chicos y medianos, de los que no justifican llamar a una empresa.</p>
+        <Pendiente texto="Dos o tres ejemplos concretos de cada rubro, con las palabras de Diego. Aire acondicionado y electricidad estaban en su flyer pero no los marcó: a confirmar antes de sumarlos." />
+      </div>
+      <ul class="lista">
+        {rubros.map((r) => <li><strong>{r}</strong></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <h2>Lo que más hago es pintar</h2>
+        <p>Interiores, exteriores y frentes, hierro y madera, con reparación de grietas y humedad antes de pintar.</p>
+        <p><a href="/pintura/">Ver pintura</a></p>
+      </div>
+    </div>
+  </section>
+
+  <Cierre
+    titulo="¿Qué hay que arreglar?"
+    texto="Mandame una foto por WhatsApp y te digo si lo hago y cuánto sale."
+    origen="arreglos"
+  />
+
+  <Fragment slot="pie">Diego Ceccato · Pintura y arreglos · Tigre y Zona Norte, Buenos Aires</Fragment>
+</Base>
