@@ -241,10 +241,17 @@ a {
   }
 }
 
-/* Room for the fixed WhatsApp bar on phones (see BarraWhatsApp). */
+/* Room for the fixed WhatsApp bar on phones (see BarraWhatsApp).
+   The bar already carries the hero's call to action there, so the hero button hides
+   instead of showing the same button twice on one screen. */
 @media (max-width: 719px) {
   body.con-barra {
     padding-bottom: 84px;
+  }
+
+  .con-barra .hero .wa--lleno,
+  .con-barra .portada .wa--lleno {
+    display: none;
   }
 }
 

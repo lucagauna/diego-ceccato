@@ -21,7 +21,7 @@ interface Props {
 }
 
 const { titulo, descripcion, seccion, datos, contacto = "inicio" } = Astro.props;
-const etiquetaBarra = seccion === "bateria" ? "Consultá por una clase" : seccion === "hogar" ? "Pedí presupuesto por WhatsApp" : "Escribime por WhatsApp";
+const etiquetaBarra = seccion === "bateria" ? "Consultá por una clase" : seccion === "hogar" ? "Pedí presupuesto" : "Escribime por WhatsApp";
 const oscuro = seccion === "bateria";
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // TODO(task 7): og:image with a real photo of Diego once the originals arrive.

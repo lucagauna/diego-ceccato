@@ -239,8 +239,18 @@ const azulejos = [
   }
 
   @media (max-width: 600px) {
+    .portada {
+      min-height: 0;
+      padding-top: clamp(32px, 8vw, 48px);
+    }
+
+    .portada__nombre {
+      font-size: clamp(3.5rem, 19vw, 5rem);
+    }
+
     .portada .hechos {
       grid-template-columns: repeat(2, 1fr);
+      margin-top: 20px;
     }
   }
 
@@ -284,12 +294,29 @@ const azulejos = [
   .azulejo__foto {
     display: grid;
     place-content: center;
-    padding: 16px;
+    /* Extra bottom padding keeps the placeholder text clear of the title overlay. */
+    padding: 16px 16px 64px;
     text-align: center;
     border: 1px dashed var(--escenario-linea);
     border-radius: var(--radio);
     color: var(--tiza-suave);
     font-size: 0.9rem;
+  }
+
+  @media (max-width: 719px) {
+    .azulejos__grilla {
+      gap: 10px;
+    }
+
+    .azulejo__foto {
+      padding: 12px 12px 56px;
+      font-size: 0.8rem;
+    }
+
+    .azulejo__titulo {
+      padding: 12px;
+      font-size: var(--t-1);
+    }
   }
 
   .azulejo__titulo {
