@@ -41,40 +41,6 @@ export function negocioHogar() {
   };
 }
 
-/** Drum lessons: a service provided by Diego, at home in Zona Norte or online anywhere. */
-export function clasesBateria() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "@id": `${SITIO}/#bateria`,
-    serviceType: "Clases de batería",
-    name: "Clases de batería con Diego Ceccato",
-    url: `${SITIO}/clases-de-bateria/`,
-    description:
-      "Clases individuales de batería de una hora, a domicilio en Zona Norte u online. Rock, pop, funk, jazz y blues. Adolescentes desde 15 años y adultos.",
-    provider: { "@id": `${SITIO}/#diego` },
-    areaServed,
-    availableChannel: [
-      {
-        "@type": "ServiceChannel",
-        name: "A domicilio",
-        availableLanguage: "es",
-        servicePhone: `+${TELEFONO.e164}`,
-      },
-      {
-        "@type": "ServiceChannel",
-        name: "Online",
-        serviceUrl: `${SITIO}/clases-de-bateria/`,
-        availableLanguage: "es",
-      },
-    ],
-    audience: {
-      "@type": "PeopleAudience",
-      suggestedMinAge: 15,
-    },
-  };
-}
-
 /** Diego as a person, used by the home page. */
 export function personaDiego() {
   return {
@@ -84,7 +50,7 @@ export function personaDiego() {
     name: NOMBRE,
     url: `${SITIO}/`,
     telephone: `+${TELEFONO.e164}`,
-    jobTitle: ["Pintor", "Profesor de batería"],
+    jobTitle: "Pintor",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Tigre",

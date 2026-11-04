@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { RAIZ as SITIO, PREVIEW, leer } from "./entorno.mjs";
 
-const paginas = ["", "pintura/", "arreglos-del-hogar/", "clases-de-bateria/"];
+const paginas = ["", "pintura/", "arreglos-del-hogar/"];
 
 /** Every <script> must be JSON-LD; anything else is JavaScript we promised not to ship. */
 const scripts = (html) => [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)];
@@ -52,18 +52,6 @@ for (const ruta of ["pintura/", "arreglos-del-hogar/"]) {
   });
 }
 
-test("clases-de-bateria/: Service JSON-LD provided by Diego, online and at home", async () => {
-  const datos = jsonLd(await leer("clases-de-bateria/index.html"));
-  assert.equal(datos.length, 1);
-  const servicio = datos[0];
-  assert.equal(servicio["@type"], "Service");
-  assert.equal(servicio.serviceType, "Clases de batería");
-  assert.equal(servicio.provider["@id"], `${SITIO}/#diego`);
-  assert.equal(servicio.url, `${SITIO}/clases-de-bateria/`);
-  assert.ok(Array.isArray(servicio.areaServed) && servicio.areaServed.length >= 7);
-  assert.ok(servicio.availableChannel.some((c) => c.serviceUrl === `${SITIO}/clases-de-bateria/`), "online channel must be declared");
-});
-
 test("home: Person JSON-LD for Diego", async () => {
   const datos = jsonLd(await leer("index.html"));
   assert.equal(datos.length, 1);
@@ -93,11 +81,12 @@ test("sitemap lists every built page with its canonical URL", async () => {
   for (const ruta of paginas) assert.match(mapa, new RegExp(`<loc>${SITIO}/${ruta}</loc>`));
 });
 
-test("llms.txt describes both businesses and links the service pages", async () => {
+test("llms.txt describes the business and links the service pages", async () => {
   const llms = await leer("llms.txt");
   assert.match(llms, /^# Diego Ceccato/m);
   assert.match(llms, /pintura/i);
-  assert.match(llms, /batería/i);
+  assert.doesNotMatch(llms, /batería/i);
   assert.match(llms, new RegExp(`${SITIO}/pintura/`));
+  assert.match(llms, new RegExp(`${SITIO}/arreglos-del-hogar/`));
   assert.match(llms, /5491134883317|11 3488 3317/);
 });

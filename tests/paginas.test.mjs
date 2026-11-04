@@ -14,10 +14,6 @@ const paginas = {
     origen: "Hola%20Diego%2C%20quiero%20pedirte%20un%20presupuesto%20para%20un%20arreglo%20en%20casa",
     h1: /Arreglos/,
   },
-  "clases-de-bateria/": {
-    origen: "Hola%20Diego%2C%20quiero%20info%20sobre%20las%20clases%20de%20bater%C3%ADa",
-    h1: /batería/,
-  },
 };
 
 for (const [ruta, esperado] of Object.entries(paginas)) {
@@ -58,24 +54,10 @@ for (const [ruta, esperado] of Object.entries(paginas)) {
   });
 }
 
-test("the home page links to both businesses", async () => {
+test("the home page links to both service pages", async () => {
   const html = await leer("");
   assert.ok(html.includes(`href="${BASE}pintura/"`));
-  assert.ok(html.includes(`href="${BASE}clases-de-bateria/"`));
-});
-
-test("clases-de-bateria/ uses the dark theme and names the real stages", async () => {
-  const html = await leer("clases-de-bateria/");
-  assert.ok(/<body class="[^"]*(^| )tema-oscuro( |")/.test(html), "body must carry the tema-oscuro class");
-  for (const dato of ["Rinaldo Rafanelli", "Omar Mollo", "Cosquín Rock", "Cemento", "25 enseñando"]) {
-    assert.ok(html.includes(dato), `missing confirmed fact: ${dato}`);
-  }
-  assert.match(html, /No hace falta para arrancar/);
-});
-
-test("clases-de-bateria/ links to the service pages of the other business", async () => {
-  const html = await leer("clases-de-bateria/");
-  assert.ok(html.includes(`href="${BASE}pintura/"`));
+  assert.ok(html.includes(`href="${BASE}arreglos-del-hogar/"`));
 });
 
 test("provisional content is marked visibly so nothing invented slips through", async () => {
@@ -88,7 +70,6 @@ test("every page carries the phone-only WhatsApp bar with its own origin", async
     "": "Hola%20Diego%2C%20te%20escribo%20desde%20tu%20p%C3%A1gina",
     "pintura/": paginas["pintura/"].origen,
     "arreglos-del-hogar/": paginas["arreglos-del-hogar/"].origen,
-    "clases-de-bateria/": paginas["clases-de-bateria/"].origen,
   };
   for (const [ruta, origen] of Object.entries(esperados)) {
     const html = await leer(ruta);
@@ -106,11 +87,12 @@ test("the favicon is ours, not the Astro default", async () => {
 });
 
 test("service pages show the trust facts before the photo placeholder", async () => {
-  for (const ruta of ["pintura/", "clases-de-bateria/"]) {
+  for (const ruta of ["pintura/"]) {
     const cuerpo = (await leer(ruta)).split("<body")[1];
-    const hechos = cuerpo.indexOf('class="hechos"');
-    const placeholder = cuerpo.indexOf('class="pendiente pendiente--bloque"');
-    const retrato = cuerpo.indexOf('class="retrato"');
+    const posicion = (re) => cuerpo.search(re);
+    const hechos = posicion(/class="hechos[\s"]/);
+    const placeholder = posicion(/class="pendiente pendiente--bloque"/);
+    const retrato = posicion(/class="(?:[^"]* )?retrato(?: [^"]*)?"/);
     const foto = placeholder === -1 ? retrato : placeholder;
     assert.ok(hechos !== -1 && foto !== -1, `${ruta} is missing facts or photo block`);
     assert.ok(hechos < foto, `${ruta}: facts (${hechos}) must come before the photo block (${foto}) in the DOM`);
@@ -118,7 +100,7 @@ test("service pages show the trust facts before the photo placeholder", async ()
 });
 
 test("every page offers a phone call as well as WhatsApp, and the footer repeats phone and hours", async () => {
-  for (const ruta of ["", "pintura/", "arreglos-del-hogar/", "clases-de-bateria/"]) {
+  for (const ruta of ["", "pintura/", "arreglos-del-hogar/"]) {
     const html = await leer(ruta);
     assert.match(html, /href="tel:\+5491134883317"/, `${ruta || "home"} has no tel: link`);
     const pie = html.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
@@ -128,7 +110,7 @@ test("every page offers a phone call as well as WhatsApp, and the footer repeats
 });
 
 test("closing buttons name the action, not the phone number", async () => {
-  for (const ruta of ["pintura/", "arreglos-del-hogar/", "clases-de-bateria/"]) {
+  for (const ruta of ["pintura/", "arreglos-del-hogar/"]) {
     const html = await leer(ruta);
     const botones = [...html.matchAll(/class="wa wa--lleno[^"]*"[^>]*>[\s\S]*?<\/svg>([^<]*)</g)].map((m) => m[1].trim());
     assert.ok(botones.length >= 2, `${ruta} should have hero and closing buttons`);

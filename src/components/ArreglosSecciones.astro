@@ -1,0 +1,56 @@
+---
+/**
+ * Body sections of the home repairs page (what he does, the painting bridge,
+ * closing), shared by the live page and its hero variants. A hero that already
+ * lists the trades can leave that block out.
+ */
+import Pendiente from "./Pendiente.astro";
+import Cierre from "./Cierre.astro";
+import { ruta } from "../data/sitio";
+
+interface Props {
+  sinRubros?: boolean;
+}
+
+const { sinRubros = false } = Astro.props;
+
+export const rubros = [
+  "Plomería",
+  "Carpintería",
+  "Herrería",
+  "Puertas, ventanas y cerraduras",
+  "Colocaciones",
+  "Quinchos y parrillas",
+];
+---
+
+{!sinRubros && (
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <h2>Lo que hago</h2>
+        <p>Arreglos de casa, chicos y medianos, de los que no justifican llamar a una empresa.</p>
+        <Pendiente texto="Dos o tres ejemplos concretos de cada rubro, con las palabras de Diego. Aire acondicionado y electricidad estaban en su flyer pero no los marcó: a confirmar antes de sumarlos." />
+      </div>
+      <ul class="lista">
+        {rubros.map((r) => <li><strong>{r}</strong></li>)}
+      </ul>
+    </div>
+  </section>
+)}
+
+<section class="seccion">
+  <div class="contenedor dos">
+    <div>
+      <h2>Lo que más hago es pintar</h2>
+      <p>Interiores, exteriores y frentes, hierro y madera, con reparación de grietas y humedad antes de pintar.</p>
+      <p><a href={ruta("/pintura/")}>Ver pintura</a></p>
+    </div>
+  </div>
+</section>
+
+<Cierre
+  titulo="¿Qué hay que arreglar?"
+  texto="Mandame una foto por WhatsApp y te digo si lo hago y cuánto sale."
+  origen="arreglos"
+/>

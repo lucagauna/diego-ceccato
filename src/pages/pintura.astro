@@ -1,16 +1,15 @@
 ---
 /**
  * Main landing page: where the Google Business Profile and future ads point to.
+ * The hero shows the WhatsApp conversation that is about to happen: the visitor's
+ * pre-filled message and the one instruction Diego gives. Bubbles appear in turn.
  * Every sentence comes from Diego's form answers. Gaps are marked with <Pendiente>.
  */
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
-import Pendiente from "../components/Pendiente.astro";
-import Cierre from "../components/Cierre.astro";
-import AntesDespues from "../components/AntesDespues.astro";
-import { HORARIO, listarZonas } from "../data/contacto";
+import PinturaSecciones from "../components/PinturaSecciones.astro";
+import { HORARIO, MENSAJES, listarZonas } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
-import { ruta } from "../data/sitio";
 
 const zonas = listarZonas("y");
 ---
@@ -18,19 +17,19 @@ const zonas = listarZonas("y");
 <Base
   titulo="Pintor en Tigre y Zona Norte · Diego Ceccato"
   descripcion="Pintura de interiores, exteriores y frentes, hierro y madera en Tigre y Zona Norte. 30 años de oficio. Presupuesto por WhatsApp."
-  seccion="hogar"
+  seccion="pintura"
   datos={negocioHogar()}
   contacto="pintura"
 >
-  <section class="seccion hero">
-    <div class="contenedor hero__grilla">
+
+  <section class="pedido">
+    <div class="contenedor pedido__grilla">
       <div>
+        <p class="ceja">01 · Látex azul</p>
         <h1>Pintura de casas en Tigre y Zona Norte</h1>
-        <p class="hero__lead">
-          Hace 30 años que pinto casas, departamentos y locales. Trabajo solo: el que presupuesta y el que hace el trabajo soy yo.
-        </p>
-        <p class="hero__zonas">{zonas}.</p>
-        <BotonWhatsApp origen="pintura">Pedí presupuesto</BotonWhatsApp>
+        <p class="hero__lead">Así de simple es pedir presupuesto. 30 años de oficio, trabajo solo: el que presupuesta hace el trabajo.</p>
+        <BotonWhatsApp origen="pintura">Empezar el chat</BotonWhatsApp>
+        <p class="suave pedido__nota">{zonas}.</p>
         <dl class="hechos">
           <div><dt>30 años</dt><dd>de oficio</dd></div>
           <div><dt>Trabajo solo</dt><dd>sin intermediarios</dd></div>
@@ -38,83 +37,82 @@ const zonas = listarZonas("y");
           <div><dt>Por WhatsApp</dt><dd>mandá una foto y te paso presupuesto</dd></div>
         </dl>
       </div>
-      <Pendiente bloque texto="Foto de Diego pintando o de un trabajo terminado. Llega con las fotos de mañana." />
-    </div>
-  </section>
 
-  <section class="seccion">
-    <div class="contenedor dos">
-      <div>
-        <h2>Pintura</h2>
-        <p>Interiores y exteriores en casas, departamentos y locales. También pinto rejas, portones, puertas y aberturas de hierro y madera.</p>
-        <p>Antes de pintar, reparo grietas y manchas de humedad para que la pintura dure.</p>
-      </div>
-      <ul class="lista">
-        <li><strong>Interiores</strong><span>Paredes, techos y aberturas</span></li>
-        <li><strong>Exteriores y frentes</strong><span>Frentes, medianeras y muros</span></li>
-        <li><strong>Hierro y madera</strong><span>Rejas, portones, puertas y ventanas</span></li>
-        <li><strong>Grietas y humedad</strong><span>Reparación antes de pintar</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="seccion">
-    <div class="contenedor">
-      <h2>Trabajos terminados</h2>
-      <p>Cada foto va con la localidad donde se hizo el trabajo.</p>
-      <div class="galeria">
-        <div class="galeria__destacado">
-          {/* TODO(task 7): swap the demo drawings for Diego's real before/after photos. */}
-          <AntesDespues
-            titulo="Así se compara un trabajo: arrastrá la línea"
-            antes={{ src: ruta("/img/demo-antes.svg"), alt: "Antes: pared con grietas y manchas (imagen de prueba)", width: 1200, height: 900 }}
-            despues={{ src: ruta("/img/demo-despues.svg"), alt: "Después: pared pintada (imagen de prueba)", width: 1200, height: 900 }}
-          />
-          <Pendiente texto="Las dos imágenes son dibujos de prueba para que el control se pueda probar. Se reemplazan por el antes y después real de un trabajo de Diego." />
-        </div>
-        <Pendiente bloque texto="Frente de casa" />
-        <Pendiente bloque texto="Reja o portón" />
+      <div class="chat" aria-label="Ejemplo de conversación">
+        <p class="burbuja burbuja--vos" style="--i: 0">{MENSAJES.pintura}</p>
+        <p class="burbuja burbuja--diego" style="--i: 1">Hola. Mandame una foto de lo que hay que pintar y te paso presupuesto.</p>
+        <p class="burbuja burbuja--vos burbuja--foto" style="--i: 2"><span>📷 Foto</span></p>
+        <p class="burbuja burbuja--diego" style="--i: 3">Listo, te paso presupuesto.</p>
       </div>
     </div>
   </section>
 
-  <section class="seccion">
-    <div class="contenedor dos">
-      <div>
-        <h2>Otros arreglos</h2>
-        <p>Si ya me conocés por la pintura, también te resuelvo plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas.</p>
-        <p><a href={ruta("/arreglos-del-hogar/")}>Ver los arreglos que hago</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion">
-    <div class="contenedor">
-      <h2>Preguntas frecuentes</h2>
-      <dl class="faq">
-        <div>
-          <dt>¿Cómo pido presupuesto?</dt>
-          <dd>Mandame una foto de lo que hay que pintar por WhatsApp y te paso presupuesto.</dd>
-        </div>
-        <div>
-          <dt>¿En qué zonas trabajás?</dt>
-          <dd>{zonas}.</dd>
-        </div>
-        <div>
-          <dt>¿Qué días atendés?</dt>
-          <dd>{HORARIO}.</dd>
-        </div>
-      </dl>
-      <Pendiente texto="Las preguntas sobre el trabajo en sí (cuánto tarda, quién compra la pintura, si hay que mover muebles, garantía) esperan la respuesta de Diego." />
-    </div>
-  </section>
-
-  {/* TODO(task 7): "Opiniones" section with real Google reviews. Hidden until they exist: an empty promise reads worse than none. */}
-
-  <Cierre
-    titulo="¿Qué hay que pintar?"
-    texto="Mandame una foto por WhatsApp y te paso presupuesto."
-    origen="pintura"
-  />
-
+  <PinturaSecciones />
 </Base>
+
+<style>
+  .pedido { padding-block: clamp(32px, 6vw, 72px) var(--seccion); border-bottom: 1px solid var(--linea); }
+
+  .pedido__grilla { display: grid; gap: 32px 48px; align-items: center; }
+
+  @media (min-width: 820px) {
+    .pedido__grilla { grid-template-columns: 1.1fr 1fr; }
+  }
+
+  .ceja { margin: 0 0 12px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--azul); }
+  .pedido h1 { font-size: var(--t-5); }
+  .pedido__nota { margin: 16px 0 0; }
+
+  .chat {
+    display: grid;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 12px;
+    background: var(--imprimacion);
+    border: 1px solid var(--linea);
+  }
+
+  .burbuja {
+    margin: 0;
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: var(--t-0);
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: llegar 350ms ease forwards;
+    animation-delay: calc(var(--i) * 600ms + 300ms);
+  }
+
+  @keyframes llegar { to { opacity: 1; transform: none; } }
+
+  .burbuja--vos {
+    justify-self: end;
+    background: #d9f5e3;
+    color: var(--tinta);
+    border-bottom-right-radius: 4px;
+  }
+
+  .burbuja--diego {
+    justify-self: start;
+    background: var(--pared);
+    color: var(--tinta);
+    border: 1px solid var(--linea);
+    border-bottom-left-radius: 4px;
+  }
+
+  .burbuja--foto span {
+    display: grid;
+    place-items: center;
+    width: 140px;
+    aspect-ratio: 4 / 3;
+    border: 1px dashed var(--tinta-suave);
+    border-radius: 8px;
+    color: var(--tinta-suave);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .burbuja { opacity: 1; transform: none; }
+  }
+</style>

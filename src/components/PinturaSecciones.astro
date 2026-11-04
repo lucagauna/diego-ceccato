@@ -1,0 +1,99 @@
+---
+/**
+ * Body sections of the painting page (services, finished jobs, other repairs,
+ * FAQ, closing), shared by the live page and its hero variants. A variant whose
+ * hero already shows the services or the gallery can leave that block out.
+ */
+import Pendiente from "./Pendiente.astro";
+import Cierre from "./Cierre.astro";
+import AntesDespues from "./AntesDespues.astro";
+import { HORARIO, listarZonas } from "../data/contacto";
+import { ruta } from "../data/sitio";
+
+interface Props {
+  sinServicios?: boolean;
+  sinGaleria?: boolean;
+}
+
+const { sinServicios = false, sinGaleria = false } = Astro.props;
+const zonas = listarZonas("y");
+---
+
+{!sinServicios && (
+<section class="seccion">
+  <div class="contenedor dos">
+    <div>
+      <h2>Pintura</h2>
+      <p>Interiores y exteriores en casas, departamentos y locales. También pinto rejas, portones, puertas y aberturas de hierro y madera.</p>
+      <p>Antes de pintar, reparo grietas y manchas de humedad para que la pintura dure.</p>
+    </div>
+    <ul class="lista">
+      <li><strong>Interiores</strong><span>Paredes, techos y aberturas</span></li>
+      <li><strong>Exteriores y frentes</strong><span>Frentes, medianeras y muros</span></li>
+      <li><strong>Hierro y madera</strong><span>Rejas, portones, puertas y ventanas</span></li>
+      <li><strong>Grietas y humedad</strong><span>Reparación antes de pintar</span></li>
+    </ul>
+  </div>
+</section>
+)}
+
+{!sinGaleria && (
+<section class="seccion">
+  <div class="contenedor">
+    <h2>Trabajos terminados</h2>
+    <p>Cada foto va con la localidad donde se hizo el trabajo.</p>
+    <div class="galeria">
+      <div class="galeria__destacado">
+        {/* TODO(task 7): swap the demo drawings for Diego's real before/after photos. */}
+        <AntesDespues
+          titulo="Así se compara un trabajo: arrastrá la línea"
+          antes={{ src: ruta("/img/demo-antes.svg"), alt: "Antes: pared con grietas y manchas (imagen de prueba)", width: 1200, height: 900 }}
+          despues={{ src: ruta("/img/demo-despues.svg"), alt: "Después: pared pintada (imagen de prueba)", width: 1200, height: 900 }}
+        />
+        <Pendiente texto="Las dos imágenes son dibujos de prueba para que el control se pueda probar. Se reemplazan por el antes y después real de un trabajo de Diego." />
+      </div>
+      <Pendiente bloque texto="Frente de casa" />
+      <Pendiente bloque texto="Reja o portón" />
+    </div>
+  </div>
+</section>
+)}
+
+<section class="seccion">
+  <div class="contenedor dos">
+    <div>
+      <h2>Otros arreglos</h2>
+      <p>Si ya me conocés por la pintura, también te resuelvo plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas.</p>
+      <p><a href={ruta("/arreglos-del-hogar/")}>Ver los arreglos que hago</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="contenedor">
+    <h2>Preguntas frecuentes</h2>
+    <dl class="faq">
+      <div>
+        <dt>¿Cómo pido presupuesto?</dt>
+        <dd>Mandame una foto de lo que hay que pintar por WhatsApp y te paso presupuesto.</dd>
+      </div>
+      <div>
+        <dt>¿En qué zonas trabajás?</dt>
+        <dd>{zonas}.</dd>
+      </div>
+      <div>
+        <dt>¿Qué días atendés?</dt>
+        <dd>{HORARIO}.</dd>
+      </div>
+    </dl>
+    <Pendiente texto="Las preguntas sobre el trabajo en sí (cuánto tarda, quién compra la pintura, si hay que mover muebles, garantía) esperan la respuesta de Diego." />
+  </div>
+</section>
+
+{/* TODO(task 7): "Opiniones" section with real Google reviews. Hidden until they exist: an empty promise reads worse than none. */}
+
+<Cierre
+  titulo="¿Qué hay que pintar?"
+  texto="Mandame una foto por WhatsApp y te paso presupuesto."
+  origen="pintura"
+/>

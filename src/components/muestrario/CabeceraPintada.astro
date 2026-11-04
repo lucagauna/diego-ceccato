@@ -1,0 +1,88 @@
+---
+/**
+ * The site header: a chip painted near-black, the brand in chalk and one link per
+ * page, each underlined in its own paint colour. The WhatsApp link sits on the
+ * right on desktop; on phones the fixed bar carries it.
+ */
+import BotonWhatsApp from "../BotonWhatsApp.astro";
+import { NOMBRE, type Origen } from "../../data/contacto";
+import { muestras } from "../Muestras";
+import { ruta } from "../../data/sitio";
+
+interface Props {
+  contacto?: Origen;
+  /** The service page being shown, to mark its link. */
+  seccion?: "pintura" | "arreglos";
+}
+
+const { contacto = "inicio", seccion } = Astro.props;
+const activa = (clase: string) => (seccion === "pintura" && clase === "azul") || (seccion === "arreglos" && clase === "laton");
+---
+
+<header class="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="cabecera__marca" href={ruta("/")}>{NOMBRE}</a>
+    <nav class="links" aria-label="Secciones del sitio">
+      {muestras.map((m) => (
+        <a class={`link link--${m.clase}`} href={m.href} aria-current={activa(m.clase) ? "page" : undefined}>{m.nombre}</a>
+      ))}
+    </nav>
+    <BotonWhatsApp origen={contacto} variante="texto" class="cabecera__wa">WhatsApp</BotonWhatsApp>
+  </div>
+</header>
+
+<style>
+  .cabecera {
+    background: var(--escenario);
+    color: var(--tiza);
+  }
+
+  .cabecera__fila {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    min-height: 64px;
+    padding-block: 10px;
+  }
+
+  .cabecera__marca {
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: var(--t-2);
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+    margin-right: auto;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    font-size: var(--t-0);
+    font-weight: 600;
+  }
+
+  .link {
+    color: inherit;
+    text-decoration: none;
+    padding-block: 4px;
+    border-bottom: 3px solid var(--color);
+    transition: color 150ms ease;
+  }
+
+  .link:hover,
+  .link[aria-current="page"] { color: var(--color); }
+  .link--azul { --color: #5b8ed6; }
+  .link--laton { --color: var(--laton); }
+
+  .cabecera :global(.cabecera__wa) {
+    font-size: var(--t-0);
+    color: var(--wa-tiza);
+  }
+
+  @media (max-width: 719px) {
+    .cabecera :global(.cabecera__wa) { display: none; }
+  }
+</style>

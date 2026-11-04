@@ -10,19 +10,18 @@
   --azul: #1b4b86;         /* latex blue: links, focus, the one accent */
   --wa: #0e7c3f;           /* WhatsApp button; dark enough for white text */
   --wa-hover: #0a6332;
-  --wa-tiza: #4cc77a;      /* WhatsApp text link on the dark stage */
+  --wa-tiza: #4cc77a;      /* WhatsApp text link on the dark header */
 
-  /* Dark theme (drum lessons): a dark stage with the lights off, photos carry the colour. */
+  /* Near-black and chalk: the header chip and the stage-black catalogue colour. */
   --escenario: #101010;
   --escenario-2: #1c1c1c;
   --escenario-linea: #303030;
   --tiza: #e8e6df;
   --tiza-suave: #aeb4bf;
-  --laton: #d4a03a;        /* cymbal brass */
+  --laton: #d4a03a;        /* brass: the home repairs chip and accent */
 
-  --fuente: "Archivo Variable", "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --ancho-titulo: 75%;     /* condensed width for display text */
-  --ancho-texto: 100%;
+  --fuente: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --fuente-titulo: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif; /* display text */
 
   /* Type scale, ratio ~1.25 on an 18px base. */
   --t-0: 1rem;
@@ -54,7 +53,6 @@ html {
 body {
   margin: 0;
   font-family: var(--fuente);
-  font-stretch: var(--ancho-texto);
   font-weight: 400;
   line-height: 1.55;
   color: var(--tinta);
@@ -62,15 +60,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-body.tema-oscuro {
-  color: var(--tiza);
-  background: var(--escenario);
-}
 
 h1,
 h2,
 h3 {
-  font-stretch: var(--ancho-titulo);
+  font-family: var(--fuente-titulo);
   font-weight: 700;
   line-height: 1.02;
   letter-spacing: -0.01em;
@@ -114,18 +108,12 @@ a {
   animation-duration: 180ms;
 }
 
-.tema-oscuro a {
-  color: var(--laton);
-}
 
 :focus-visible {
   outline: 3px solid var(--azul);
   outline-offset: 3px;
 }
 
-.tema-oscuro :focus-visible {
-  outline-color: var(--laton);
-}
 
 .contenedor {
   width: min(100% - 2 * var(--gutter), var(--contenedor));
@@ -140,17 +128,11 @@ a {
   border-top: 1px solid var(--linea);
 }
 
-.tema-oscuro .seccion + .seccion {
-  border-top-color: var(--escenario-linea);
-}
 
 .suave {
   color: var(--tinta-suave);
 }
 
-.tema-oscuro .suave {
-  color: var(--tiza-suave);
-}
 
 .saltar {
   position: absolute;
@@ -222,7 +204,7 @@ a {
 }
 
 .hechos dt {
-  font-stretch: var(--ancho-titulo);
+  font-family: var(--fuente-titulo);
   font-weight: 700;
   font-size: var(--t-2);
   line-height: 1.1;
@@ -252,7 +234,7 @@ a {
   }
 
   .con-barra .hero .wa--lleno,
-  .con-barra .portada .wa--lleno {
+  .con-barra .pedido .wa--lleno {
     display: none;
   }
 }
@@ -324,24 +306,8 @@ a {
   margin: 4px 0 0;
 }
 
-/* Dark theme: uppercase display headings, like a musician's site. */
-.tema-oscuro h2 {
-  font-size: var(--t-5);
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-}
 
-/* Dark theme overrides for the shared page patterns. */
-.tema-oscuro .hechos,
-.tema-oscuro .lista li,
-.tema-oscuro .lista li:last-child {
-  border-color: var(--escenario-linea);
-}
 
-.tema-oscuro .hechos dd,
-.tema-oscuro .lista span {
-  color: var(--tiza-suave);
-}
 
 /* A featured before/after spans the whole gallery row. */
 .galeria__destacado {

@@ -1,76 +1,81 @@
 ---
 /**
  * Secondary services: sold to people who already trust Diego for painting.
- * Only the trades he ticked in the form appear here. Examples per trade await his confirmation.
+ * The hero shows the WhatsApp conversation that is about to happen, as on the
+ * painting page. Only the trades he ticked in the form appear here.
  */
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
-import Pendiente from "../components/Pendiente.astro";
-import Cierre from "../components/Cierre.astro";
-import { listarZonas } from "../data/contacto";
+import ArreglosSecciones from "../components/ArreglosSecciones.astro";
+import { HORARIO, MENSAJES, listarZonas } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
-import { ruta } from "../data/sitio";
 
 const zonas = listarZonas("y");
-
-const rubros = [
-  "Plomería",
-  "Carpintería",
-  "Herrería",
-  "Puertas, ventanas y cerraduras",
-  "Colocaciones",
-  "Quinchos y parrillas",
-];
 ---
 
 <Base
   titulo="Arreglos para tu casa en Tigre y Zona Norte · Diego Ceccato"
   descripcion="Plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas en Tigre y Zona Norte. 30 años de oficio."
-  seccion="hogar"
+  seccion="arreglos"
   datos={negocioHogar()}
   contacto="arreglos"
 >
-  <section class="seccion hero">
-    <div class="contenedor hero__grilla">
+
+  <section class="pedido">
+    <div class="contenedor pedido__grilla">
       <div>
+        <p class="ceja">02 · Latón</p>
         <h1>Arreglos para tu casa en Tigre y Zona Norte</h1>
-        <p class="hero__lead">
-          Si ya me conocés por la pintura, también te resuelvo esto. Trabajo solo: el que presupuesta y el que hace el trabajo soy yo.
-        </p>
-        <p class="hero__zonas">{zonas}.</p>
-        <BotonWhatsApp origen="arreglos">Contame qué hay que arreglar</BotonWhatsApp>
+        <p class="hero__lead">Si ya me conocés por la pintura, también te resuelvo esto. Plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas.</p>
+        <BotonWhatsApp origen="arreglos">Empezar el chat</BotonWhatsApp>
+        <p class="suave pedido__nota">{zonas}. {HORARIO}.</p>
       </div>
-      <Pendiente bloque texto="Foto de un arreglo terminado o de Diego trabajando." />
-    </div>
-  </section>
 
-  <section class="seccion">
-    <div class="contenedor dos">
-      <div>
-        <h2>Lo que hago</h2>
-        <p>Arreglos de casa, chicos y medianos, de los que no justifican llamar a una empresa.</p>
-        <Pendiente texto="Dos o tres ejemplos concretos de cada rubro, con las palabras de Diego. Aire acondicionado y electricidad estaban en su flyer pero no los marcó: a confirmar antes de sumarlos." />
-      </div>
-      <ul class="lista">
-        {rubros.map((r) => <li><strong>{r}</strong></li>)}
-      </ul>
-    </div>
-  </section>
-
-  <section class="seccion">
-    <div class="contenedor dos">
-      <div>
-        <h2>Lo que más hago es pintar</h2>
-        <p>Interiores, exteriores y frentes, hierro y madera, con reparación de grietas y humedad antes de pintar.</p>
-        <p><a href={ruta("/pintura/")}>Ver pintura</a></p>
+      <div class="chat" aria-label="Ejemplo de conversación">
+        <p class="burbuja burbuja--vos" style="--i: 0">{MENSAJES.arreglos}</p>
+        <p class="burbuja burbuja--diego" style="--i: 1">Hola. Mandame una foto y te digo si lo hago y cuánto sale.</p>
+        <p class="burbuja burbuja--vos burbuja--foto" style="--i: 2"><span>📷 Foto</span></p>
       </div>
     </div>
   </section>
 
-  <Cierre
-    titulo="¿Qué hay que arreglar?"
-    texto="Mandame una foto por WhatsApp y te digo si lo hago y cuánto sale."
-    origen="arreglos"
-  />
-
+  <ArreglosSecciones />
 </Base>
+
+<style>
+  .pedido { padding-block: clamp(32px, 6vw, 72px) var(--seccion); border-bottom: 1px solid var(--linea); }
+  .pedido__grilla { display: grid; gap: 32px 48px; align-items: center; }
+
+  @media (min-width: 820px) {
+    .pedido__grilla { grid-template-columns: 1.1fr 1fr; }
+  }
+
+  .ceja { margin: 0 0 12px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9a7222; }
+  .pedido h1 { font-size: var(--t-5); }
+  .pedido__nota { margin: 16px 0 0; }
+
+  .chat { display: grid; gap: 10px; padding: 20px; border-radius: 12px; background: var(--imprimacion); border: 1px solid var(--linea); }
+
+  .burbuja {
+    margin: 0;
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: var(--t-0);
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: llegar 350ms ease forwards;
+    animation-delay: calc(var(--i) * 600ms + 300ms);
+  }
+
+  @keyframes llegar { to { opacity: 1; transform: none; } }
+
+  .burbuja--vos { justify-self: end; background: #d9f5e3; color: var(--tinta); border-bottom-right-radius: 4px; }
+  .burbuja--diego { justify-self: start; background: var(--pared); color: var(--tinta); border: 1px solid var(--linea); border-bottom-left-radius: 4px; }
+  .burbuja--foto span { display: grid; place-items: center; width: 140px; aspect-ratio: 4 / 3; border: 1px dashed var(--tinta-suave); border-radius: 8px; color: var(--tinta-suave); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .burbuja { opacity: 1; transform: none; }
+  }
+</style>

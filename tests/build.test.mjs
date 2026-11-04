@@ -24,9 +24,10 @@ test("WhatsApp links carry the home-page message", () => {
   assert.match(html, /https:\/\/wa\.me\/5491134883317\?text=Hola%20Diego%2C%20te%20escribo%20desde%20tu%20p%C3%A1gina/);
 });
 
-test("no external font request: Archivo is self-hosted", () => {
+test("no external font request: Barlow is self-hosted", () => {
   assert.doesNotMatch(html + css, /fonts\.googleapis\.com|fonts\.gstatic\.com/);
-  assert.match(css, /archivo-latin-wdth-normal[^"')]*\.woff2/);
+  assert.match(css, /barlow-latin-400-normal[^"')]*\.woff2/);
+  assert.match(css, /barlow-condensed-latin-700-normal[^"')]*\.woff2/);
 });
 
 test("motion only answers an action: button transitions and a CSS page fade, both reduced-motion aware", () => {

@@ -1,114 +1,108 @@
 # DESIGN.md — Diego Ceccato
 
-Design rules for diegoceccato.com.ar. One person, two trades, two worlds on one site.
-Read this before touching any page, component or token. Every value below already
-exists in `src/styles/global.css`; this file explains why and how to use it.
+Design rules for diegoceccato.com.ar: a painter's site that looks like a paint
+catalogue. Read this before touching any page, component or token. Every value
+below already exists in `src/styles/global.css`; this file explains why and how
+to use it.
 
 ## 1. Concept
 
-**One man, two doors.** Diego paints houses and plays drums. The site never blends
-the two: each has its own world, and the home is the fork between them.
+**A paint chip card.** Diego paints houses and does small home repairs. The site
+is his colour chart: one paint chip per page, and the colour is the paint.
 
-| World | Pages | Mood | Metaphor |
+| Chip | Page | Colour | Tone name |
 |---|---|---|---|
-| **Pared** (wall) | `/`, `/pintura/`, `/arreglos-del-hogar/` | Daylight, clean, honest trade | A freshly painted room |
-| **Escenario** (stage) | `/clases-de-bateria/` | Night, loud type, one spotlight | A stage with the lights off |
+| 01 | `/pintura/` | `--azul`, latex blue | Látex azul |
+| 02 | `/arreglos-del-hogar/` | `--laton`, brass | Latón |
 
-The home shows both worlds side by side as two full-screen doors: cream on the
-left, near-black on the right. The contrast between them is the brand; nothing
-else decorates the page.
+The home is the catalogue page: the name on the left, the chips on the right, and
+hovering a chip paints the whole page in that colour, so the visitor tries the
+colour on the wall before clicking. The header is a chip painted near-black; the
+footer is a cream chip with the colour squares.
 
-Three borrowed rules (from Refero style sheets, rules not colours):
+Three rules, borrowed from Refero style sheets and kept:
 
-1. **Contrast, not ornament.** Warm canvas against cinematic dark. No gradients
-   for decoration, no shadows, no illustration.
-2. **One accent, rationed.** Each world has exactly one accent colour, used only
-   for actions and the active state. Never as a background fill.
+1. **Contrast, not ornament.** Cream wall, near-black header, flat colour. No
+   gradients for decoration, no shadows, no illustration.
+2. **Colour has a job.** Blue means painting, brass means repairs, green means
+   WhatsApp. A colour never appears without meaning what it means.
 3. **Type does the work.** Condensed display type at large sizes carries the
    identity. Body text stays quiet.
+
+Each service page opens with the same device: the WhatsApp conversation that is
+about to happen, as chat bubbles. The visitor sees what will happen before being
+asked to write.
 
 ## 2. Colour
 
 Tokens are named after the painter's trade. Never write a hex value in a page or
 component; use the token. The one literal allowed is `#fff` for text on a filled
-button or the before/after handle.
-
-### Pared (light world)
+button or the before/after handle, and `#1a1405` for text on brass.
 
 | Token | Value | Use |
 |---|---|---|
 | `--pared` | `#ffffff` | Page background |
-| `--imprimacion` | `#efeee9` | Quiet surfaces: cards, the light door, pending blocks |
+| `--imprimacion` | `#efeee9` | Quiet surfaces: cards, chat panel, footer, pending blocks |
 | `--imprimacion-2` | `#e9e7e0` | The same surface on hover |
 | `--linea` | `#d6d4ce` | Rules, borders, dividers |
 | `--tinta` | `#23282d` | Body text, headings |
 | `--tinta-suave` | `#5a6168` | Secondary text, captions |
-| `--azul` | `#1b4b86` | **The accent.** Links, focus ring, the door button |
-
-### Escenario (dark world)
-
-| Token | Value | Use |
-|---|---|---|
-| `--escenario` | `#101010` | Page background, bar background |
-| `--escenario-2` | `#1c1c1c` | Cards, tiles, pending blocks |
-| `--escenario-linea` | `#303030` | Rules and borders |
-| `--tiza` | `#e8e6df` | Headings and body text (chalk, not pure white) |
-| `--tiza-suave` | `#aeb4bf` | Secondary text |
-| `--laton` | `#d4a03a` | **The accent.** Links, focus ring, the door button, hover on tiles |
-
-### Shared
-
-| Token | Value | Use |
-|---|---|---|
-| `--wa` | `#0e7c3f` | WhatsApp button fill, both worlds. White text on it |
-| `--wa-hover` | `#0a6332` | Hover and active |
-| `--wa-tiza` | `#4cc77a` | WhatsApp text link on the dark stage |
+| `--azul` | `#1b4b86` | Painting: chip 01, eyebrows and links on the painting page, focus ring |
+| `--laton` | `#d4a03a` | Repairs: chip 02, its underline in the header. Dark text on it |
+| `--escenario` | `#101010` | The header chip. Chalk text on it |
+| `--escenario-2`, `--escenario-linea` | `#1c1c1c`, `#303030` | Surfaces and rules on the header |
+| `--tiza`, `--tiza-suave` | `#e8e6df`, `#aeb4bf` | Text on the header |
+| `--wa`, `--wa-hover` | `#0e7c3f`, `#0a6332` | WhatsApp button fill. White text on it |
+| `--wa-tiza` | `#4cc77a` | WhatsApp text link on the dark header |
 
 Rules:
 
-- The dark world is switched on by `body.tema-oscuro` (set by `seccion="bateria"`
-  in `Base.astro`). Components override their colours under `.tema-oscuro`; pages
-  never pick colours per world by hand.
-- Accents are never backgrounds for large areas. The only filled buttons are
-  WhatsApp (green) and the two door buttons on the home.
-- Photos carry the colour. Chrome stays monochrome around them.
+- On the repairs page, eyebrows use a darker brass (`#9a7222`) because brass on
+  cream does not pass contrast for small text.
+- Filled surfaces are chips: the home chips, the header, the WhatsApp button.
+  Everything else sits on the wall.
+- Contrast: every text and surface pair passes AA (checked 2026-11-04).
 
 ## 3. Typography
 
-One family: **Archivo Variable** (self-hosted via `@fontsource-variable/archivo`,
-width axis). No second typeface, no serif.
+One superfamily: **Barlow** for text and **Barlow Condensed** for display, both
+self-hosted through `@fontsource` (Barlow 400 and 600, Barlow Condensed 700).
+No other typeface, no serif. Chosen among three candidates on the real pages:
+industrial and tight in display, honest and clear in text.
 
-| Role | Width | Weight | Case | Line height |
+| Role | Family | Weight | Case | Line height |
 |---|---|---|---|---|
-| Display (h1, h2, door titles, the hero name) | `--ancho-titulo` = 75% (condensed) | 700 | Sentence case in Pared, **UPPERCASE** in Escenario | 0.88–1.02 |
-| h3, facts (`.hechos dt`), tile titles | 75% | 700 | As above | 1.1 |
-| Body | `--ancho-texto` = 100% | 400 | Sentence case | 1.55 |
-| Labels, eyebrows (`.puerta__rotulo`) | 100% | 600 | UPPERCASE, +0.06em tracking | 1.4 |
+| Display (h1, chip names, the home name) | `--fuente-titulo` = Barlow Condensed | 700 | Sentence case; UPPERCASE for chip names and the home name | 0.9–1.1 |
+| h2, h3, facts (`.hechos dt`), brand | Barlow Condensed | 700 | Sentence case | 1.02–1.1 |
+| Body | `--fuente` = Barlow | 400 | Sentence case | 1.55 |
+| Labels, eyebrows, nav, buttons | Barlow | 600 | Eyebrows UPPERCASE, +0.06em tracking | 1.4 |
 
 Scale (base 18px, ratio ~1.25):
 
 ```
---t-0 1rem      body, captions
+--t-0 1rem      body, captions, chat bubbles
 --t-1 1.1875rem lead on phones, nav, kicker
 --t-2 1.4375rem h3, facts, lead on desktop
---t-3 1.8125rem drum page h1
---t-4 2.3125rem h2 in Pared
---t-5 clamp(2.5rem, 6vw, 3.5rem)   h2 in Escenario, door titles, closing h2
---t-6 clamp(3rem, 8vw, 4.75rem)    h1 in Pared
+--t-3 1.8125rem chip names on the home
+--t-4 2.3125rem h2
+--t-5 clamp(2.5rem, 6vw, 3.5rem)   service page h1, closing h2
+--t-6 clamp(3rem, 8vw, 4.75rem)    reserved for display
 ```
 
-Beyond the scale, two display sizes exist on purpose:
-
-- The hero name on the drum page: `clamp(4rem, 14vw, 9rem)`, line-height 0.88.
-- The same on phones: `clamp(3.5rem, 19vw, 5rem)`.
+The home name is the one size beyond the scale: `clamp(3.5rem, 10vw, 7rem)`,
+uppercase, line-height 0.9.
 
 Rules:
 
+- Every display element sets `font-family: var(--fuente-titulo)`; never fake a
+  condensed cut with `font-stretch`, and never use Barlow Condensed below
+  `--t-1`, where Barlow 600 does the job.
 - Headings use `text-wrap: balance`. Body paragraphs stop at `--medida` (64ch).
-- Letter spacing stays near 0 on display type (−0.01 to −0.02em). Tight feel
-  comes from line height and condensed width, not from tracking.
 - Copy is Argentine Spanish, voseo, short sentences. Nothing on the site says
   something Diego did not confirm; missing content is marked with `<Pendiente>`.
+- The chat bubbles quote the real pre-filled WhatsApp message (`MENSAJES` in
+  `src/data/contacto.ts`) and Diego's own instruction. They are an example and
+  are labelled as one.
 
 ## 4. Spacing and shape
 
@@ -118,44 +112,46 @@ Rules:
 | `--gutter` | 16px | Side padding on phones; `.contenedor` is `min(100% − 2·gutter, 1080px)` |
 | `--seccion` | `clamp(36px, 6vw, 72px)` | Vertical padding of every `.seccion` |
 | `--medida` | 64ch | Max line length for text |
-| `--radio` | 6px | The only corner radius: buttons, cards, images, tiles |
+| `--radio` | 6px | Corner radius of buttons, cards, chips, images |
 
 Rules:
 
 - Sections stack with a 1px `--linea` rule between them (`.seccion + .seccion`).
+- Chat panels use a 12px radius and bubbles 14px with one 4px corner, the only
+  place where the radius grows: they must read as messages, not cards.
 - Grids: `.dos` (two columns from 820px), `.galeria` (auto-fill 260px),
-  `.hechos` (2 columns, 4 in the drum hero on desktop), tiles 2 → 4 columns at 720px.
-- Full-bleed surfaces (home doors, drum hero) escape the container; their text
-  still sits inside the container width.
+  `.hechos` (2 columns), the home catalogue 1.1fr/1fr from 820px.
 - No shadows anywhere. Depth comes from surface colour and 1px rules.
-- Pill shapes, 999px radii and oversized rounded corners are out.
+- Pill shapes and oversized rounded corners are out.
 
 ## 5. Components
 
 | Component | Role | Rules |
 |---|---|---|
-| `BotonWhatsApp` | The only contact control. `lleno` (green fill) for the main action, `texto` (inline link with icon) elsewhere | `origen` picks the pre-filled message so Diego knows which page the chat came from |
-| `BarraWhatsApp` | Fixed bottom bar on phones (<720px) | Carries the hero action; the hero's own button hides on phones to avoid showing it twice |
-| `Cierre` | Closing call to action on service pages | WhatsApp first, phone call as the alternative, hours below |
-| `Pendiente` | Visible marker for content Diego still owes | Dashed border, ships in the HTML on purpose; counted by tests via `data-pendiente` |
+| `muestrario/CabeceraPintada` | The header: near-black chip, brand, one link per page underlined in its colour, WhatsApp link on desktop | `seccion` marks the active page; the bar replaces the WhatsApp link on phones |
+| `muestrario/PieMuestra` | The footer: cream chip, colour squares with page links, WhatsApp, phone, hours, legal line | Takes the page's `contacto` origin |
+| `Muestras.ts` | The chip data: href, colour class, code, name, text, tone | The single source for header, footer and home. Adding a page means adding a chip |
+| `BotonWhatsApp` | The only contact control. `lleno` for the main action, `texto` elsewhere | `origen` picks the pre-filled message |
+| `BarraWhatsApp` | Fixed bottom bar on phones (<720px) | Carries the hero action; the hero's own button hides on phones |
+| `PinturaSecciones`, `ArreglosSecciones` | The body of each service page below the hero | Props let a hero skip a block it already shows |
+| `Cierre` | Closing call to action | WhatsApp first, phone call as the alternative, hours below |
+| `Pendiente` | Visible marker for content Diego still owes | Dashed border; counted by tests via `data-pendiente` |
 | `AntesDespues` | Before/after slider for finished jobs | Both photos in the HTML; the only inline script besides JSON-LD |
-| Header (`Base.astro`) | Brand, two section links, WhatsApp link on desktop | Same on every page; active section underlined with `currentColor` |
-| Footer (`Base.astro`) | Three columns: who and where, site pages, contact | Takes the page's world; repeats phone and hours |
-
-Page patterns (`global.css`): `.hero` + `.hero__grilla`, `.hechos` (trust facts,
-always before the photo block), `.lista`, `.faq`, `.galeria`.
 
 ## 6. Motion
 
-Motion is reserved for actions. Nothing moves on its own.
+Motion is reserved for actions and for the one reveal on each page.
 
+- Chat bubbles arrive one after the other on load: 350ms fade and 8px rise,
+  600ms apart. This is the page's only entrance animation.
+- The home paints itself on hover: 450ms ease on background and colour; the
+  hovered chip slides 6px and its swatch scales 1.08.
 - Hover and active on links and buttons: 150ms ease on colour, background,
   border. Buttons sink 1px on `:active`.
-- Tiles lift 3px on hover; the dark door's photo scales 1.08 → 1.12 over 400ms.
-- Page changes cross-fade in 180ms through the CSS View Transitions API
-  (`@view-transition { navigation: auto }`). No JavaScript involved.
-- `prefers-reduced-motion: reduce` turns every transition and animation off.
-- No scroll-triggered animation, no parallax, no auto-playing carousels.
+- Page changes cross-fade in 180ms through the CSS View Transitions API.
+- `prefers-reduced-motion: reduce` turns every transition and animation off;
+  bubbles then render in place.
+- No JavaScript for motion, no scroll-triggered animation, no carousels.
 
 ## 7. Responsive
 
@@ -163,34 +159,33 @@ Desktop is designed first, then each pattern is re-decided for phones.
 
 | Breakpoint | What changes |
 |---|---|
-| ≥820px | `.hero__grilla` 3:2, `.dos` two columns |
-| ≥720px | Doors side by side, tiles 4 columns, footer 3 columns, header WhatsApp link visible, phone bar hidden |
-| <720px | Phone bar fixed at the bottom (`body.con-barra` pads 84px), hero WhatsApp button hidden, tiles 2 columns with smaller titles |
-| ≤600px | `h1` drops to `--t-5`, lead to `--t-1`, header wraps to two rows, drum hero loses its min-height |
+| ≥820px | Home catalogue and service heroes in two columns, `.dos` two columns |
+| ≥720px | Footer in one row, header WhatsApp link visible, phone bar hidden |
+| <720px | Phone bar fixed at the bottom (`body.con-barra` pads 84px), hero WhatsApp button hidden, header wraps to two rows |
+| ≤600px | `h1` drops to `--t-5`, lead to `--t-1` |
 
 Rules:
 
 - 16px side gutter on phones, never horizontal scroll.
 - The first screen on a phone must show the headline, the lead and the trust
-  facts; the action is the fixed bar.
-- Anchor targets keep `scroll-margin-top` so in-page links do not land glued to
-  the top edge.
+  facts; the action is the fixed bar. The chat follows under them.
+- The home's hover painting needs a pointer; on phones the chips are plain links.
 
 ## 8. Accessibility and performance
 
-- `:focus-visible` ring: 3px, `--azul` in Pared, `--laton` in Escenario, 3px offset.
-- Every page has exactly one `h1`. Section links use `aria-current="page"`.
-- Contrast: body text and accents pass AA on their surfaces; WhatsApp green is
-  dark enough for white text.
+- `:focus-visible` ring: 3px `--azul`, 3px offset.
+- Every page has exactly one `h1`. Header links use `aria-current="page"`.
+- Chat panels carry an `aria-label` naming them as an example conversation.
 - No client-side JavaScript except JSON-LD and the before/after script. All
   content is in the HTML.
-- Fonts are self-hosted; no third-party requests.
-- Images declare `width` and `height` and load lazily below the fold. Hero photos
-  are CSS backgrounds behind a dark gradient.
+- Fonts are self-hosted (three woff2 files); no third-party requests.
+- Images declare `width` and `height` and load lazily below the fold.
 
 ## 9. Open items
 
-- Real photos: hero original, one per tile, one per home door, finished jobs.
-  Until then the 160px live photo is blurred behind the dark surfaces.
-- The drum page is close to its reference (matiassabagh.com.ar). Next step:
-  ask for layout variants against this document and pick one, do not keep the copy.
+- Real photos: finished jobs for the before/after and the gallery, a photo of
+  Diego for the painting hero.
+- Diego's answers to the open questions marked with `<Pendiente>` on both
+  service pages.
+- Drum lessons left the site on 2026-11-04. The layouts explored for it live in
+  git history (commit `65734d0` and before) if they are ever needed again.

@@ -35,7 +35,6 @@ export const MENSAJES = {
   pintura: "Hola Diego, quiero pedirte un presupuesto de pintura",
   arreglos: "Hola Diego, quiero pedirte un presupuesto para un arreglo en casa",
   trabajos: "Hola Diego, vi tus trabajos y quiero pedirte un presupuesto",
-  bateria: "Hola Diego, quiero info sobre las clases de batería",
   google: "Hola Diego, te encontré en Google",
 } as const;
 

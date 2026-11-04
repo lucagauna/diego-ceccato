@@ -1,221 +1,134 @@
 ---
 /**
- * Home: the fork between the two businesses, as two full-screen doors.
- * The light door previews the painting pages, the dark door previews the drum page.
+ * Home: a paint catalogue page. The name on the left, one paint chip per page on
+ * the right. Hovering a chip paints the whole page in that colour (CSS :has(),
+ * no script), so the visitor tries the colour on the wall before clicking.
  * Copy comes from Diego's form answers; nothing here is invented.
- * TODO(task 7): real photos behind each door once his wife sends the originals.
  */
 import Base from "../layouts/Base.astro";
-import Pendiente from "../components/Pendiente.astro";
+import { muestras } from "../components/Muestras";
+import { HORARIO, TELEFONO, linkTelefono } from "../data/contacto";
 import { personaDiego } from "../data/schema";
-import { ruta } from "../data/sitio";
-
-const fotoBateria = ruta("/img/diego-bateria-en-vivo.jpg");
 ---
 
 <Base
-  titulo="Diego Ceccato · Pintor en Tigre y Zona Norte · Clases de batería"
-  descripcion="Pintura y arreglos para tu casa en Tigre y Zona Norte. Clases de batería a domicilio y online. 30 años de oficio."
+  titulo="Diego Ceccato · Pintor en Tigre y Zona Norte"
+  descripcion="Pintura y arreglos para tu casa en Tigre y Zona Norte. 30 años de oficio. Presupuesto por WhatsApp."
   datos={personaDiego()}
   contacto="inicio"
 >
-  <h1 class="contenedor presentacion">Pintor y baterista en Tigre y Zona Norte</h1>
+  <section class="catalogo">
+    <div class="contenedor catalogo__grilla">
+      <div class="catalogo__texto">
+        <p class="catalogo__ceja">Carta de colores · Tigre y Zona Norte</p>
+        <h1>Diego Ceccato</h1>
+        <p class="catalogo__sub">Pintor en Tigre y Zona Norte. Pasá el mouse por un color para probarlo en la pared.</p>
+        <p class="catalogo__contacto"><a href={linkTelefono()}>{TELEFONO.visible}</a> · {HORARIO}</p>
+      </div>
 
-  <div class="puertas">
-    <a class="puerta puerta--clara" href={ruta("/pintura/")}>
-      <span class="puerta__cuerpo">
-        <span class="puerta__rotulo">Para tu casa</span>
-        <h2>Pintura y arreglos</h2>
-        <p>Interiores, exteriores y frentes, hierro y madera. También plomería, carpintería, herrería y colocaciones.</p>
-        <span class="puerta__dato">30 años de oficio. El que presupuesta y el que hace el trabajo soy yo.</span>
-        <span class="puerta__ir">Ver pintura y arreglos</span>
-      </span>
-      <Pendiente texto="Foto de fondo de esta puerta: un trabajo terminado, en alta resolución." />
-    </a>
-
-    <a class="puerta puerta--oscura" href={ruta("/clases-de-bateria/")} style={`--puerta-foto: url("${fotoBateria}")`}>
-      <span class="puerta__cuerpo">
-        <span class="puerta__rotulo">Para vos</span>
-        <h2>Clases de batería</h2>
-        <p>Individuales, de una hora. A domicilio en Zona Norte u online desde cualquier lugar.</p>
-        <span class="puerta__dato">30 años tocando en vivo, 25 enseñando.</span>
-        <span class="puerta__ir">Ver clases</span>
-      </span>
-      <Pendiente texto="Foto de fondo de esta puerta: la original en alta resolución de Diego tocando." />
-    </a>
-  </div>
-
-
+      <nav class="chips" aria-label="Páginas del sitio">
+        {muestras.map((m) => (
+          <a class={`chip chip--${m.clase}`} href={m.href}>
+            <span class="chip__color" aria-hidden="true"></span>
+            <span class="chip__cuerpo">
+              <span class="chip__codigo">{m.codigo} · {m.tono}</span>
+              <span class="chip__nombre">{m.nombre}</span>
+              <span class="chip__texto">{m.texto}</span>
+            </span>
+          </a>
+        ))}
+      </nav>
+    </div>
+  </section>
 </Base>
 
 <style>
-  /* The name is the page heading, but visually a one-line kicker above the doors. */
-  .presentacion {
-    font-size: var(--t-1);
-    font-stretch: var(--ancho-texto);
-    font-weight: 600;
-    letter-spacing: 0;
-    line-height: 1.4;
-    margin-block: 0;
-    padding-block: 18px;
-    color: var(--tinta-suave);
-  }
-
-  /* Two full-screen doors, side by side on wide screens and stacked on phones. */
-  .puertas {
+  .catalogo {
+    min-height: calc(100svh - 64px);
     display: grid;
-    grid-template-columns: 1fr;
+    align-items: center;
+    background: var(--pared);
+    color: var(--tinta);
+    transition: background-color 450ms ease, color 450ms ease;
   }
 
-  @media (min-width: 720px) {
-    .puertas {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
+  /* The page tries the colour on. */
+  .catalogo:has(.chip--azul:hover) { background: var(--azul); color: #fff; }
+  .catalogo:has(.chip--laton:hover) { background: var(--laton); color: #1a1405; }
 
-  .puerta {
-    position: relative;
-    isolation: isolate;
+  .catalogo:has(.chip:hover) .catalogo__sub,
+  .catalogo:has(.chip:hover) .catalogo__contacto,
+  .catalogo:has(.chip:hover) .chip__texto,
+  .catalogo:has(.chip:hover) .chip__codigo { color: inherit; opacity: 0.85; }
+
+  .catalogo__grilla {
     display: grid;
-    align-content: end;
-    gap: 16px;
-    min-height: min(56svh, 520px);
-    padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 48px);
-    text-decoration: none;
-    overflow: hidden;
-    transition: background-color 150ms ease;
+    gap: 40px;
+    padding-block: clamp(32px, 6vw, 72px);
   }
 
-  @media (min-width: 720px) {
-    .puerta {
-      min-height: min(calc(100svh - 140px), 720px);
-    }
+  @media (min-width: 820px) {
+    .catalogo__grilla { grid-template-columns: 1.1fr 1fr; align-items: center; }
   }
 
-  .puerta__cuerpo {
-    display: grid;
-    gap: 8px;
-    max-width: 440px;
-  }
-
-  .puerta h2 {
-    font-size: var(--t-5);
-    margin: 0;
-  }
-
-  .puerta p {
-    margin: 0;
-  }
-
-  .puerta__rotulo {
+  .catalogo__ceja {
+    margin: 0 0 12px;
     font-size: var(--t-0);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    opacity: 0.8;
   }
 
-  .puerta__dato {
-    font-weight: 600;
-  }
-
-  .puerta__ir {
-    margin-top: 10px;
-    justify-self: start;
-    padding: 12px 20px;
-    border-radius: var(--radio);
-    font-weight: 600;
-    transition: background-color 150ms ease, color 150ms ease;
-  }
-
-  .puerta :global(.pendiente) {
-    margin: 0;
-    font-size: 0.85rem;
-  }
-
-  /* Light door: a freshly painted wall. */
-  .puerta--clara {
-    background: var(--imprimacion);
-    color: var(--tinta);
-    border-bottom: 1px solid var(--linea);
-  }
-
-  .puerta--clara .puerta__rotulo {
-    color: var(--azul);
-  }
-
-  .puerta--clara .puerta__dato {
-    color: var(--tinta-suave);
-  }
-
-  .puerta--clara .puerta__ir {
-    background: var(--azul);
-    color: #fff;
-  }
-
-  .puerta--clara:hover {
-    background: var(--imprimacion-2);
-  }
-
-  /* Dark door: the stage, with the live photo behind, as on the drum page. */
-  .puerta--oscura {
-    background: var(--escenario);
-    color: var(--tiza);
-  }
-
-  .puerta--oscura::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    background: var(--puerta-foto) center 30% / cover no-repeat var(--escenario-2);
-    /* The only photo we have is 160px wide: blur it until the original arrives. */
-    filter: blur(14px) saturate(0.9);
-    transform: scale(1.08);
-    transition: transform 400ms ease;
-  }
-
-  .puerta--oscura:hover::before {
-    transform: scale(1.12);
-  }
-
-  .puerta--oscura::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--escenario) 30%, transparent) 0%,
-      color-mix(in srgb, var(--escenario) 75%, transparent) 60%,
-      var(--escenario) 100%
-    );
-  }
-
-  .puerta--oscura h2 {
+  .catalogo h1 {
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    line-height: 0.9;
     text-transform: uppercase;
-    letter-spacing: 0.01em;
+    margin: 0 0 16px;
   }
 
-  .puerta--oscura .puerta__rotulo {
-    color: var(--laton);
+  .catalogo__sub { font-size: var(--t-1); max-width: 36ch; margin: 0 0 20px; color: var(--tinta-suave); transition: color 450ms ease; }
+  .catalogo__contacto { margin: 0; color: var(--tinta-suave); transition: color 450ms ease; }
+  .catalogo__contacto a { font-weight: 600; color: inherit; }
+
+  .chips {
+    display: grid;
+    gap: 12px;
   }
 
-  .puerta--oscura .puerta__dato {
-    color: var(--tiza-suave);
+  .chip {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid currentColor;
+    border-radius: var(--radio);
+    color: inherit;
+    text-decoration: none;
+    transition: transform 200ms ease, border-color 450ms ease;
   }
 
-  .puerta--oscura .puerta__ir {
-    background: var(--laton);
-    color: var(--escenario);
+  .chip:hover { transform: translateX(6px); }
+
+  .chip__color {
+    display: block;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    transition: transform 200ms ease;
   }
 
-  .puerta--oscura :global(.pendiente) {
-    background: color-mix(in srgb, var(--escenario-2) 80%, transparent);
-    border-color: var(--escenario-linea);
-    color: var(--tiza-suave);
-  }
+  .chip:hover .chip__color { transform: scale(1.08); }
 
-  .puerta--oscura :global(.pendiente__rotulo) {
-    color: var(--tiza);
-  }
+  .chip--azul .chip__color { background: var(--azul); }
+  .chip--laton .chip__color { background: var(--laton); }
+
+  /* On a painted page the chip of that colour needs an edge to stay visible. */
+  .catalogo:has(.chip--azul:hover) .chip--azul .chip__color,
+  .catalogo:has(.chip--laton:hover) .chip--laton .chip__color { box-shadow: inset 0 0 0 2px currentColor; }
+
+  .chip__cuerpo { display: grid; gap: 2px; }
+  .chip__codigo { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tinta-suave); transition: color 450ms ease; }
+  .chip__nombre { font-family: var(--fuente-titulo); font-weight: 700; font-size: var(--t-3); line-height: 1; text-transform: uppercase; }
+  .chip__texto { font-size: var(--t-0); color: var(--tinta-suave); transition: color 450ms ease; }
 </style>

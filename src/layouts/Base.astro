@@ -3,30 +3,31 @@
  * Shared shell for every page. No client-side JavaScript on purpose:
  * search engines and AI crawlers must find all content in the HTML.
  */
-import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource/barlow/400.css";
+import "@fontsource/barlow/600.css";
+import "@fontsource/barlow-condensed/700.css";
 import "../styles/global.css";
 import BarraWhatsApp from "../components/BarraWhatsApp.astro";
-import BotonWhatsApp from "../components/BotonWhatsApp.astro";
-import { HORARIO, NOMBRE, TELEFONO, linkTelefono, listarZonas, type Origen } from "../data/contacto";
+import CabeceraPintada from "../components/muestrario/CabeceraPintada.astro";
+import PieMuestra from "../components/muestrario/PieMuestra.astro";
+import { NOMBRE, type Origen } from "../data/contacto";
 import { PREVIEW, ruta } from "../data/sitio";
 
 interface Props {
   titulo: string;
   descripcion: string;
-  /** Which business this page belongs to; drives the header links and the theme. */
-  seccion?: "hogar" | "bateria";
+  /** Which service page this is; marks the active link in the header. */
+  seccion?: "pintura" | "arreglos";
   /** schema.org object for this page, serialized as JSON-LD. The only <script> the site ships. */
   datos?: Record<string, unknown>;
   /** Origin for the phone-only WhatsApp bar; it pins the main call to action to the bottom of small screens. */
   contacto?: Origen;
 }
 
+
 const { titulo, descripcion, seccion, datos, contacto = "inicio" } = Astro.props;
-const etiquetaBarra = seccion === "bateria" ? "Consultá por una clase" : seccion === "hogar" ? "Pedí presupuesto" : "Escribime por WhatsApp";
-const oscuro = seccion === "bateria";
+const etiquetaBarra = seccion ? "Pedí presupuesto" : "Escribime por WhatsApp";
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const zonas = listarZonas("y");
-const anio = new Date().getFullYear();
 // TODO(task 7): og:image with a real photo of Diego once the originals arrive.
 ---
 
@@ -40,7 +41,7 @@ const anio = new Date().getFullYear();
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={ruta("/favicon.svg")} type="image/svg+xml" />
     {PREVIEW && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content={oscuro ? "#101010" : "#ffffff"} />
+    <meta name="theme-color" content="#ffffff" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={NOMBRE} />
     <meta property="og:locale" content="es_AR" />
@@ -50,206 +51,17 @@ const anio = new Date().getFullYear();
     {datos && <script is:inline type="application/ld+json" set:html={JSON.stringify(datos)} />}
     <slot name="head" />
   </head>
-  <body class:list={["con-barra", { "tema-oscuro": oscuro }]}>
+  <body class="con-barra">
     <a class="saltar" href="#contenido">Ir al contenido</a>
 
-    <header class="cabecera">
-      <div class="contenedor cabecera__fila">
-        <a class="cabecera__marca" href={ruta("/")} aria-current={!seccion ? "page" : undefined}>{NOMBRE}</a>
-        <nav class="cabecera__nav" aria-label="Secciones del sitio">
-          <a href={ruta("/pintura/")} aria-current={seccion === "hogar" ? "page" : undefined}>Pintura y arreglos</a>
-          <a href={ruta("/clases-de-bateria/")} aria-current={seccion === "bateria" ? "page" : undefined}>Clases de batería</a>
-        </nav>
-        <BotonWhatsApp origen={contacto} variante="texto" class="cabecera__wa">WhatsApp</BotonWhatsApp>
-      </div>
-    </header>
+    <CabeceraPintada contacto={contacto} seccion={seccion} />
 
     <main id="contenido">
       <slot />
     </main>
 
-    <footer class="pie">
-      <div class="contenedor pie__columnas">
-        <div class="pie__col">
-          <p class="pie__marca">{NOMBRE}</p>
-          <p>Pintor y baterista. Trabajo en {zonas}. Clases de batería también online.</p>
-        </div>
-        <nav class="pie__col" aria-label="Páginas del sitio">
-          <p class="pie__titulo">Páginas</p>
-          <ul>
-            <li><a href={ruta("/")}>Inicio</a></li>
-            <li><a href={ruta("/pintura/")}>Pintura</a></li>
-            <li><a href={ruta("/arreglos-del-hogar/")}>Arreglos del hogar</a></li>
-            <li><a href={ruta("/clases-de-bateria/")}>Clases de batería</a></li>
-          </ul>
-        </nav>
-        <div class="pie__col">
-          <p class="pie__titulo">Contacto</p>
-          <ul>
-            <li><BotonWhatsApp origen={contacto} variante="texto">Escribime por WhatsApp</BotonWhatsApp></li>
-            <li><a href={linkTelefono()}>{TELEFONO.visible}</a></li>
-            <li>{HORARIO}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="contenedor pie__legal">
-        <p>© {anio} {NOMBRE} · Tigre, Buenos Aires</p>
-      </div>
-    </footer>
+    <PieMuestra contacto={contacto} />
 
     <BarraWhatsApp origen={contacto} etiqueta={etiquetaBarra} />
   </body>
 </html>
-
-<style>
-  .cabecera {
-    border-bottom: 1px solid var(--linea);
-  }
-
-  :global(.tema-oscuro) .cabecera {
-    border-bottom-color: var(--escenario-linea);
-  }
-
-  .cabecera__fila {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    min-height: 64px;
-  }
-
-  .cabecera__marca {
-    font-stretch: var(--ancho-titulo);
-    font-weight: 700;
-    font-size: var(--t-2);
-    color: inherit;
-    text-decoration: none;
-    letter-spacing: -0.01em;
-    margin-right: auto;
-  }
-
-  .cabecera__nav {
-    display: flex;
-    gap: 20px;
-    font-size: var(--t-0);
-  }
-
-  .cabecera__nav a {
-    color: inherit;
-    text-decoration: none;
-    padding-block: 4px;
-    border-bottom: 2px solid transparent;
-    transition: border-color 150ms ease;
-  }
-
-  .cabecera__nav a:hover {
-    border-bottom-color: var(--linea);
-  }
-
-  .cabecera__nav a[aria-current="page"] {
-    border-bottom-color: currentColor;
-  }
-
-  /* The header WhatsApp link only matters where the phone bar does not exist. */
-  .cabecera :global(.cabecera__wa) {
-    font-size: var(--t-0);
-  }
-
-  @media (max-width: 719px) {
-    .cabecera :global(.cabecera__wa) {
-      display: none;
-    }
-  }
-
-  .pie {
-    border-top: 1px solid var(--linea);
-    padding-block: 40px 28px;
-    font-size: var(--t-0);
-    color: var(--tinta-suave);
-  }
-
-  :global(.tema-oscuro) .pie {
-    border-top-color: var(--escenario-linea);
-    color: var(--tiza-suave);
-  }
-
-  .pie__columnas {
-    display: grid;
-    gap: 28px 40px;
-  }
-
-  @media (min-width: 720px) {
-    .pie__columnas {
-      grid-template-columns: 1.4fr 1fr 1fr;
-    }
-  }
-
-  .pie__col p,
-  .pie__col ul {
-    margin: 0;
-    max-width: 36ch;
-  }
-
-  .pie__col ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 8px;
-  }
-
-  .pie__marca {
-    font-stretch: var(--ancho-titulo);
-    font-weight: 700;
-    font-size: var(--t-2);
-    color: var(--tinta);
-    margin-bottom: 6px !important;
-  }
-
-  .pie__titulo {
-    font-weight: 600;
-    color: var(--tinta);
-    margin-bottom: 10px !important;
-  }
-
-  :global(.tema-oscuro) .pie__marca,
-  :global(.tema-oscuro) .pie__titulo {
-    color: var(--tiza);
-  }
-
-  .pie a {
-    color: inherit;
-    font-weight: 600;
-  }
-
-  .pie__legal {
-    margin-top: 32px;
-    padding-top: 16px;
-    border-top: 1px solid var(--linea);
-    font-size: 0.9rem;
-  }
-
-  :global(.tema-oscuro) .pie__legal {
-    border-top-color: var(--escenario-linea);
-  }
-
-  .pie__legal p {
-    margin: 0;
-  }
-
-  @media (max-width: 600px) {
-    .cabecera__fila {
-      flex-wrap: wrap;
-      gap: 4px 16px;
-      padding-block: 12px;
-      min-height: 0;
-    }
-
-    .cabecera__marca {
-      flex-basis: 100%;
-    }
-
-    .cabecera__nav {
-      gap: 16px;
-      font-size: 0.95rem;
-    }
-  }
-</style>

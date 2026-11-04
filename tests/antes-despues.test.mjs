@@ -31,7 +31,7 @@ test("exactly one small inline script powers the control, and only where it is u
   assert.ok(cuerpo.length < 1500, `script is ${cuerpo.length} chars; keep it tiny`);
   assert.doesNotMatch(cuerpo, /fetch\(|XMLHttpRequest|import\(/, "no network or dynamic imports");
 
-  for (const ruta of ["", "arreglos-del-hogar/", "clases-de-bateria/"]) {
+  for (const ruta of ["", "arreglos-del-hogar/"]) {
     assert.equal(scriptsComparar(await leer(ruta)).length, 0, `${ruta || "home"} must not ship the compare script`);
   }
 });

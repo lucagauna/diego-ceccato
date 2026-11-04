@@ -1,0 +1,92 @@
+---
+/**
+ * The site footer: a cream chip with one row, the colour squares with their page
+ * links, then WhatsApp, phone and hours. One line on desktop, two on phones.
+ */
+import BotonWhatsApp from "../BotonWhatsApp.astro";
+import { HORARIO, NOMBRE, TELEFONO, linkTelefono, type Origen } from "../../data/contacto";
+import { muestras } from "../Muestras";
+
+interface Props {
+  contacto?: Origen;
+}
+
+const { contacto = "inicio" } = Astro.props;
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="contenedor pie__fila">
+    <nav class="pie__chips" aria-label="Páginas del sitio">
+      {muestras.map((m) => (
+        <a class={`chip chip--${m.clase}`} href={m.href}>
+          <span class="chip__color" aria-hidden="true"></span>
+          {m.nombre}
+        </a>
+      ))}
+    </nav>
+    <p class="pie__contacto">
+      <BotonWhatsApp origen={contacto} variante="texto">WhatsApp</BotonWhatsApp>
+      <a href={linkTelefono()}>{TELEFONO.visible}</a>
+      <span>{HORARIO}</span>
+    </p>
+  </div>
+  <div class="contenedor pie__legal">
+    <p>© {anio} {NOMBRE} · Tigre, Buenos Aires</p>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    background: var(--imprimacion);
+    color: var(--tinta-suave);
+    padding-block: 28px 20px;
+    font-size: var(--t-0);
+  }
+
+  .pie__fila {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px 32px;
+  }
+
+  .pie__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-weight: 600;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--tinta);
+    text-decoration: none;
+  }
+
+  .chip__color { width: 14px; height: 14px; border-radius: 2px; }
+  .chip--azul .chip__color { background: var(--azul); }
+  .chip--laton .chip__color { background: var(--laton); }
+
+  .pie__contacto {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin: 0;
+  }
+
+  .pie__contacto a { font-weight: 600; color: var(--tinta); }
+
+  .pie__legal {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--linea);
+    font-size: 0.9rem;
+  }
+
+  .pie__legal p { margin: 0; }
+</style>

@@ -16,10 +16,10 @@ test("messages are distinct per origin so Diego can tell where a chat came from"
 });
 
 test("accents and spaces survive the round trip", () => {
-  const url = linkWhatsApp("bateria");
+  const url = linkWhatsApp("arreglos");
   assert.ok(url.includes("%20"), "spaces must be percent-encoded");
   assert.ok(!/[áéíóúñ ]/.test(url), "raw accents or spaces would break on some clients");
-  assert.equal(decodeURIComponent(url.split("text=")[1]), MENSAJES.bateria);
+  assert.equal(decodeURIComponent(url.split("text=")[1]), MENSAJES.arreglos);
 });
 
 test("listarZonas joins the service areas as a sentence with the given connector", async () => {

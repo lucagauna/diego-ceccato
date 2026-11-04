@@ -1,6 +1,6 @@
 # Sitio de Diego Ceccato
 
-Static site for Diego Ceccato: house painting and repairs in Tigre and Zona Norte (Buenos Aires), and drum lessons at home or online.
+Static site for Diego Ceccato: house painting and repairs in Tigre and Zona Norte (Buenos Aires).
 
 Built with [Astro](https://astro.build), hand-written CSS and no client-side JavaScript. All content lives in the HTML so search engines and AI crawlers can read it.
 
