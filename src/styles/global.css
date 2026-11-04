@@ -3,12 +3,14 @@
   /* Light theme: a freshly painted room. */
   --pared: #ffffff;        /* wall white: page background */
   --imprimacion: #efeee9;  /* primer grey: quiet surfaces */
+  --imprimacion-2: #e9e7e0; /* same surface, hovered */
   --linea: #d6d4ce;        /* rules and borders */
   --tinta: #23282d;        /* body text */
   --tinta-suave: #5a6168;  /* secondary text */
   --azul: #1b4b86;         /* latex blue: links, focus, the one accent */
   --wa: #0e7c3f;           /* WhatsApp button; dark enough for white text */
   --wa-hover: #0a6332;
+  --wa-tiza: #4cc77a;      /* WhatsApp text link on the dark stage */
 
   /* Dark theme (drum lessons): a dark stage with the lights off, photos carry the colour. */
   --escenario: #101010;
