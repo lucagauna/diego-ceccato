@@ -6,8 +6,8 @@ const dist = new URL("../dist/", import.meta.url);
 const leer = (ruta) => readFile(new URL(`${ruta}index.html`, dist), "utf8");
 const existe = (ruta) => access(new URL(`${ruta}index.html`, dist)).then(() => true, () => false);
 
-/** Pages linked from the shared header that later tasks build. Shrinks to empty by task 5. */
-const todaviaNoConstruidas = new Set(["/clases-de-bateria/"]);
+/** Pages linked from shared chrome that a later task still has to build. Empty means every link resolves. */
+const todaviaNoConstruidas = new Set([]);
 
 const paginas = {
   "pintura/": {
@@ -17,6 +17,10 @@ const paginas = {
   "arreglos-del-hogar/": {
     origen: "Hola%20Diego%2C%20quiero%20pedirte%20un%20presupuesto%20para%20un%20arreglo%20en%20casa",
     h1: /Arreglos/,
+  },
+  "clases-de-bateria/": {
+    origen: "Hola%20Diego%2C%20quiero%20info%20sobre%20las%20clases%20de%20bater%C3%ADa",
+    h1: /batería/,
   },
 };
 
@@ -56,8 +60,23 @@ for (const [ruta, esperado] of Object.entries(paginas)) {
   });
 }
 
-test("the home page links to both service pages", async () => {
+test("the home page links to both businesses", async () => {
   const html = await leer("");
+  assert.match(html, /href="\/pintura\/"/);
+  assert.match(html, /href="\/clases-de-bateria\/"/);
+});
+
+test("clases-de-bateria/ uses the dark theme and names the real stages", async () => {
+  const html = await leer("clases-de-bateria/");
+  assert.match(html, /<body class="tema-oscuro"/);
+  for (const dato of ["Rinaldo Rafanelli", "Omar Mollo", "Cosquín Rock", "Cemento", "25 enseñando"]) {
+    assert.ok(html.includes(dato), `missing confirmed fact: ${dato}`);
+  }
+  assert.match(html, /No hace falta para arrancar/);
+});
+
+test("clases-de-bateria/ links to the service pages of the other business", async () => {
+  const html = await leer("clases-de-bateria/");
   assert.match(html, /href="\/pintura\/"/);
 });
 

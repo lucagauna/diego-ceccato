@@ -1,0 +1,187 @@
+---
+/**
+ * Drum lessons. Different audience, different tone, dark theme.
+ * Every fact comes from Diego's form answers; open questions are marked with <Pendiente>.
+ */
+import Base from "../layouts/Base.astro";
+import BotonWhatsApp from "../components/BotonWhatsApp.astro";
+import Pendiente from "../components/Pendiente.astro";
+import Cierre from "../components/Cierre.astro";
+import { ZONAS } from "../data/contacto";
+import { clasesBateria } from "../data/schema";
+
+const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " o $1");
+
+// Spelling of each teacher's name is still to be confirmed by Diego (see Pendiente below).
+const profesores = [
+  "Jorge Araujo",
+  "Pipi Piazzolla",
+  "Sebastián Peyceré",
+  "Andrés Álvarez",
+  "Carlos Riganti",
+  "Daniel Volpini",
+  "Sebastián Hoyos",
+];
+---
+
+<Base
+  titulo="Clases de batería a domicilio en Zona Norte y online · Diego Ceccato"
+  descripcion="Clases individuales de batería de una hora, a domicilio en Zona Norte u online. 30 años tocando, 25 enseñando. Rock, pop, funk, jazz y blues."
+  seccion="bateria"
+  datos={clasesBateria()}
+>
+  <section class="seccion hero">
+    <div class="contenedor hero__grilla">
+      <div>
+        <h1>Clases de batería a domicilio en Zona Norte y online</h1>
+        <p class="hero__lead">
+          Con un baterista que hace 30 años que toca en vivo: 12 años con Rinaldo Rafanelli, 3 con Omar Mollo, escenarios como Cosquín Rock y Cemento.
+        </p>
+        <p class="suave">Clases individuales de una hora. Para adolescentes desde 15 años y adultos.</p>
+        <BotonWhatsApp origen="bateria">Consultá por una clase</BotonWhatsApp>
+      </div>
+      <figure class="retrato">
+        <img src="/img/diego-bateria-en-vivo.jpg" alt="Diego Ceccato tocando la batería en vivo" width="160" height="160" loading="eager" />
+        <Pendiente texto="Esta es la copia chica de la foto. Falta el original en alta resolución y más fotos o videos de shows." />
+      </figure>
+    </div>
+    <dl class="contenedor hechos">
+      <div><dt>30 años</dt><dd>tocando</dd></div>
+      <div><dt>25 años</dt><dd>enseñando</dd></div>
+      <div><dt>1 hora</dt><dd>clase individual</dd></div>
+      <div><dt>Desde 15 años</dt><dd>adolescentes y adultos</dd></div>
+    </dl>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <h2>Trayectoria</h2>
+        <p>Hace 30 años que toco en vivo y 25 enseñando. Toqué 12 años con Rinaldo Rafanelli y 3 con Omar Mollo en M.A.M.</p>
+      </div>
+      <dl class="ficha">
+        <div>
+          <dt>En vivo</dt>
+          <dd>Cosquín Rock, Cemento y Teatro Labardén. Shows en Rosario, Córdoba, Bariloche, Santa Fe, San Luis y Mendoza.</dd>
+        </div>
+        <div>
+          <dt>Estudié con</dt>
+          <dd>{profesores.join(", ")}. Con Sebastián Hoyos, tres años de técnica.</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="contenedor">
+      <Pendiente texto="Confirmar con Diego cómo se escribe cada nombre, en especial Andrés Álvarez." />
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <h2>Cómo son las clases</h2>
+        <p>Una hora, individual. Sin un método fijo: cada alumno es distinto y la clase se arma según lo que toca y lo que quiere aprender.</p>
+        <p>Rock, pop, funk, jazz y blues. Nivel intermedio y avanzado.</p>
+        <Pendiente texto="¿También principiantes? Diego todavía no contestó." />
+      </div>
+      <div class="modos">
+        <div>
+          <h3>A domicilio</h3>
+          <p>Voy a tu casa en {zonas}.</p>
+        </div>
+        <div>
+          <h3>Online</h3>
+          <p>Por videollamada, desde cualquier lugar del país.</p>
+        </div>
+        <Pendiente texto="Días y horarios de las clases: a confirmar." />
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <h2>Preguntas frecuentes</h2>
+      <dl class="faq">
+        <div>
+          <dt>¿Necesito tener batería para empezar?</dt>
+          <dd>No hace falta para arrancar.</dd>
+        </div>
+        <div>
+          <dt>¿Cuánto dura cada clase?</dt>
+          <dd>Una hora. Las clases son individuales.</dd>
+        </div>
+        <div>
+          <dt>¿Desde qué edad?</dt>
+          <dd>Desde los 15 años. También doy clases a adultos.</dd>
+        </div>
+        <div>
+          <dt>¿Las clases son presenciales?</dt>
+          <dd>Pueden ser a domicilio, si vivís en Zona Norte, u online por videollamada.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <Cierre
+    titulo="Escribime y coordinamos"
+    texto="Contame qué tocás, qué querés aprender y si preferís clases a domicilio u online."
+    origen="bateria"
+  />
+
+  <Fragment slot="pie">
+    Diego Ceccato · Clases de batería · Zona Norte y online · <a href="/pintura/">Pintura y arreglos</a>
+  </Fragment>
+</Base>
+
+<style>
+  .retrato {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+  }
+
+  .retrato img {
+    border-radius: var(--radio);
+  }
+
+  .ficha {
+    max-width: none;
+  }
+
+  .ficha div + div {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--escenario-linea);
+  }
+
+  .ficha dt {
+    font-stretch: var(--ancho-titulo);
+    font-weight: 700;
+    font-size: var(--t-2);
+  }
+
+  .ficha dd {
+    margin: 4px 0 0;
+    color: var(--tiza-suave);
+  }
+
+  .modos {
+    display: grid;
+    gap: 16px;
+  }
+
+  .modos > div:not(.pendiente) {
+    padding: 20px;
+    border-radius: var(--radio);
+    background: var(--escenario-2);
+  }
+
+  .modos h3 {
+    margin-bottom: 4px;
+  }
+
+  .modos p {
+    margin: 0;
+    color: var(--tiza-suave);
+  }
+</style>

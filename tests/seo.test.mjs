@@ -6,7 +6,7 @@ const SITIO = "https://diegoceccato.com.ar";
 const dist = new URL("../dist/", import.meta.url);
 const leer = (ruta) => readFile(new URL(ruta, dist), "utf8");
 
-const paginas = ["", "pintura/", "arreglos-del-hogar/"];
+const paginas = ["", "pintura/", "arreglos-del-hogar/", "clases-de-bateria/"];
 
 /** Every <script> must be JSON-LD; anything else is JavaScript we promised not to ship. */
 const scripts = (html) => [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)];
@@ -53,6 +53,18 @@ for (const ruta of ["pintura/", "arreglos-del-hogar/"]) {
     assert.ok(!("streetAddress" in negocio.address), "home address must never be published");
   });
 }
+
+test("clases-de-bateria/: Service JSON-LD provided by Diego, online and at home", async () => {
+  const datos = jsonLd(await leer("clases-de-bateria/index.html"));
+  assert.equal(datos.length, 1);
+  const servicio = datos[0];
+  assert.equal(servicio["@type"], "Service");
+  assert.equal(servicio.serviceType, "Clases de batería");
+  assert.equal(servicio.provider["@id"], `${SITIO}/#diego`);
+  assert.equal(servicio.url, `${SITIO}/clases-de-bateria/`);
+  assert.ok(Array.isArray(servicio.areaServed) && servicio.areaServed.length >= 7);
+  assert.ok(servicio.availableChannel.some((c) => c.serviceUrl === `${SITIO}/clases-de-bateria/`), "online channel must be declared");
+});
 
 test("home: Person JSON-LD for Diego", async () => {
   const datos = jsonLd(await leer("index.html"));

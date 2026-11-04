@@ -276,3 +276,15 @@ a {
 .faq dd {
   margin: 4px 0 0;
 }
+
+/* Dark theme overrides for the shared page patterns. */
+.tema-oscuro .hechos,
+.tema-oscuro .lista li,
+.tema-oscuro .lista li:last-child {
+  border-color: var(--escenario-linea);
+}
+
+.tema-oscuro .hechos dd,
+.tema-oscuro .lista span {
+  color: var(--tiza-suave);
+}
