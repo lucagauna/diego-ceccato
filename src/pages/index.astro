@@ -6,9 +6,7 @@
  * TODO(task 7): real photos behind each door once his wife sends the originals.
  */
 import Base from "../layouts/Base.astro";
-import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Pendiente from "../components/Pendiente.astro";
-import { HORARIO, TELEFONO } from "../data/contacto";
 import { personaDiego } from "../data/schema";
 import { ruta } from "../data/sitio";
 
@@ -47,14 +45,7 @@ const fotoBateria = ruta("/img/diego-bateria-en-vivo.jpg");
     </a>
   </div>
 
-  <section class="contenedor seccion contacto">
-    <p class="contacto__fila">
-      <BotonWhatsApp origen="inicio" variante="texto">{TELEFONO.visible}</BotonWhatsApp>
-      <span class="suave">{HORARIO}</span>
-    </p>
-  </section>
 
-  <Fragment slot="pie">Diego Ceccato · Tigre, Buenos Aires</Fragment>
 </Base>
 
 <style>
@@ -226,17 +217,5 @@ const fotoBateria = ruta("/img/diego-bateria-en-vivo.jpg");
 
   .puerta--oscura :global(.pendiente__rotulo) {
     color: var(--tiza);
-  }
-
-  .contacto {
-    padding-block: 28px;
-  }
-
-  .contacto__fila {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 18px;
-    align-items: center;
-    margin: 0;
   }
 </style>

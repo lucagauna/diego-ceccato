@@ -6,7 +6,8 @@
 import "@fontsource-variable/archivo/wdth.css";
 import "../styles/global.css";
 import BarraWhatsApp from "../components/BarraWhatsApp.astro";
-import { HORARIO, NOMBRE, TELEFONO, linkTelefono, type Origen } from "../data/contacto";
+import BotonWhatsApp from "../components/BotonWhatsApp.astro";
+import { HORARIO, NOMBRE, TELEFONO, linkTelefono, listarZonas, type Origen } from "../data/contacto";
 import { PREVIEW, ruta } from "../data/sitio";
 
 interface Props {
@@ -24,6 +25,8 @@ const { titulo, descripcion, seccion, datos, contacto = "inicio" } = Astro.props
 const etiquetaBarra = seccion === "bateria" ? "Consultá por una clase" : seccion === "hogar" ? "Pedí presupuesto" : "Escribime por WhatsApp";
 const oscuro = seccion === "bateria";
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const zonas = listarZonas("y");
+const anio = new Date().getFullYear();
 // TODO(task 7): og:image with a real photo of Diego once the originals arrive.
 ---
 
@@ -52,15 +55,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
     <header class="cabecera">
       <div class="contenedor cabecera__fila">
-        <a class="cabecera__marca" href={ruta("/")}>{NOMBRE}</a>
-        {
-          seccion && (
-            <nav aria-label="Secciones del sitio">
-              <a href={ruta("/pintura/")} aria-current={seccion === "hogar" ? "page" : undefined}>Pintura y arreglos</a>
-              <a href={ruta("/clases-de-bateria/")} aria-current={seccion === "bateria" ? "page" : undefined}>Clases de batería</a>
-            </nav>
-          )
-        }
+        <a class="cabecera__marca" href={ruta("/")} aria-current={!seccion ? "page" : undefined}>{NOMBRE}</a>
+        <nav class="cabecera__nav" aria-label="Secciones del sitio">
+          <a href={ruta("/pintura/")} aria-current={seccion === "hogar" ? "page" : undefined}>Pintura y arreglos</a>
+          <a href={ruta("/clases-de-bateria/")} aria-current={seccion === "bateria" ? "page" : undefined}>Clases de batería</a>
+        </nav>
+        <BotonWhatsApp origen={contacto} variante="texto" class="cabecera__wa">WhatsApp</BotonWhatsApp>
       </div>
     </header>
 
@@ -69,11 +69,31 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </main>
 
     <footer class="pie">
-      <div class="contenedor pie__filas">
-        <p><slot name="pie" /></p>
-        <p>
-          <a href={linkTelefono()}>{TELEFONO.visible}</a> · {HORARIO}
-        </p>
+      <div class="contenedor pie__columnas">
+        <div class="pie__col">
+          <p class="pie__marca">{NOMBRE}</p>
+          <p>Pintor y baterista. Trabajo en {zonas}. Clases de batería también online.</p>
+        </div>
+        <nav class="pie__col" aria-label="Páginas del sitio">
+          <p class="pie__titulo">Páginas</p>
+          <ul>
+            <li><a href={ruta("/")}>Inicio</a></li>
+            <li><a href={ruta("/pintura/")}>Pintura</a></li>
+            <li><a href={ruta("/arreglos-del-hogar/")}>Arreglos del hogar</a></li>
+            <li><a href={ruta("/clases-de-bateria/")}>Clases de batería</a></li>
+          </ul>
+        </nav>
+        <div class="pie__col">
+          <p class="pie__titulo">Contacto</p>
+          <ul>
+            <li><BotonWhatsApp origen={contacto} variante="texto">Escribime por WhatsApp</BotonWhatsApp></li>
+            <li><a href={linkTelefono()}>{TELEFONO.visible}</a></li>
+            <li>{HORARIO}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="contenedor pie__legal">
+        <p>© {anio} {NOMBRE} · Tigre, Buenos Aires</p>
       </div>
     </footer>
 
@@ -93,8 +113,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   .cabecera__fila {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    gap: 24px;
     min-height: 64px;
   }
 
@@ -105,28 +124,45 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     color: inherit;
     text-decoration: none;
     letter-spacing: -0.01em;
+    margin-right: auto;
   }
 
-  nav {
+  .cabecera__nav {
     display: flex;
     gap: 20px;
     font-size: var(--t-0);
   }
 
-  nav a {
+  .cabecera__nav a {
     color: inherit;
     text-decoration: none;
     padding-block: 4px;
     border-bottom: 2px solid transparent;
+    transition: border-color 150ms ease;
   }
 
-  nav a[aria-current="page"] {
+  .cabecera__nav a:hover {
+    border-bottom-color: var(--linea);
+  }
+
+  .cabecera__nav a[aria-current="page"] {
     border-bottom-color: currentColor;
+  }
+
+  /* The header WhatsApp link only matters where the phone bar does not exist. */
+  .cabecera :global(.cabecera__wa) {
+    font-size: var(--t-0);
+  }
+
+  @media (max-width: 719px) {
+    .cabecera :global(.cabecera__wa) {
+      display: none;
+    }
   }
 
   .pie {
     border-top: 1px solid var(--linea);
-    padding-block: 28px;
+    padding-block: 40px 28px;
     font-size: var(--t-0);
     color: var(--tinta-suave);
   }
@@ -136,15 +172,47 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     color: var(--tiza-suave);
   }
 
-  .pie__filas {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 6px 24px;
+  .pie__columnas {
+    display: grid;
+    gap: 28px 40px;
   }
 
-  .pie__filas p {
+  @media (min-width: 720px) {
+    .pie__columnas {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+  }
+
+  .pie__col p,
+  .pie__col ul {
     margin: 0;
+    max-width: 36ch;
+  }
+
+  .pie__col ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .pie__marca {
+    font-stretch: var(--ancho-titulo);
+    font-weight: 700;
+    font-size: var(--t-2);
+    color: var(--tinta);
+    margin-bottom: 6px !important;
+  }
+
+  .pie__titulo {
+    font-weight: 600;
+    color: var(--tinta);
+    margin-bottom: 10px !important;
+  }
+
+  :global(.tema-oscuro) .pie__marca,
+  :global(.tema-oscuro) .pie__titulo {
+    color: var(--tiza);
   }
 
   .pie a {
@@ -152,16 +220,34 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     font-weight: 600;
   }
 
+  .pie__legal {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--linea);
+    font-size: 0.9rem;
+  }
+
+  :global(.tema-oscuro) .pie__legal {
+    border-top-color: var(--escenario-linea);
+  }
+
+  .pie__legal p {
+    margin: 0;
+  }
+
   @media (max-width: 600px) {
     .cabecera__fila {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
+      flex-wrap: wrap;
+      gap: 4px 16px;
       padding-block: 12px;
       min-height: 0;
     }
 
-    nav {
+    .cabecera__marca {
+      flex-basis: 100%;
+    }
+
+    .cabecera__nav {
       gap: 16px;
       font-size: 0.95rem;
     }
