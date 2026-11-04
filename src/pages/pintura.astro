@@ -1,17 +1,28 @@
 ---
 /**
  * Main landing page: where the Google Business Profile and future ads point to.
- * The hero shows the WhatsApp conversation that is about to happen: the visitor's
- * pre-filled message and the one instruction Diego gives. Bubbles appear in turn.
- * Every sentence comes from Diego's form answers. Gaps are marked with <Pendiente>.
+ * Phone-framed chat hero, the four lines of the trade as cards, the before/after
+ * as a band, the questions as an accordion, and a blue closing that repeats the
+ * chat's last line. Every sentence comes from Diego's form answers; gaps are
+ * marked with <Pendiente>.
  */
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
-import PinturaSecciones from "../components/PinturaSecciones.astro";
-import { HORARIO, MENSAJES, listarZonas } from "../data/contacto";
+import Chat from "../components/Chat.astro";
+import AntesDespues from "../components/AntesDespues.astro";
+import Pendiente from "../components/Pendiente.astro";
+import { chatPintura } from "../components/Conversaciones";
+import { HORARIO, TELEFONO, linkTelefono, listarZonas } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
+import { pintura as servicios } from "../data/servicios";
+import { ruta } from "../data/sitio";
 
 const zonas = listarZonas("y");
+const preguntas = [
+  { q: "¿Cómo pido presupuesto?", a: "Mandame una foto de lo que hay que pintar por WhatsApp y te paso presupuesto." },
+  { q: "¿En qué zonas trabajás?", a: `${zonas}.` },
+  { q: "¿Qué días atendés?", a: `${HORARIO}.` },
+];
 ---
 
 <Base
@@ -21,7 +32,6 @@ const zonas = listarZonas("y");
   datos={negocioHogar()}
   contacto="pintura"
 >
-
   <section class="pedido">
     <div class="contenedor pedido__grilla">
       <div>
@@ -29,7 +39,6 @@ const zonas = listarZonas("y");
         <h1>Pintura de casas en Tigre y Zona Norte</h1>
         <p class="hero__lead">Así de simple es pedir presupuesto. 30 años de oficio, trabajo solo: el que presupuesta hace el trabajo.</p>
         <BotonWhatsApp origen="pintura">Empezar el chat</BotonWhatsApp>
-        <p class="suave pedido__nota">{zonas}.</p>
         <dl class="hechos">
           <div><dt>30 años</dt><dd>de oficio</dd></div>
           <div><dt>Trabajo solo</dt><dd>sin intermediarios</dd></div>
@@ -37,82 +46,113 @@ const zonas = listarZonas("y");
           <div><dt>Por WhatsApp</dt><dd>mandá una foto y te paso presupuesto</dd></div>
         </dl>
       </div>
+      <Chat mensajes={chatPintura} marco="telefono" class="pedido__telefono" />
+    </div>
+  </section>
 
-      <div class="chat" aria-label="Ejemplo de conversación">
-        <p class="burbuja burbuja--vos" style="--i: 0">{MENSAJES.pintura}</p>
-        <p class="burbuja burbuja--diego" style="--i: 1">Hola. Mandame una foto de lo que hay que pintar y te paso presupuesto.</p>
-        <p class="burbuja burbuja--vos burbuja--foto" style="--i: 2"><span>📷 Foto</span></p>
-        <p class="burbuja burbuja--diego" style="--i: 3">Listo, te paso presupuesto.</p>
+  <section class="seccion">
+    <div class="contenedor">
+      <p class="ceja">Lo que pinto</p>
+      <h2>Casas, departamentos y locales. Y todo lo de hierro y madera.</h2>
+      <div class="tarjetas">
+        {servicios.map((s, i) => (
+          <div class="tarjeta">
+            <span class="tarjeta__num">0{i + 1}</span>
+            <h3>{s.nombre}</h3>
+            <p>{s.texto}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <PinturaSecciones />
+  <section class="banda">
+    <div class="contenedor">
+      <p class="ceja">Trabajos terminados</p>
+      <h2>Arrastrá la línea y mirá el antes y el después.</h2>
+      <AntesDespues
+        titulo="Así se compara un trabajo"
+        antes={{ src: ruta("/img/demo-antes.svg"), alt: "Antes: pared con grietas y manchas (imagen de prueba)", width: 1200, height: 900 }}
+        despues={{ src: ruta("/img/demo-despues.svg"), alt: "Después: pared pintada (imagen de prueba)", width: 1200, height: 900 }}
+      />
+      <div class="banda__fotos">
+        <Pendiente bloque texto="Frente de casa" />
+        <Pendiente bloque texto="Reja o portón" />
+        <Pendiente bloque texto="Interior terminado" />
+      </div>
+      <Pendiente texto="Las imágenes del comparador son dibujos de prueba; se reemplazan por fotos reales de un trabajo de Diego, con la localidad." />
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div>
+        <p class="ceja">Preguntas</p>
+        <h2>Lo que todos preguntan antes de escribir.</h2>
+        <p class="suave">Las preguntas sobre el trabajo en sí, cuánto tarda, quién compra la pintura, si hay que mover muebles, esperan la respuesta de Diego.</p>
+      </div>
+      <div class="acordeon">
+        {preguntas.map((p) => (
+          <details class="duda">
+            <summary><span>{p.q}</span><span class="duda__mas" aria-hidden="true">+</span></summary>
+            <p>{p.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cierre">
+    <div class="contenedor cierre__grilla">
+      <div>
+        <h2>¿Qué hay que pintar?</h2>
+        <p>Mandame una foto por WhatsApp y te paso presupuesto. O llamá al <a href={linkTelefono()}>{TELEFONO.visible}</a>, {HORARIO.toLowerCase()}.</p>
+      </div>
+      <div class="cierre__accion">
+        <BotonWhatsApp origen="pintura">Mandar la foto</BotonWhatsApp>
+        <p class="suave">Arreglos del hogar también: plomería, carpintería, herrería. <a href={ruta("/arreglos-del-hogar/")}>Ver arreglos</a>.</p>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
+  .ceja { margin: 0 0 10px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--azul); }
+
   .pedido { padding-block: clamp(32px, 6vw, 72px) var(--seccion); border-bottom: 1px solid var(--linea); }
-
   .pedido__grilla { display: grid; gap: 32px 48px; align-items: center; }
-
-  @media (min-width: 820px) {
-    .pedido__grilla { grid-template-columns: 1.1fr 1fr; }
-  }
-
-  .ceja { margin: 0 0 12px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--azul); }
+  @media (min-width: 820px) { .pedido__grilla { grid-template-columns: 1.2fr 1fr; } }
   .pedido h1 { font-size: var(--t-5); }
-  .pedido__nota { margin: 16px 0 0; }
+  .pedido :global(.pedido__telefono) { justify-self: center; width: 100%; }
 
-  .chat {
-    display: grid;
-    gap: 10px;
-    padding: 20px;
-    border-radius: 12px;
-    background: var(--imprimacion);
-    border: 1px solid var(--linea);
-  }
+  h2 { max-width: 24ch; }
 
-  .burbuja {
-    margin: 0;
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: var(--t-0);
-    line-height: 1.4;
-    opacity: 0;
-    transform: translateY(8px);
-    animation: llegar 350ms ease forwards;
-    animation-delay: calc(var(--i) * 600ms + 300ms);
-  }
+  .tarjetas { display: grid; gap: 16px; }
+  @media (min-width: 720px) { .tarjetas { grid-template-columns: repeat(2, 1fr); } }
+  .tarjeta { padding: 20px; border: 2px solid var(--azul); border-radius: var(--radio); display: grid; gap: 4px; }
+  .tarjeta__num { font-weight: 600; color: var(--azul); }
+  .tarjeta h3 { margin: 0; }
+  .tarjeta p { margin: 0; color: var(--tinta-suave); }
 
-  @keyframes llegar { to { opacity: 1; transform: none; } }
+  .banda { background: var(--imprimacion); padding-block: var(--seccion); border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+  .banda__fotos { display: grid; gap: 12px; margin-top: 12px; grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 600px) { .banda__fotos { grid-template-columns: 1fr; } }
 
-  .burbuja--vos {
-    justify-self: end;
-    background: #d9f5e3;
-    color: var(--tinta);
-    border-bottom-right-radius: 4px;
-  }
+  .acordeon { border-top: 1px solid var(--linea); }
+  .duda { border-bottom: 1px solid var(--linea); }
+  .duda summary { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; cursor: pointer; list-style: none; font-weight: 600; font-size: var(--t-1); }
+  .duda summary::-webkit-details-marker { display: none; }
+  .duda__mas { color: var(--azul); transition: transform 200ms ease; }
+  .duda[open] .duda__mas { transform: rotate(45deg); }
+  .duda p { margin: 0 0 14px; color: var(--tinta-suave); }
 
-  .burbuja--diego {
-    justify-self: start;
-    background: var(--pared);
-    color: var(--tinta);
-    border: 1px solid var(--linea);
-    border-bottom-left-radius: 4px;
-  }
-
-  .burbuja--foto span {
-    display: grid;
-    place-items: center;
-    width: 140px;
-    aspect-ratio: 4 / 3;
-    border: 1px dashed var(--tinta-suave);
-    border-radius: 8px;
-    color: var(--tinta-suave);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .burbuja { opacity: 1; transform: none; }
-  }
+  .cierre { background: var(--azul); color: #fff; padding-block: var(--seccion); }
+  .cierre__grilla { display: grid; gap: 24px 48px; align-items: center; }
+  @media (min-width: 820px) { .cierre__grilla { grid-template-columns: 1.2fr 1fr; } }
+  .cierre h2 { color: #fff; font-size: var(--t-5); }
+  .cierre p { margin: 0; }
+  .cierre a { color: #fff; font-weight: 600; }
+  .cierre__accion { display: grid; gap: 12px; justify-items: start; }
+  .cierre .suave { color: rgba(255, 255, 255, 0.8); }
+  .cierre :global(.wa--lleno) { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35); }
 </style>

@@ -1,0 +1,119 @@
+---
+/**
+ * The WhatsApp conversation that is about to happen, as chat bubbles.
+ * Bubbles arrive one after the other on load; reduced motion shows them in place.
+ * `marco="telefono"` draws the panel as a phone screen.
+ */
+interface Burbuja {
+  de: "vos" | "diego";
+  texto?: string;
+  /** Render a photo placeholder instead of text. */
+  foto?: boolean;
+}
+
+interface Props {
+  mensajes: Burbuja[];
+  marco?: "panel" | "telefono";
+  class?: string;
+}
+
+const { mensajes, marco = "panel", class: extra = "" } = Astro.props;
+---
+
+<div class:list={["chat", `chat--${marco}`, extra]} aria-label="Ejemplo de conversación">
+  {marco === "telefono" && <span class="chat__barra" aria-hidden="true">Diego Ceccato</span>}
+  <div class="chat__hilo">
+    {mensajes.map((m, i) => (
+      <p class:list={["burbuja", `burbuja--${m.de}`, { "burbuja--foto": m.foto }]} style={`--i: ${i}`}>
+        {m.foto ? <span>📷 Foto</span> : m.texto}
+      </p>
+    ))}
+  </div>
+</div>
+
+<style>
+  .chat {
+    display: grid;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 12px;
+    background: var(--imprimacion);
+    border: 1px solid var(--linea);
+  }
+
+  .chat__hilo {
+    display: grid;
+    gap: 10px;
+  }
+
+  .burbuja {
+    margin: 0;
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: var(--t-0);
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: llegar 350ms ease forwards;
+    animation-delay: calc(var(--i) * 600ms + 300ms);
+  }
+
+  @keyframes llegar { to { opacity: 1; transform: none; } }
+
+  .burbuja--vos {
+    justify-self: end;
+    background: #d9f5e3;
+    color: var(--tinta);
+    border-bottom-right-radius: 4px;
+  }
+
+  .burbuja--diego {
+    justify-self: start;
+    background: var(--pared);
+    color: var(--tinta);
+    border: 1px solid var(--linea);
+    border-bottom-left-radius: 4px;
+  }
+
+  .burbuja--foto span {
+    display: grid;
+    place-items: center;
+    width: 140px;
+    aspect-ratio: 4 / 3;
+    border: 1px dashed var(--tinta-suave);
+    border-radius: 8px;
+    color: var(--tinta-suave);
+  }
+
+  /* Phone frame: a dark bezel, a status bar with the contact name, the thread inside. */
+  .chat--telefono {
+    padding: 12px;
+    border-radius: 28px;
+    background: var(--escenario);
+    border: 0;
+    max-width: 360px;
+    gap: 0;
+  }
+
+  .chat__barra {
+    display: block;
+    padding: 14px 16px 10px;
+    color: var(--tiza);
+    font-weight: 600;
+    font-size: var(--t-0);
+    text-align: center;
+  }
+
+  .chat--telefono .chat__hilo {
+    padding: 16px 12px;
+    border-radius: 18px;
+    background: var(--imprimacion);
+    min-height: 280px;
+    align-content: start;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .burbuja { opacity: 1; transform: none; }
+  }
+</style>

@@ -29,9 +29,11 @@ Three rules, borrowed from Refero style sheets and kept:
 3. **Type does the work.** Condensed display type at large sizes carries the
    identity. Body text stays quiet.
 
-Each service page opens with the same device: the WhatsApp conversation that is
-about to happen, as chat bubbles. The visitor sees what will happen before being
-asked to write.
+Each service page follows the same order: the WhatsApp conversation that is
+about to happen, framed as a phone screen, with the trust facts beside it; the
+trade as numbered cards in the page colour; the proof (before/after on painting,
+the painting bridge on repairs); the questions as an accordion; and a closing
+band in the page colour that repeats the chat's last line.
 
 ## 2. Colour
 
@@ -133,8 +135,8 @@ Rules:
 | `Muestras.ts` | The chip data: href, colour class, code, name, text, tone | The single source for header, footer and home. Adding a page means adding a chip |
 | `BotonWhatsApp` | The only contact control. `lleno` for the main action, `texto` elsewhere | `origen` picks the pre-filled message |
 | `BarraWhatsApp` | Fixed bottom bar on phones (<720px) | Carries the hero action; the hero's own button hides on phones |
-| `PinturaSecciones`, `ArreglosSecciones` | The body of each service page below the hero | Props let a hero skip a block it already shows |
-| `Cierre` | Closing call to action | WhatsApp first, phone call as the alternative, hours below |
+| `Chat` | The WhatsApp conversation as bubbles; `marco="telefono"` draws it as a phone screen | Messages come from `Conversaciones.ts`; never invent Diego's lines |
+| `data/servicios.ts` | The four painting lines and the six repair trades | The single source for the service cards |
 | `Pendiente` | Visible marker for content Diego still owes | Dashed border; counted by tests via `data-pendiente` |
 | `AntesDespues` | Before/after slider for finished jobs | Both photos in the HTML; the only inline script besides JSON-LD |
 

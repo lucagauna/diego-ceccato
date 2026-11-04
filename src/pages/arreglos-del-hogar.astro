@@ -1,14 +1,18 @@
 ---
 /**
  * Secondary services: sold to people who already trust Diego for painting.
- * The hero shows the WhatsApp conversation that is about to happen, as on the
- * painting page. Only the trades he ticked in the form appear here.
+ * Phone-framed chat hero, the six trades as brass cards, the painting bridge as a
+ * blue band, and a brass closing. Only the trades he ticked in the form appear.
  */
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
-import ArreglosSecciones from "../components/ArreglosSecciones.astro";
-import { HORARIO, MENSAJES, listarZonas } from "../data/contacto";
+import Chat from "../components/Chat.astro";
+import Pendiente from "../components/Pendiente.astro";
+import { chatArreglos } from "../components/Conversaciones";
+import { rubros } from "../data/servicios";
+import { HORARIO, TELEFONO, linkTelefono, listarZonas } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
+import { ruta } from "../data/sitio";
 
 const zonas = listarZonas("y");
 ---
@@ -20,62 +24,95 @@ const zonas = listarZonas("y");
   datos={negocioHogar()}
   contacto="arreglos"
 >
-
   <section class="pedido">
     <div class="contenedor pedido__grilla">
       <div>
         <p class="ceja">02 · Latón</p>
         <h1>Arreglos para tu casa en Tigre y Zona Norte</h1>
-        <p class="hero__lead">Si ya me conocés por la pintura, también te resuelvo esto. Plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas.</p>
+        <p class="hero__lead">Si ya me conocés por la pintura, también te resuelvo esto. Arreglos chicos y medianos, de los que no justifican llamar a una empresa.</p>
         <BotonWhatsApp origen="arreglos">Empezar el chat</BotonWhatsApp>
-        <p class="suave pedido__nota">{zonas}. {HORARIO}.</p>
+        <dl class="hechos">
+          <div><dt>30 años</dt><dd>de oficio</dd></div>
+          <div><dt>Trabajo solo</dt><dd>sin intermediarios</dd></div>
+          <div><dt>{HORARIO}</dt><dd>horario de atención</dd></div>
+          <div><dt>Zona Norte</dt><dd>{zonas}</dd></div>
+        </dl>
       </div>
-
-      <div class="chat" aria-label="Ejemplo de conversación">
-        <p class="burbuja burbuja--vos" style="--i: 0">{MENSAJES.arreglos}</p>
-        <p class="burbuja burbuja--diego" style="--i: 1">Hola. Mandame una foto y te digo si lo hago y cuánto sale.</p>
-        <p class="burbuja burbuja--vos burbuja--foto" style="--i: 2"><span>📷 Foto</span></p>
-      </div>
+      <Chat mensajes={chatArreglos} marco="telefono" class="pedido__telefono" />
     </div>
   </section>
 
-  <ArreglosSecciones />
+  <section class="seccion">
+    <div class="contenedor">
+      <p class="ceja">Lo que hago</p>
+      <h2>Seis rubros. Mandame una foto y te digo si lo hago y cuánto sale.</h2>
+      <div class="tarjetas">
+        {rubros.map((r, i) => (
+          <div class="tarjeta">
+            <span class="tarjeta__num">0{i + 1}</span>
+            <h3>{r}</h3>
+          </div>
+        ))}
+      </div>
+      <Pendiente texto="Dos o tres ejemplos concretos de cada rubro, con las palabras de Diego. Aire acondicionado y electricidad estaban en su flyer pero no los marcó: a confirmar antes de sumarlos." />
+    </div>
+  </section>
+
+  <a class="puente" href={ruta("/pintura/")}>
+    <div class="contenedor puente__fila">
+      <div>
+        <p class="puente__ceja">01 · Látex azul</p>
+        <h2>Lo que más hago es pintar</h2>
+        <p>Interiores, exteriores y frentes, hierro y madera, con reparación de grietas y humedad antes de pintar.</p>
+      </div>
+      <span class="puente__ir">Ver pintura →</span>
+    </div>
+  </a>
+
+  <section class="cierre">
+    <div class="contenedor cierre__grilla">
+      <div>
+        <h2>¿Qué hay que arreglar?</h2>
+        <p>Mandame una foto por WhatsApp y te digo si lo hago y cuánto sale. O llamá al <a href={linkTelefono()}>{TELEFONO.visible}</a>, {HORARIO.toLowerCase()}.</p>
+      </div>
+      <div class="cierre__accion">
+        <BotonWhatsApp origen="arreglos">Mandar la foto</BotonWhatsApp>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
+  .ceja { margin: 0 0 10px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9a7222; }
+
   .pedido { padding-block: clamp(32px, 6vw, 72px) var(--seccion); border-bottom: 1px solid var(--linea); }
   .pedido__grilla { display: grid; gap: 32px 48px; align-items: center; }
-
-  @media (min-width: 820px) {
-    .pedido__grilla { grid-template-columns: 1.1fr 1fr; }
-  }
-
-  .ceja { margin: 0 0 12px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9a7222; }
+  @media (min-width: 820px) { .pedido__grilla { grid-template-columns: 1.2fr 1fr; } }
   .pedido h1 { font-size: var(--t-5); }
-  .pedido__nota { margin: 16px 0 0; }
+  .pedido :global(.pedido__telefono) { justify-self: center; width: 100%; }
 
-  .chat { display: grid; gap: 10px; padding: 20px; border-radius: 12px; background: var(--imprimacion); border: 1px solid var(--linea); }
+  h2 { max-width: 24ch; }
 
-  .burbuja {
-    margin: 0;
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: var(--t-0);
-    line-height: 1.4;
-    opacity: 0;
-    transform: translateY(8px);
-    animation: llegar 350ms ease forwards;
-    animation-delay: calc(var(--i) * 600ms + 300ms);
-  }
+  .tarjetas { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-bottom: 16px; }
+  @media (min-width: 720px) { .tarjetas { grid-template-columns: repeat(3, 1fr); } }
+  .tarjeta { padding: 18px; border-radius: var(--radio); background: var(--laton); color: #1a1405; display: grid; gap: 4px; align-content: end; aspect-ratio: 4 / 3; }
+  .tarjeta__num { font-weight: 600; opacity: 0.7; }
+  .tarjeta h3 { margin: 0; font-size: var(--t-2); text-transform: uppercase; line-height: 1; }
 
-  @keyframes llegar { to { opacity: 1; transform: none; } }
+  .puente { display: block; background: var(--azul); color: #fff; text-decoration: none; padding-block: clamp(28px, 5vw, 48px); transition: filter 150ms ease; }
+  .puente:hover { filter: brightness(1.08); }
+  .puente__fila { display: grid; gap: 16px 32px; align-items: center; }
+  @media (min-width: 720px) { .puente__fila { grid-template-columns: 1fr auto; } }
+  .puente__ceja { margin: 0 0 8px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.8; }
+  .puente h2 { color: #fff; margin-bottom: 6px; }
+  .puente p { margin: 0; opacity: 0.9; }
+  .puente__ir { font-weight: 600; font-size: var(--t-1); }
 
-  .burbuja--vos { justify-self: end; background: #d9f5e3; color: var(--tinta); border-bottom-right-radius: 4px; }
-  .burbuja--diego { justify-self: start; background: var(--pared); color: var(--tinta); border: 1px solid var(--linea); border-bottom-left-radius: 4px; }
-  .burbuja--foto span { display: grid; place-items: center; width: 140px; aspect-ratio: 4 / 3; border: 1px dashed var(--tinta-suave); border-radius: 8px; color: var(--tinta-suave); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .burbuja { opacity: 1; transform: none; }
-  }
+  .cierre { background: var(--laton); color: #1a1405; padding-block: var(--seccion); }
+  .cierre__grilla { display: grid; gap: 24px 48px; align-items: center; }
+  @media (min-width: 820px) { .cierre__grilla { grid-template-columns: 1.2fr auto; } }
+  .cierre h2 { color: inherit; font-size: var(--t-5); }
+  .cierre p { margin: 0; }
+  .cierre a { color: inherit; font-weight: 600; }
+  .cierre :global(.wa--lleno) { box-shadow: 0 0 0 2px rgba(26, 20, 5, 0.25); }
 </style>
