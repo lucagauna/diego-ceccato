@@ -1,14 +1,18 @@
 ---
 /**
- * Home: the fork between the two businesses.
+ * Home: the fork between the two businesses, as two full-screen doors.
+ * The light door previews the painting pages, the dark door previews the drum page.
  * Copy comes from Diego's form answers; nothing here is invented.
- * TODO(task 7): add a real photo of Diego once his wife sends the originals.
+ * TODO(task 7): real photos behind each door once his wife sends the originals.
  */
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
+import Pendiente from "../components/Pendiente.astro";
 import { HORARIO, TELEFONO } from "../data/contacto";
 import { personaDiego } from "../data/schema";
 import { ruta } from "../data/sitio";
+
+const fotoBateria = ruta("/img/diego-bateria-en-vivo.jpg");
 ---
 
 <Base
@@ -17,24 +21,34 @@ import { ruta } from "../data/sitio";
   datos={personaDiego()}
   contacto="inicio"
 >
-  <section class="contenedor seccion portada">
-    <h1>Diego Ceccato</h1>
-    <p class="portada__sub suave">Pintor y baterista. Tigre, Zona Norte.</p>
+  <h1 class="contenedor presentacion">Pintor y baterista en Tigre y Zona Norte</h1>
 
-    <div class="puertas">
-      <a class="puerta" href={ruta("/pintura/")}>
-        <h2>Pintura y arreglos para tu casa</h2>
-        <p>Interiores, exteriores y frentes, hierro y madera. También plomería, carpintería, herrería y colocaciones. 30 años de oficio.</p>
+  <div class="puertas">
+    <a class="puerta puerta--clara" href={ruta("/pintura/")}>
+      <span class="puerta__cuerpo">
+        <span class="puerta__rotulo">Para tu casa</span>
+        <h2>Pintura y arreglos</h2>
+        <p>Interiores, exteriores y frentes, hierro y madera. También plomería, carpintería, herrería y colocaciones.</p>
+        <span class="puerta__dato">30 años de oficio. El que presupuesta y el que hace el trabajo soy yo.</span>
         <span class="puerta__ir">Ver pintura y arreglos</span>
-      </a>
-      <a class="puerta puerta--oscura" href={ruta("/clases-de-bateria/")}>
-        <h2>Clases de batería</h2>
-        <p>Individuales, de una hora. A domicilio en Zona Norte u online desde cualquier lugar. 30 años tocando, 25 enseñando.</p>
-        <span class="puerta__ir">Ver clases</span>
-      </a>
-    </div>
+      </span>
+      <Pendiente texto="Foto de fondo de esta puerta: un trabajo terminado, en alta resolución." />
+    </a>
 
-    <p class="portada__contacto">
+    <a class="puerta puerta--oscura" href={ruta("/clases-de-bateria/")} style={`--puerta-foto: url("${fotoBateria}")`}>
+      <span class="puerta__cuerpo">
+        <span class="puerta__rotulo">Para vos</span>
+        <h2>Clases de batería</h2>
+        <p>Individuales, de una hora. A domicilio en Zona Norte u online desde cualquier lugar.</p>
+        <span class="puerta__dato">30 años tocando en vivo, 25 enseñando.</span>
+        <span class="puerta__ir">Ver clases</span>
+      </span>
+      <Pendiente texto="Foto de fondo de esta puerta: la original en alta resolución de Diego tocando." />
+    </a>
+  </div>
+
+  <section class="contenedor seccion contacto">
+    <p class="contacto__fila">
       <BotonWhatsApp origen="inicio" variante="texto">{TELEFONO.visible}</BotonWhatsApp>
       <span class="suave">{HORARIO}</span>
     </p>
@@ -44,70 +58,185 @@ import { ruta } from "../data/sitio";
 </Base>
 
 <style>
-  .portada {
-    padding-block: clamp(40px, 7vw, 72px) var(--seccion);
+  /* The name is the page heading, but visually a one-line kicker above the doors. */
+  .presentacion {
+    font-size: var(--t-1);
+    font-stretch: var(--ancho-texto);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+    margin-block: 0;
+    padding-block: 18px;
+    color: var(--tinta-suave);
   }
 
-  .portada__sub {
-    font-size: var(--t-2);
-    margin-top: -0.25em;
-  }
-
+  /* Two full-screen doors, side by side on wide screens and stacked on phones. */
   .puertas {
     display: grid;
-    gap: 16px;
-    margin-block: 40px 32px;
+    grid-template-columns: 1fr;
   }
 
   @media (min-width: 720px) {
     .puertas {
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
     }
   }
 
   .puerta {
+    position: relative;
+    isolation: isolate;
     display: grid;
-    align-content: start;
-    gap: 6px;
-    padding: 28px 24px 24px;
-    border-radius: var(--radio);
-    background: var(--imprimacion);
-    color: var(--tinta);
+    align-content: end;
+    gap: 16px;
+    min-height: min(56svh, 520px);
+    padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 48px);
     text-decoration: none;
-    border: 1px solid var(--linea);
+    overflow: hidden;
+    transition: background-color 150ms ease;
   }
 
-  .puerta--oscura {
-    background: var(--escenario);
-    color: var(--tiza);
-    border-color: var(--escenario);
+  @media (min-width: 720px) {
+    .puerta {
+      min-height: min(calc(100svh - 140px), 720px);
+    }
+  }
+
+  .puerta__cuerpo {
+    display: grid;
+    gap: 8px;
+    max-width: 440px;
   }
 
   .puerta h2 {
-    font-size: var(--t-4);
+    font-size: var(--t-5);
     margin: 0;
   }
 
   .puerta p {
-    margin: 4px 0 14px;
+    margin: 0;
+  }
+
+  .puerta__rotulo {
+    font-size: var(--t-0);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .puerta__dato {
+    font-weight: 600;
   }
 
   .puerta__ir {
+    margin-top: 10px;
+    justify-self: start;
+    padding: 12px 20px;
+    border-radius: var(--radio);
     font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .puerta :global(.pendiente) {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+
+  /* Light door: a freshly painted wall. */
+  .puerta--clara {
+    background: var(--imprimacion);
+    color: var(--tinta);
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .puerta--clara .puerta__rotulo {
     color: var(--azul);
   }
 
-  .puerta--oscura .puerta__ir {
+  .puerta--clara .puerta__dato {
+    color: var(--tinta-suave);
+  }
+
+  .puerta--clara .puerta__ir {
+    background: var(--azul);
+    color: #fff;
+  }
+
+  .puerta--clara:hover {
+    background: #e9e7e0;
+  }
+
+  /* Dark door: the stage, with the live photo behind, as on the drum page. */
+  .puerta--oscura {
+    background: var(--escenario);
+    color: var(--tiza);
+  }
+
+  .puerta--oscura::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: var(--puerta-foto) center 30% / cover no-repeat var(--escenario-2);
+    /* The only photo we have is 160px wide: blur it until the original arrives. */
+    filter: blur(14px) saturate(0.9);
+    transform: scale(1.08);
+    transition: transform 400ms ease;
+  }
+
+  .puerta--oscura:hover::before {
+    transform: scale(1.12);
+  }
+
+  .puerta--oscura::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--escenario) 30%, transparent) 0%,
+      color-mix(in srgb, var(--escenario) 75%, transparent) 60%,
+      var(--escenario) 100%
+    );
+  }
+
+  .puerta--oscura h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .puerta--oscura .puerta__rotulo {
     color: var(--laton);
   }
 
-  .portada__contacto {
+  .puerta--oscura .puerta__dato {
+    color: var(--tiza-suave);
+  }
+
+  .puerta--oscura .puerta__ir {
+    background: var(--laton);
+    color: var(--escenario);
+  }
+
+  .puerta--oscura :global(.pendiente) {
+    background: color-mix(in srgb, var(--escenario-2) 80%, transparent);
+    border-color: var(--escenario-linea);
+    color: var(--tiza-suave);
+  }
+
+  .puerta--oscura :global(.pendiente__rotulo) {
+    color: var(--tiza);
+  }
+
+  .contacto {
+    padding-block: 28px;
+  }
+
+  .contacto__fila {
     display: flex;
     flex-wrap: wrap;
     gap: 8px 18px;
     align-items: center;
+    margin: 0;
   }
 </style>
