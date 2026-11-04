@@ -8,6 +8,7 @@ import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Pendiente from "../components/Pendiente.astro";
 import Cierre from "../components/Cierre.astro";
 import { ZONAS } from "../data/contacto";
+import { negocioHogar } from "../data/schema";
 
 const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
 
@@ -25,6 +26,7 @@ const rubros = [
   titulo="Arreglos para tu casa en Tigre y Zona Norte · Diego Ceccato"
   descripcion="Plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas en Tigre y Zona Norte. 30 años de oficio."
   seccion="hogar"
+  datos={negocioHogar()}
 >
   <section class="seccion hero">
     <div class="contenedor hero__grilla">

@@ -42,7 +42,7 @@ for (const [ruta, esperado] of Object.entries(paginas)) {
 
   test(`${ruta} ships no JavaScript and no empty marketing phrases`, async () => {
     const html = await leer(ruta);
-    assert.doesNotMatch(html, /<script/i);
+    for (const [, attrs] of html.matchAll(/<script([^>]*)>/gi)) assert.match(attrs, /type="application\/ld\+json"/);
     assert.doesNotMatch(html, /soluciones integrales|calidad garantizada|los mejores|de confianza|sin vueltas|jerarquía y excelencia/i);
   });
 

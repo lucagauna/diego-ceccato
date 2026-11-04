@@ -12,7 +12,8 @@ test("page is served in Argentine Spanish", () => {
 });
 
 test("no JavaScript ships: all content must be in the HTML for AI crawlers", () => {
-  assert.doesNotMatch(html, /<script/i);
+  const scripts = [...html.matchAll(/<script([^>]*)>/gi)].map((m) => m[1]);
+  for (const attrs of scripts) assert.match(attrs, /type="application\/ld\+json"/, `unexpected script: <script${attrs}>`);
 });
 
 test("exactly one h1", () => {

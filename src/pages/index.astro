@@ -7,11 +7,13 @@
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import { HORARIO, TELEFONO } from "../data/contacto";
+import { personaDiego } from "../data/schema";
 ---
 
 <Base
   titulo="Diego Ceccato · Pintor en Tigre y Zona Norte · Clases de batería"
   descripcion="Pintura y arreglos para tu casa en Tigre y Zona Norte. Clases de batería a domicilio y online. 30 años de oficio."
+  datos={personaDiego()}
 >
   <section class="contenedor seccion portada">
     <h1>Diego Ceccato</h1>

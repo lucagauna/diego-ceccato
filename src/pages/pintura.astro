@@ -8,6 +8,7 @@ import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Pendiente from "../components/Pendiente.astro";
 import Cierre from "../components/Cierre.astro";
 import { HORARIO, ZONAS } from "../data/contacto";
+import { negocioHogar } from "../data/schema";
 
 const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
 ---
@@ -16,6 +17,7 @@ const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
   titulo="Pintor en Tigre y Zona Norte · Diego Ceccato"
   descripcion="Pintura de interiores, exteriores y frentes, hierro y madera en Tigre y Zona Norte. 30 años de oficio. Presupuesto por WhatsApp."
   seccion="hogar"
+  datos={negocioHogar()}
 >
   <section class="seccion hero">
     <div class="contenedor hero__grilla">
