@@ -10,11 +10,11 @@
   --wa: #0e7c3f;           /* WhatsApp button; dark enough for white text */
   --wa-hover: #0a6332;
 
-  /* Dark theme (drum lessons): a stage, not a black screen. */
-  --escenario: #142033;
-  --escenario-2: #1b2a42;
-  --escenario-linea: #2c3d58;
-  --tiza: #f1eee8;
+  /* Dark theme (drum lessons): a dark stage with the lights off, photos carry the colour. */
+  --escenario: #101010;
+  --escenario-2: #1c1c1c;
+  --escenario-linea: #303030;
+  --tiza: #e8e6df;
   --tiza-suave: #aeb4bf;
   --laton: #d4a03a;        /* cymbal brass */
 
@@ -313,6 +313,13 @@ a {
 
 .faq dd {
   margin: 4px 0 0;
+}
+
+/* Dark theme: uppercase display headings, like a musician's site. */
+.tema-oscuro h2 {
+  font-size: var(--t-5);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 /* Dark theme overrides for the shared page patterns. */

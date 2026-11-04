@@ -1,6 +1,8 @@
 ---
 /**
  * Drum lessons. Different audience, different tone, dark theme.
+ * Layout follows a musician's site: a full-bleed photo hero with the name over it,
+ * photo tiles as the in-page menu, uppercase headings.
  * Every fact comes from Diego's form answers; open questions are marked with <Pendiente>.
  */
 import Base from "../layouts/Base.astro";
@@ -12,6 +14,7 @@ import { clasesBateria } from "../data/schema";
 import { ruta } from "../data/sitio";
 
 const zonas = listarZonas("o");
+const foto = ruta("/img/diego-bateria-en-vivo.jpg");
 
 // Spelling of each teacher's name is still to be confirmed by Diego (see Pendiente below).
 const profesores = [
@@ -23,6 +26,14 @@ const profesores = [
   "Daniel Volpini",
   "Sebastián Hoyos",
 ];
+
+// In-page menu, one photo tile per section. Photos pending; see the note under the grid.
+const azulejos = [
+  { href: "#trayectoria", titulo: "Trayectoria", foto: "Diego en un escenario" },
+  { href: "#clases", titulo: "Las clases", foto: "Diego dando una clase" },
+  { href: "#preguntas", titulo: "Preguntas", foto: "La batería de cerca" },
+  { href: "#contacto", titulo: "Contacto", foto: "Diego con los palillos" },
+];
 ---
 
 <Base
@@ -32,30 +43,48 @@ const profesores = [
   datos={clasesBateria()}
   contacto="bateria"
 >
-  <section class="seccion hero">
-    <div class="contenedor hero__grilla">
-      <div>
-        <h1>Clases de batería a domicilio en Zona Norte y online</h1>
-        <p class="hero__lead">
-          Con un baterista que hace 30 años que toca en vivo: 12 años con Rinaldo Rafanelli, 3 con Omar Mollo, escenarios como Cosquín Rock y Cemento.
-        </p>
-        <p class="suave">Clases individuales de una hora. Para adolescentes desde 15 años y adultos.</p>
-        <BotonWhatsApp origen="bateria">Consultá por una clase</BotonWhatsApp>
-        <dl class="hechos">
-          <div><dt>30 años</dt><dd>tocando</dd></div>
-          <div><dt>25 años</dt><dd>enseñando</dd></div>
-          <div><dt>1 hora</dt><dd>clase individual</dd></div>
-          <div><dt>Desde 15 años</dt><dd>adolescentes y adultos</dd></div>
-        </dl>
-      </div>
-      <figure class="retrato">
-        <img src={ruta("/img/diego-bateria-en-vivo.jpg")} alt="Diego Ceccato tocando la batería en vivo" width="160" height="160" loading="eager" />
-        <Pendiente texto="Esta es la copia chica de la foto. Falta el original en alta resolución y más fotos o videos de shows." />
-      </figure>
+  <section class="portada" style={`--portada-foto: url("${foto}")`}>
+    <div class="contenedor portada__contenido">
+      <p class="portada__nombre" aria-hidden="true">Diego<br />Ceccato</p>
+      <h1>Clases de batería a domicilio en Zona Norte y online</h1>
+      <p class="hero__lead">
+        Con un baterista que hace 30 años que toca en vivo: 12 años con Rinaldo Rafanelli, 3 con Omar Mollo, escenarios como Cosquín Rock y Cemento.
+      </p>
+      <p class="suave">Clases individuales de una hora. Para adolescentes desde 15 años y adultos.</p>
+      <BotonWhatsApp origen="bateria">Consultá por una clase</BotonWhatsApp>
+      <dl class="hechos">
+        <div><dt>30 años</dt><dd>tocando</dd></div>
+        <div><dt>25 años</dt><dd>enseñando</dd></div>
+        <div><dt>1 hora</dt><dd>clase individual</dd></div>
+        <div><dt>Desde 15 años</dt><dd>adolescentes y adultos</dd></div>
+      </dl>
     </div>
   </section>
 
-  <section class="seccion">
+  <nav class="seccion azulejos" aria-label="Secciones de esta página">
+    <div class="contenedor">
+      <ul class="azulejos__grilla">
+        {
+          azulejos.map((a) => (
+            <li>
+              <a href={a.href} class="azulejo">
+                <span class="azulejo__foto">Foto pendiente: {a.foto}</span>
+                <span class="azulejo__titulo">{a.titulo}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <figure class="retrato">
+        <Pendiente
+          bloque
+          texto="La foto de fondo de la portada es la copia chica de 160 píxeles. Faltan el original en alta resolución, una foto por tarjeta y más fotos o videos de shows."
+        />
+      </figure>
+    </div>
+  </nav>
+
+  <section class="seccion" id="trayectoria">
     <div class="contenedor dos">
       <div>
         <h2>Trayectoria</h2>
@@ -77,7 +106,7 @@ const profesores = [
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="seccion" id="clases">
     <div class="contenedor dos">
       <div>
         <h2>Cómo son las clases</h2>
@@ -99,7 +128,7 @@ const profesores = [
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="seccion" id="preguntas">
     <div class="contenedor">
       <h2>Preguntas frecuentes</h2>
       <dl class="faq">
@@ -123,11 +152,13 @@ const profesores = [
     </div>
   </section>
 
-  <Cierre
-    titulo="Escribime y coordinamos"
-    texto="Contame qué tocás, qué querés aprender y si preferís clases a domicilio u online."
-    origen="bateria"
-  />
+  <div id="contacto">
+    <Cierre
+      titulo="Escribime y coordinamos"
+      texto="Contame qué tocás, qué querés aprender y si preferís clases a domicilio u online."
+      origen="bateria"
+    />
+  </div>
 
   <Fragment slot="pie">
     Diego Ceccato · Clases de batería · Zona Norte y online · <a href={ruta("/pintura/")}>Pintura y arreglos</a>
@@ -135,15 +166,152 @@ const profesores = [
 </Base>
 
 <style>
-  .retrato {
-    margin: 0;
+  /* Full-bleed photo hero. The photo sits behind a dark gradient so the text stays readable. */
+  .portada {
+    position: relative;
+    isolation: isolate;
     display: grid;
-    gap: 12px;
-    justify-items: start;
+    align-items: end;
+    min-height: min(88svh, 760px);
+    padding-block: clamp(48px, 10vw, 96px) clamp(32px, 6vw, 56px);
+    overflow: hidden;
   }
 
-  .retrato img {
+  .portada::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: var(--portada-foto) center 30% / cover no-repeat var(--escenario-2);
+    /* The only photo we have is 160px wide: blur it until the original arrives. */
+    filter: blur(14px) saturate(0.9);
+    transform: scale(1.08);
+  }
+
+  .portada::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--escenario) 35%, transparent) 0%,
+      color-mix(in srgb, var(--escenario) 70%, transparent) 55%,
+      var(--escenario) 100%
+    );
+  }
+
+  .portada__contenido {
+    max-width: 760px;
+    margin-inline: auto 0;
+    width: min(100% - 2 * var(--gutter), var(--contenedor));
+  }
+
+  .portada__nombre {
+    margin: 0 0 clamp(16px, 3vw, 32px);
+    font-stretch: var(--ancho-titulo);
+    font-weight: 700;
+    font-size: clamp(4rem, 14vw, 9rem);
+    line-height: 0.88;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--tiza);
+  }
+
+  .portada h1 {
+    font-size: var(--t-3);
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1.15;
+    max-width: 30ch;
+  }
+
+  .portada .hero__lead {
+    font-size: var(--t-1);
+    max-width: 52ch;
+  }
+
+  .portada .hechos {
+    grid-template-columns: repeat(4, auto);
+    justify-content: start;
+    gap: 16px 36px;
+    border-top-color: color-mix(in srgb, var(--tiza) 25%, transparent);
+  }
+
+  @media (max-width: 600px) {
+    .portada .hechos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Photo tiles as the in-page menu. */
+  .azulejos__grilla {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+    max-width: none;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 720px) {
+    .azulejos__grilla {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .azulejo {
+    position: relative;
+    display: grid;
+    aspect-ratio: 1;
+    overflow: hidden;
     border-radius: var(--radio);
+    background: var(--escenario-2);
+    color: var(--tiza);
+    text-decoration: none;
+    transition: transform 150ms ease;
+  }
+
+  .azulejo:hover {
+    transform: translateY(-3px);
+  }
+
+  .azulejo:hover .azulejo__titulo {
+    color: var(--laton);
+  }
+
+  .azulejo__foto {
+    display: grid;
+    place-content: center;
+    padding: 16px;
+    text-align: center;
+    border: 1px dashed var(--escenario-linea);
+    border-radius: var(--radio);
+    color: var(--tiza-suave);
+    font-size: 0.9rem;
+  }
+
+  .azulejo__titulo {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 14px 16px;
+    background: linear-gradient(to top, color-mix(in srgb, var(--escenario) 92%, transparent), transparent);
+    font-stretch: var(--ancho-titulo);
+    font-weight: 700;
+    font-size: var(--t-2);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    transition: color 150ms ease;
+  }
+
+  .retrato {
+    margin: 0;
+  }
+
+  .retrato :global(.pendiente--bloque) {
+    aspect-ratio: auto;
+    padding: 16px;
   }
 
   .ficha {
@@ -160,6 +328,7 @@ const profesores = [
     font-stretch: var(--ancho-titulo);
     font-weight: 700;
     font-size: var(--t-2);
+    text-transform: uppercase;
   }
 
   .ficha dd {
@@ -180,10 +349,16 @@ const profesores = [
 
   .modos h3 {
     margin-bottom: 4px;
+    text-transform: uppercase;
   }
 
   .modos p {
     margin: 0;
     color: var(--tiza-suave);
+  }
+
+  /* Anchor targets land below the section's top padding, not glued to the edge. */
+  [id] {
+    scroll-margin-top: 24px;
   }
 </style>
