@@ -1,0 +1,124 @@
+---
+/**
+ * Shared shell for every page. No client-side JavaScript on purpose:
+ * search engines and AI crawlers must find all content in the HTML.
+ */
+import "@fontsource-variable/archivo/wdth.css";
+import "../styles/global.css";
+import { NOMBRE } from "../data/contacto";
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  /** Which business this page belongs to; drives the header links and the theme. */
+  seccion?: "hogar" | "bateria";
+}
+
+const { titulo, descripcion, seccion } = Astro.props;
+const oscuro = seccion === "bateria";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content={oscuro ? "#142033" : "#ffffff"} />
+    <slot name="head" />
+  </head>
+  <body class:list={[{ "tema-oscuro": oscuro }]}>
+    <a class="saltar" href="#contenido">Ir al contenido</a>
+
+    <header class="cabecera">
+      <div class="contenedor cabecera__fila">
+        <a class="cabecera__marca" href="/">{NOMBRE}</a>
+        {
+          seccion && (
+            <nav aria-label="Secciones del sitio">
+              <a href="/pintura/" aria-current={seccion === "hogar" ? "page" : undefined}>Pintura y arreglos</a>
+              <a href="/clases-de-bateria/" aria-current={seccion === "bateria" ? "page" : undefined}>Clases de batería</a>
+            </nav>
+          )
+        }
+      </div>
+    </header>
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <div class="contenedor">
+        <slot name="pie" />
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .cabecera {
+    border-bottom: 1px solid var(--linea);
+  }
+
+  :global(.tema-oscuro) .cabecera {
+    border-bottom-color: var(--escenario-linea);
+  }
+
+  .cabecera__fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 64px;
+  }
+
+  .cabecera__marca {
+    font-stretch: var(--ancho-titulo);
+    font-weight: 700;
+    font-size: var(--t-2);
+    color: inherit;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+
+  nav {
+    display: flex;
+    gap: 20px;
+    font-size: var(--t-0);
+  }
+
+  nav a {
+    color: inherit;
+    text-decoration: none;
+    padding-block: 4px;
+    border-bottom: 2px solid transparent;
+  }
+
+  nav a[aria-current="page"] {
+    border-bottom-color: currentColor;
+  }
+
+  .pie {
+    border-top: 1px solid var(--linea);
+    padding-block: 28px;
+    font-size: var(--t-0);
+    color: var(--tinta-suave);
+  }
+
+  :global(.tema-oscuro) .pie {
+    border-top-color: var(--escenario-linea);
+    color: var(--tiza-suave);
+  }
+
+  @media (max-width: 480px) {
+    nav {
+      gap: 14px;
+      font-size: 0.9rem;
+    }
+  }
+</style>

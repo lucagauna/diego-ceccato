@@ -1,0 +1,109 @@
+---
+/**
+ * Home: the fork between the two businesses.
+ * Copy comes from Diego's form answers; nothing here is invented.
+ * TODO(task 7): add a real photo of Diego once his wife sends the originals.
+ */
+import Base from "../layouts/Base.astro";
+import BotonWhatsApp from "../components/BotonWhatsApp.astro";
+import { HORARIO, TELEFONO } from "../data/contacto";
+---
+
+<Base
+  titulo="Diego Ceccato · Pintor en Tigre y Zona Norte · Clases de batería"
+  descripcion="Pintura y arreglos para tu casa en Tigre y Zona Norte. Clases de batería a domicilio y online. 30 años de oficio."
+>
+  <section class="contenedor seccion portada">
+    <h1>Diego Ceccato</h1>
+    <p class="portada__sub suave">Pintor y baterista. Tigre, Zona Norte.</p>
+
+    <div class="puertas">
+      <a class="puerta" href="/pintura/">
+        <h2>Pintura y arreglos para tu casa</h2>
+        <p>Interiores, exteriores y frentes, hierro y madera. También plomería, carpintería, herrería y colocaciones. 30 años de oficio.</p>
+        <span class="puerta__ir">Ver pintura y arreglos</span>
+      </a>
+      <a class="puerta puerta--oscura" href="/clases-de-bateria/">
+        <h2>Clases de batería</h2>
+        <p>Individuales, de una hora. A domicilio en Zona Norte u online desde cualquier lugar. 30 años tocando, 25 enseñando.</p>
+        <span class="puerta__ir">Ver clases</span>
+      </a>
+    </div>
+
+    <p class="portada__contacto">
+      <BotonWhatsApp origen="inicio" variante="texto">{TELEFONO.visible}</BotonWhatsApp>
+      <span class="suave">{HORARIO}</span>
+    </p>
+  </section>
+
+  <Fragment slot="pie">Diego Ceccato · Tigre, Buenos Aires</Fragment>
+</Base>
+
+<style>
+  .portada {
+    padding-block: clamp(40px, 7vw, 72px) var(--seccion);
+  }
+
+  .portada__sub {
+    font-size: var(--t-2);
+    margin-top: -0.25em;
+  }
+
+  .puertas {
+    display: grid;
+    gap: 16px;
+    margin-block: 40px 32px;
+  }
+
+  @media (min-width: 720px) {
+    .puertas {
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+  }
+
+  .puerta {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 28px 24px 24px;
+    border-radius: var(--radio);
+    background: var(--imprimacion);
+    color: var(--tinta);
+    text-decoration: none;
+    border: 1px solid var(--linea);
+  }
+
+  .puerta--oscura {
+    background: var(--escenario);
+    color: var(--tiza);
+    border-color: var(--escenario);
+  }
+
+  .puerta h2 {
+    font-size: var(--t-4);
+    margin: 0;
+  }
+
+  .puerta p {
+    margin: 4px 0 14px;
+  }
+
+  .puerta__ir {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    color: var(--azul);
+  }
+
+  .puerta--oscura .puerta__ir {
+    color: var(--laton);
+  }
+
+  .portada__contacto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    align-items: center;
+  }
+</style>

@@ -1,0 +1,165 @@
+/* Design tokens. Names come from the painter's trade. */
+:root {
+  /* Light theme: a freshly painted room. */
+  --pared: #ffffff;        /* wall white: page background */
+  --imprimacion: #efeee9;  /* primer grey: quiet surfaces */
+  --linea: #d6d4ce;        /* rules and borders */
+  --tinta: #23282d;        /* body text */
+  --tinta-suave: #5a6168;  /* secondary text */
+  --azul: #1b4b86;         /* latex blue: links, focus, the one accent */
+  --wa: #0e7c3f;           /* WhatsApp button; dark enough for white text */
+  --wa-hover: #0a6332;
+
+  /* Dark theme (drum lessons): a stage, not a black screen. */
+  --escenario: #142033;
+  --escenario-2: #1b2a42;
+  --escenario-linea: #2c3d58;
+  --tiza: #f1eee8;
+  --tiza-suave: #aeb4bf;
+  --laton: #d4a03a;        /* cymbal brass */
+
+  --fuente: "Archivo Variable", "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --ancho-titulo: 75%;     /* condensed width for display text */
+  --ancho-texto: 100%;
+
+  /* Type scale, ratio ~1.25 on an 18px base. */
+  --t-0: 1rem;
+  --t-1: 1.1875rem;
+  --t-2: 1.4375rem;
+  --t-3: 1.8125rem;
+  --t-4: 2.3125rem;
+  --t-5: clamp(2.5rem, 6vw, 3.5rem);
+  --t-6: clamp(3rem, 8vw, 4.75rem);
+
+  --contenedor: 1080px;
+  --medida: 64ch;
+  --gutter: 16px;
+  --seccion: clamp(48px, 8vw, 88px);
+  --radio: 6px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 112.5%; /* 18px */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente);
+  font-stretch: var(--ancho-texto);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--tinta);
+  background: var(--pared);
+  -webkit-font-smoothing: antialiased;
+}
+
+body.tema-oscuro {
+  color: var(--tiza);
+  background: var(--escenario);
+}
+
+h1,
+h2,
+h3 {
+  font-stretch: var(--ancho-titulo);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--t-6); }
+h2 { font-size: var(--t-4); }
+h3 { font-size: var(--t-2); }
+
+p,
+ul,
+ol,
+dl {
+  margin: 0 0 1em;
+  max-width: var(--medida);
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--azul);
+  text-underline-offset: 0.15em;
+}
+
+.tema-oscuro a {
+  color: var(--laton);
+}
+
+:focus-visible {
+  outline: 3px solid var(--azul);
+  outline-offset: 3px;
+}
+
+.tema-oscuro :focus-visible {
+  outline-color: var(--laton);
+}
+
+.contenedor {
+  width: min(100% - 2 * var(--gutter), var(--contenedor));
+  margin-inline: auto;
+}
+
+.seccion {
+  padding-block: var(--seccion);
+}
+
+.seccion + .seccion {
+  border-top: 1px solid var(--linea);
+}
+
+.tema-oscuro .seccion + .seccion {
+  border-top-color: var(--escenario-linea);
+}
+
+.suave {
+  color: var(--tinta-suave);
+}
+
+.tema-oscuro .suave {
+  color: var(--tiza-suave);
+}
+
+.saltar {
+  position: absolute;
+  left: -999px;
+  top: 8px;
+  padding: 8px 12px;
+  background: var(--azul);
+  color: #fff;
+  border-radius: var(--radio);
+}
+
+.saltar:focus {
+  left: 8px;
+  z-index: 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
