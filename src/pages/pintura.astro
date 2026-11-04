@@ -19,6 +19,7 @@ const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
   descripcion="Pintura de interiores, exteriores y frentes, hierro y madera en Tigre y Zona Norte. 30 años de oficio. Presupuesto por WhatsApp."
   seccion="hogar"
   datos={negocioHogar()}
+  contacto="pintura"
 >
   <section class="seccion hero">
     <div class="contenedor hero__grilla">
@@ -27,17 +28,17 @@ const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
         <p class="hero__lead">
           Hace 30 años que pinto casas, departamentos y locales. Trabajo solo: el que presupuesta y el que hace el trabajo soy yo.
         </p>
-        <p class="suave">{zonas}.</p>
+        <p class="hero__zonas">{zonas}.</p>
         <BotonWhatsApp origen="pintura">Pedí presupuesto</BotonWhatsApp>
+        <dl class="hechos">
+          <div><dt>30 años</dt><dd>de oficio</dd></div>
+          <div><dt>Trabajo solo</dt><dd>sin intermediarios</dd></div>
+          <div><dt>{HORARIO}</dt><dd>horario de atención</dd></div>
+          <div><dt>Por WhatsApp</dt><dd>mandá una foto y te paso presupuesto</dd></div>
+        </dl>
       </div>
       <Pendiente bloque texto="Foto de Diego pintando o de un trabajo terminado. Llega con las fotos de mañana." />
     </div>
-    <dl class="contenedor hechos">
-      <div><dt>30 años</dt><dd>de oficio</dd></div>
-      <div><dt>Trabajo solo</dt><dd>sin intermediarios</dd></div>
-      <div><dt>{HORARIO}</dt><dd>horario de atención</dd></div>
-      <div><dt>Por WhatsApp</dt><dd>mandá una foto y te paso presupuesto</dd></div>
-    </dl>
   </section>
 
   <section class="seccion">

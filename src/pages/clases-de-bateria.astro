@@ -30,6 +30,7 @@ const profesores = [
   descripcion="Clases individuales de batería de una hora, a domicilio en Zona Norte u online. 30 años tocando, 25 enseñando. Rock, pop, funk, jazz y blues."
   seccion="bateria"
   datos={clasesBateria()}
+  contacto="bateria"
 >
   <section class="seccion hero">
     <div class="contenedor hero__grilla">
@@ -40,18 +41,18 @@ const profesores = [
         </p>
         <p class="suave">Clases individuales de una hora. Para adolescentes desde 15 años y adultos.</p>
         <BotonWhatsApp origen="bateria">Consultá por una clase</BotonWhatsApp>
+        <dl class="hechos">
+          <div><dt>30 años</dt><dd>tocando</dd></div>
+          <div><dt>25 años</dt><dd>enseñando</dd></div>
+          <div><dt>1 hora</dt><dd>clase individual</dd></div>
+          <div><dt>Desde 15 años</dt><dd>adolescentes y adultos</dd></div>
+        </dl>
       </div>
       <figure class="retrato">
         <img src={ruta("/img/diego-bateria-en-vivo.jpg")} alt="Diego Ceccato tocando la batería en vivo" width="160" height="160" loading="eager" />
         <Pendiente texto="Esta es la copia chica de la foto. Falta el original en alta resolución y más fotos o videos de shows." />
       </figure>
     </div>
-    <dl class="contenedor hechos">
-      <div><dt>30 años</dt><dd>tocando</dd></div>
-      <div><dt>25 años</dt><dd>enseñando</dd></div>
-      <div><dt>1 hora</dt><dd>clase individual</dd></div>
-      <div><dt>Desde 15 años</dt><dd>adolescentes y adultos</dd></div>
-    </dl>
   </section>
 
   <section class="seccion">

@@ -5,7 +5,8 @@
  */
 import "@fontsource-variable/archivo/wdth.css";
 import "../styles/global.css";
-import { NOMBRE } from "../data/contacto";
+import BarraWhatsApp from "../components/BarraWhatsApp.astro";
+import { NOMBRE, type Origen } from "../data/contacto";
 import { PREVIEW, ruta } from "../data/sitio";
 
 interface Props {
@@ -15,9 +16,12 @@ interface Props {
   seccion?: "hogar" | "bateria";
   /** schema.org object for this page, serialized as JSON-LD. The only <script> the site ships. */
   datos?: Record<string, unknown>;
+  /** Origin for the phone-only WhatsApp bar; it pins the main call to action to the bottom of small screens. */
+  contacto?: Origen;
 }
 
-const { titulo, descripcion, seccion, datos } = Astro.props;
+const { titulo, descripcion, seccion, datos, contacto = "inicio" } = Astro.props;
+const etiquetaBarra = seccion === "bateria" ? "Consultá por una clase" : seccion === "hogar" ? "Pedí presupuesto por WhatsApp" : "Escribime por WhatsApp";
 const oscuro = seccion === "bateria";
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // TODO(task 7): og:image with a real photo of Diego once the originals arrive.
@@ -43,7 +47,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     {datos && <script is:inline type="application/ld+json" set:html={JSON.stringify(datos)} />}
     <slot name="head" />
   </head>
-  <body class:list={[{ "tema-oscuro": oscuro }]}>
+  <body class:list={["con-barra", { "tema-oscuro": oscuro }]}>
     <a class="saltar" href="#contenido">Ir al contenido</a>
 
     <header class="cabecera">
@@ -69,6 +73,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <slot name="pie" />
       </div>
     </footer>
+
+    <BarraWhatsApp origen={contacto} etiqueta={etiquetaBarra} />
   </body>
 </html>
 
