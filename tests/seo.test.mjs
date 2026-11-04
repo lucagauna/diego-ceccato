@@ -19,7 +19,7 @@ for (const ruta of paginas) {
 
   test(`${nombre}: the only scripts are JSON-LD`, async () => {
     const html = await leer(`${ruta}index.html`);
-    for (const [, attrs] of scripts(html)) assert.match(attrs, /type="application\/ld\+json"/);
+    for (const [, attrs] of scripts(html)) assert.match(attrs, /type="application\/ld\+json"|data-antes-despues/);
   });
 
   test(`${nombre}: Open Graph tags and canonical are present`, async () => {

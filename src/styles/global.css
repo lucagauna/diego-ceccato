@@ -309,3 +309,10 @@ a {
 .tema-oscuro .lista span {
   color: var(--tiza-suave);
 }
+
+/* A featured before/after spans the whole gallery row. */
+.galeria__destacado {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 12px;
+}

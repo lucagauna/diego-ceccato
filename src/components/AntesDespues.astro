@@ -1,0 +1,199 @@
+---
+/**
+ * Before/after comparison of one job.
+ *
+ * Without JavaScript both photos render side by side, labelled, so the content is
+ * always in the HTML. With JavaScript (a tiny inline script, the only one on the
+ * site besides JSON-LD) the "after" photo overlays the "before" one and a native
+ * range input moves the divider: works with touch, mouse and keyboard.
+ */
+interface Foto {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+interface Props {
+  antes: Foto;
+  despues: Foto;
+  /** What and where, e.g. "Living en Benavídez". Shown as the caption. */
+  titulo: string;
+  /** Starting position of the divider, 0 to 100. */
+  inicio?: number;
+  class?: string;
+}
+
+const { antes, despues, titulo, inicio = 50, class: extra = "" } = Astro.props;
+---
+
+<figure class:list={["antes-despues", extra]} data-comparar style={`--pos: ${inicio}%`}>
+  <div class="antes-despues__fotos">
+    <img class="antes-despues__antes" src={antes.src} alt={antes.alt} width={antes.width} height={antes.height} loading="lazy" decoding="async" />
+    <img class="antes-despues__despues" src={despues.src} alt={despues.alt} width={despues.width} height={despues.height} loading="lazy" decoding="async" />
+    <span class="antes-despues__rotulo antes-despues__rotulo--antes" aria-hidden="true">Antes</span>
+    <span class="antes-despues__rotulo antes-despues__rotulo--despues" aria-hidden="true">Después</span>
+    <input
+      class="antes-despues__control"
+      type="range"
+      min="0"
+      max="100"
+      step="1"
+      value={inicio}
+      aria-label={`Comparar antes y después: ${titulo}`}
+      hidden
+    />
+  </div>
+  <figcaption>{titulo}</figcaption>
+</figure>
+
+<script is:inline data-antes-despues>
+  document.querySelectorAll("[data-comparar]").forEach(function (figura) {
+    var control = figura.querySelector("input[type=range]");
+    if (!control) return;
+    var mover = function () { figura.style.setProperty("--pos", control.value + "%"); };
+    control.hidden = false;
+    figura.classList.add("antes-despues--activo");
+    control.addEventListener("input", mover);
+    mover();
+  });
+</script>
+
+<style>
+  .antes-despues {
+    margin: 0;
+  }
+
+  /* Baseline, no JavaScript: two labelled photos side by side. */
+  .antes-despues__fotos {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .antes-despues__fotos img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+  }
+
+  .antes-despues__rotulo {
+    position: absolute;
+    top: 10px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: rgb(29 35 41 / 0.78);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .antes-despues__rotulo--antes {
+    left: 10px;
+  }
+
+  .antes-despues__rotulo--despues {
+    right: 10px;
+  }
+
+  figcaption {
+    margin-top: 8px;
+    color: var(--tinta-suave);
+    font-size: var(--t-0);
+  }
+
+  /* Enhanced: the "after" photo overlays the "before" one, clipped at --pos. */
+  .antes-despues--activo .antes-despues__fotos {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radio);
+    touch-action: pan-y;
+  }
+
+  .antes-despues--activo img {
+    display: block;
+    border-radius: 0;
+  }
+
+  .antes-despues--activo .antes-despues__despues {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: inset(0 0 0 var(--pos));
+  }
+
+  /* Divider line */
+  .antes-despues--activo .antes-despues__fotos::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 2px;
+    margin-left: -1px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25);
+    pointer-events: none;
+  }
+
+  /* The range covers the whole photo; only its thumb is visible. */
+  .antes-despues__control {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: transparent;
+    appearance: none;
+    cursor: ew-resize;
+  }
+
+  .antes-despues__control::-webkit-slider-runnable-track {
+    background: transparent;
+    height: 100%;
+  }
+
+  .antes-despues__control::-moz-range-track {
+    background: transparent;
+    height: 100%;
+  }
+
+  .antes-despues__control::-webkit-slider-thumb {
+    appearance: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--azul);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+    cursor: ew-resize;
+  }
+
+  .antes-despues__control::-moz-range-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--azul);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+    cursor: ew-resize;
+  }
+
+  .antes-despues__control:focus-visible {
+    outline: none;
+  }
+
+  .antes-despues__control:focus-visible::-webkit-slider-thumb {
+    outline: 3px solid var(--azul);
+    outline-offset: 3px;
+  }
+
+  .antes-despues__control:focus-visible::-moz-range-thumb {
+    outline: 3px solid var(--azul);
+    outline-offset: 3px;
+  }
+</style>

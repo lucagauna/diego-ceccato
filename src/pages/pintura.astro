@@ -7,6 +7,7 @@ import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Pendiente from "../components/Pendiente.astro";
 import Cierre from "../components/Cierre.astro";
+import AntesDespues from "../components/AntesDespues.astro";
 import { HORARIO, ZONAS } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
 import { ruta } from "../data/sitio";
@@ -62,7 +63,15 @@ const zonas = ZONAS.join(", ").replace(/, ([^,]*)$/, " y $1");
       <h2>Trabajos terminados</h2>
       <p>Cada foto va con la localidad donde se hizo el trabajo.</p>
       <div class="galeria">
-        <Pendiente bloque texto="Antes y después de un interior" />
+        <div class="galeria__destacado">
+          {/* TODO(task 7): swap the demo drawings for Diego's real before/after photos. */}
+          <AntesDespues
+            titulo="Así se compara un trabajo: arrastrá la línea"
+            antes={{ src: ruta("/img/demo-antes.svg"), alt: "Antes: pared con grietas y manchas (imagen de prueba)", width: 1200, height: 900 }}
+            despues={{ src: ruta("/img/demo-despues.svg"), alt: "Después: pared pintada (imagen de prueba)", width: 1200, height: 900 }}
+          />
+          <Pendiente texto="Las dos imágenes son dibujos de prueba para que el control se pueda probar. Se reemplazan por el antes y después real de un trabajo de Diego." />
+        </div>
         <Pendiente bloque texto="Frente de casa" />
         <Pendiente bloque texto="Reja o portón" />
       </div>
