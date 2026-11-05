@@ -8,8 +8,8 @@ import { ruta } from "../data/sitio";
 
 export interface Muestra {
   href: string;
-  /** Colour class suffix: azul or laton. */
-  clase: "azul" | "laton";
+  /** Colour class suffix: azul or naranja. */
+  clase: "azul" | "naranja";
   codigo: string;
   nombre: string;
   texto: string;
@@ -28,10 +28,10 @@ export const muestras: Muestra[] = [
   },
   {
     href: ruta("/arreglos-del-hogar/"),
-    clase: "laton",
+    clase: "naranja",
     codigo: "02",
     nombre: "Arreglos del hogar",
     texto: "Plomería, carpintería, herrería y colocaciones.",
-    tono: "Latón",
+    tono: "Naranja",
   },
 ];

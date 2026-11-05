@@ -27,7 +27,7 @@ const zonas = listarZonas("y");
   <section class="pedido">
     <div class="contenedor pedido__grilla">
       <div>
-        <p class="ceja">02 · Latón</p>
+        <p class="ceja">02 · Naranja</p>
         <h1>Arreglos para tu casa en Tigre y Zona Norte</h1>
         <p class="hero__lead">Si ya me conocés por la pintura, también te resuelvo esto. Arreglos chicos y medianos, de los que no justifican llamar a una empresa.</p>
         <BotonWhatsApp origen="arreglos">Empezar el chat</BotonWhatsApp>
@@ -83,7 +83,7 @@ const zonas = listarZonas("y");
 </Base>
 
 <style>
-  .ceja { margin: 0 0 10px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9a7222; }
+  .ceja { margin: 0 0 10px; font-size: var(--t-0); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--naranja-texto); }
 
   .pedido { padding-block: clamp(32px, 6vw, 72px) var(--seccion); border-bottom: 1px solid var(--linea); }
   .pedido__grilla { display: grid; gap: 32px 48px; align-items: center; }
@@ -95,7 +95,7 @@ const zonas = listarZonas("y");
 
   .tarjetas { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-bottom: 16px; }
   @media (min-width: 720px) { .tarjetas { grid-template-columns: repeat(3, 1fr); } }
-  .tarjeta { padding: 18px; border-radius: var(--radio); background: var(--laton); color: #1a1405; display: grid; gap: 4px; align-content: end; aspect-ratio: 4 / 3; }
+  .tarjeta { padding: 18px; border-radius: var(--radio); background: var(--naranja); color: var(--tinta-naranja); display: grid; gap: 4px; align-content: end; aspect-ratio: 4 / 3; }
   .tarjeta__num { font-weight: 600; opacity: 0.7; }
   .tarjeta h3 { margin: 0; font-size: var(--t-2); text-transform: uppercase; line-height: 1; }
 
@@ -108,7 +108,7 @@ const zonas = listarZonas("y");
   .puente p { margin: 0; opacity: 0.9; }
   .puente__ir { font-weight: 600; font-size: var(--t-1); }
 
-  .cierre { background: var(--laton); color: #1a1405; padding-block: var(--seccion); }
+  .cierre { background: var(--naranja); color: var(--tinta-naranja); padding-block: var(--seccion); }
   .cierre__grilla { display: grid; gap: 24px 48px; align-items: center; }
   @media (min-width: 820px) { .cierre__grilla { grid-template-columns: 1.2fr auto; } }
   .cierre h2 { color: inherit; font-size: var(--t-5); }

@@ -18,7 +18,9 @@
   --escenario-linea: #303030;
   --tiza: #e8e6df;
   --tiza-suave: #aeb4bf;
-  --laton: #d4a03a;        /* brass: the home repairs chip and accent */
+  --naranja: #ee7106;       /* the logo orange: the home repairs chip and accent */
+  --naranja-texto: #a84b00; /* the same orange, dark enough for small text on the wall */
+  --tinta-naranja: #1a1405; /* text on an orange fill */
 
   --fuente: "Barlow", "Helvetica Neue", Arial, sans-serif;
   --fuente-titulo: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif; /* display text */

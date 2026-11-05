@@ -13,7 +13,7 @@ is his colour chart: one paint chip per page, and the colour is the paint.
 | Chip | Page | Colour | Tone name |
 |---|---|---|---|
 | 01 | `/pintura/` | `--azul`, latex blue | Látex azul |
-| 02 | `/arreglos-del-hogar/` | `--laton`, brass | Latón |
+| 02 | `/arreglos-del-hogar/` | `--naranja`, the logo orange | Naranja |
 
 The home is the catalogue page: the name on the left, the chips on the right, and
 hovering a chip paints the whole page in that colour, so the visitor tries the
@@ -24,7 +24,7 @@ Three rules, borrowed from Refero style sheets and kept:
 
 1. **Contrast, not ornament.** Cream wall, near-black header, flat colour. No
    gradients for decoration, no shadows, no illustration.
-2. **Colour has a job.** Blue means painting, brass means repairs, green means
+2. **Colour has a job.** Blue means painting, orange means repairs, green means
    WhatsApp. A colour never appears without meaning what it means.
 3. **Type does the work.** Condensed display type at large sizes carries the
    identity. Body text stays quiet.
@@ -35,11 +35,28 @@ trade as numbered cards in the page colour; the proof (before/after on painting,
 the painting bridge on repairs); the questions as an accordion; and a closing
 band in the page colour that repeats the chat's last line.
 
+## 1b. Logo
+
+Diego's own logo: a house roof over the initials DC, black and orange, with the
+line "Pintura y mantenimiento del hogar". Traced to vector from his image; the
+masters live in `logo/` at the repository root.
+
+| File | Use |
+|---|---|
+| `logo-dc.svg` | Full logo, transparent background: print, Google profile |
+| `logo-dc-sobre-oscuro.svg` | Full logo with white instead of black, for dark surfaces |
+| `isotipo-dc.svg`, `isotipo-dc-sobre-oscuro.svg` | The mark alone: header, favicon, avatars |
+
+Rules: the mark sits in the header next to the name, never alone, because "DC"
+does not say who he is. The favicon is the mark on the near-black chip. The
+logo's black and orange are the header black and `--naranja`; do not redraw it
+in other colours. The text under the mark is outlines, not live type.
+
 ## 2. Colour
 
 Tokens are named after the painter's trade. Never write a hex value in a page or
 component; use the token. The one literal allowed is `#fff` for text on a filled
-button or the before/after handle, and `#1a1405` for text on brass.
+button or the before/after handle.
 
 | Token | Value | Use |
 |---|---|---|
@@ -50,7 +67,9 @@ button or the before/after handle, and `#1a1405` for text on brass.
 | `--tinta` | `#23282d` | Body text, headings |
 | `--tinta-suave` | `#5a6168` | Secondary text, captions |
 | `--azul` | `#1b4b86` | Painting: chip 01, eyebrows and links on the painting page, focus ring |
-| `--laton` | `#d4a03a` | Repairs: chip 02, its underline in the header. Dark text on it |
+| `--naranja` | `#ee7106` | The logo orange. Repairs: chip 02, its underline in the header |
+| `--naranja-texto` | `#a84b00` | The same orange for small text on the wall (eyebrows, numbers) |
+| `--tinta-naranja` | `#1a1405` | Text on an orange fill; white does not pass contrast there |
 | `--escenario` | `#101010` | The header chip. Chalk text on it |
 | `--escenario-2`, `--escenario-linea` | `#1c1c1c`, `#303030` | Surfaces and rules on the header |
 | `--tiza`, `--tiza-suave` | `#e8e6df`, `#aeb4bf` | Text on the header |
@@ -59,7 +78,7 @@ button or the before/after handle, and `#1a1405` for text on brass.
 
 Rules:
 
-- On the repairs page, eyebrows use a darker brass (`#9a7222`) because brass on
+- On the repairs page, eyebrows use `--naranja-texto` because the logo orange on
   cream does not pass contrast for small text.
 - Filled surfaces are chips: the home chips, the header, the WhatsApp button.
   Everything else sits on the wall.
@@ -130,7 +149,7 @@ Rules:
 
 | Component | Role | Rules |
 |---|---|---|
-| `muestrario/CabeceraPintada` | The header: near-black chip, brand, one link per page underlined in its colour, WhatsApp link on desktop | `seccion` marks the active page; the bar replaces the WhatsApp link on phones |
+| `muestrario/CabeceraPintada` | The header: near-black chip, the DC mark and the name, one link per page underlined in its colour, WhatsApp link on desktop | `seccion` marks the active page; the bar replaces the WhatsApp link on phones |
 | `muestrario/PieMuestra` | The footer: cream chip, colour squares with page links, WhatsApp, phone, hours, legal line | Takes the page's `contacto` origin |
 | `Muestras.ts` | The chip data: href, colour class, code, name, text, tone | The single source for header, footer and home. Adding a page means adding a chip |
 | `BotonWhatsApp` | The only contact control. `lleno` for the main action, `texto` elsewhere | `origen` picks the pre-filled message |

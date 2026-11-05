@@ -54,7 +54,7 @@ import { personaDiego } from "../data/schema";
 
   /* The page tries the colour on. */
   .catalogo:has(.chip--azul:hover) { background: var(--azul); color: #fff; }
-  .catalogo:has(.chip--laton:hover) { background: var(--laton); color: #1a1405; }
+  .catalogo:has(.chip--naranja:hover) { background: var(--naranja); color: var(--tinta-naranja); }
 
   .catalogo:has(.chip:hover) .catalogo__sub,
   .catalogo:has(.chip:hover) .catalogo__contacto,
@@ -121,11 +121,11 @@ import { personaDiego } from "../data/schema";
   .chip:hover .chip__color { transform: scale(1.08); }
 
   .chip--azul .chip__color { background: var(--azul); }
-  .chip--laton .chip__color { background: var(--laton); }
+  .chip--naranja .chip__color { background: var(--naranja); }
 
   /* On a painted page the chip of that colour needs an edge to stay visible. */
   .catalogo:has(.chip--azul:hover) .chip--azul .chip__color,
-  .catalogo:has(.chip--laton:hover) .chip--laton .chip__color { box-shadow: inset 0 0 0 2px currentColor; }
+  .catalogo:has(.chip--naranja:hover) .chip--naranja .chip__color { box-shadow: inset 0 0 0 2px currentColor; }
 
   .chip__cuerpo { display: grid; gap: 2px; }
   .chip__codigo { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tinta-suave); transition: color 450ms ease; }

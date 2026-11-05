@@ -1,6 +1,6 @@
 ---
 /**
- * The site header: a chip painted near-black, the brand in chalk and one link per
+ * The site header: a chip painted near-black, the DC mark and the name in chalk, one link per
  * page, each underlined in its own paint colour. The WhatsApp link sits on the
  * right on desktop; on phones the fixed bar carries it.
  */
@@ -16,12 +16,15 @@ interface Props {
 }
 
 const { contacto = "inicio", seccion } = Astro.props;
-const activa = (clase: string) => (seccion === "pintura" && clase === "azul") || (seccion === "arreglos" && clase === "laton");
+const activa = (clase: string) => (seccion === "pintura" && clase === "azul") || (seccion === "arreglos" && clase === "naranja");
 ---
 
 <header class="cabecera">
   <div class="contenedor cabecera__fila">
-    <a class="cabecera__marca" href={ruta("/")}>{NOMBRE}</a>
+    <a class="cabecera__marca" href={ruta("/")}>
+      <img src={ruta("/img/marca/isotipo-dc-sobre-oscuro.svg")} alt="" width="58" height="36" />
+      <span>{NOMBRE}</span>
+    </a>
     <nav class="links" aria-label="Secciones del sitio">
       {muestras.map((m) => (
         <a class={`link link--${m.clase}`} href={m.href} aria-current={activa(m.clase) ? "page" : undefined}>{m.nombre}</a>
@@ -47,6 +50,9 @@ const activa = (clase: string) => (seccion === "pintura" && clase === "azul") ||
   }
 
   .cabecera__marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--fuente-titulo);
     font-weight: 700;
     font-size: var(--t-2);
@@ -75,7 +81,7 @@ const activa = (clase: string) => (seccion === "pintura" && clase === "azul") ||
   .link:hover,
   .link[aria-current="page"] { color: var(--color); }
   .link--azul { --color: #5b8ed6; }
-  .link--laton { --color: var(--laton); }
+  .link--naranja { --color: var(--naranja); }
 
   .cabecera :global(.cabecera__wa) {
     font-size: var(--t-0);
