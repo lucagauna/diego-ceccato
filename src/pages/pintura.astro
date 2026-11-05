@@ -63,6 +63,18 @@ const preguntas = [
           </div>
         ))}
       </div>
+
+      <div class="proceso">
+        <figure>
+          <img src={ruta("/img/trabajos/fisura-el-talar.webp")} alt="Fisura abierta en la unión de pared y cielorraso, antes de reparar" width="1080" height="1350" loading="lazy" decoding="async" />
+          <figcaption>Fisura en el cielorraso, antes de reparar. El Talar.</figcaption>
+        </figure>
+        <figure>
+          <img src={ruta("/img/trabajos/enduido-el-talar.webp")} alt="Pared rasqueteada y enduida antes de pintar" width="1080" height="1350" loading="lazy" decoding="async" />
+          <figcaption>Enduido antes de pintar. El Talar.</figcaption>
+        </figure>
+        <p class="proceso__texto">Antes de pintar, reparo grietas y manchas de humedad para que la pintura dure. Es el trabajo que después no se ve.</p>
+      </div>
     </div>
   </section>
 
@@ -70,17 +82,41 @@ const preguntas = [
     <div class="contenedor">
       <p class="ceja">Trabajos terminados</p>
       <h2>Arrastrá la línea y mirá el antes y el después.</h2>
-      <AntesDespues
-        titulo="Así se compara un trabajo"
-        antes={{ src: ruta("/img/demo-antes.svg"), alt: "Antes: pared con grietas y manchas (imagen de prueba)", width: 1200, height: 900 }}
-        despues={{ src: ruta("/img/demo-despues.svg"), alt: "Después: pared pintada (imagen de prueba)", width: 1200, height: 900 }}
-      />
-      <div class="banda__fotos">
-        <Pendiente bloque texto="Frente de casa" />
-        <Pendiente bloque texto="Reja o portón" />
-        <Pendiente bloque texto="Interior terminado" />
+      <div class="comparar">
+        <AntesDespues
+          titulo="Baño con humedad. Rincón."
+          antes={{ src: ruta("/img/trabajos/bano-rincon-antes.webp"), alt: "Antes: pared de baño con manchas de humedad y hongos", width: 1080, height: 1350 }}
+          despues={{ src: ruta("/img/trabajos/bano-rincon-despues.webp"), alt: "Después: la misma pared reparada y pintada de blanco", width: 1080, height: 1350 }}
+        />
+        <AntesDespues
+          script={false}
+          titulo="Techo de madera."
+          antes={{ src: ruta("/img/trabajos/techo-madera-antes.webp"), alt: "Antes: techo de machimbre y vigas de madera oscura", width: 1080, height: 1350 }}
+          despues={{ src: ruta("/img/trabajos/techo-madera-despues.webp"), alt: "Después: el mismo techo pintado de blanco", width: 1080, height: 1350 }}
+        />
+        <AntesDespues
+          script={false}
+          titulo="Frente de un local. Carapachay."
+          antes={{ src: ruta("/img/trabajos/exterior-carapachay-antes.webp"), alt: "Antes: columna exterior con la pintura descascarada", width: 1080, height: 1350 }}
+          despues={{ src: ruta("/img/trabajos/exterior-carapachay-despues.webp"), alt: "Después: el arco y la columna reparados y pintados", width: 1080, height: 1350 }}
+        />
       </div>
-      <Pendiente texto="Las imágenes del comparador son dibujos de prueba; se reemplazan por fotos reales de un trabajo de Diego, con la localidad." />
+
+      <div class="trabajos">
+        <figure>
+          <img src={ruta("/img/trabajos/living-tigre.webp")} alt="Living comedor de un departamento recién pintado de blanco" width="1080" height="1350" loading="lazy" decoding="async" />
+          <figcaption>Departamento completo. Tigre.</figcaption>
+        </figure>
+        <figure>
+          <img src={ruta("/img/trabajos/arcos-carapachay.webp")} alt="Arcos de ladrillo y paredes exteriores pintados en una terraza" width="1080" height="1350" loading="lazy" decoding="async" />
+          <figcaption>Exterior de una terraza. Carapachay.</figcaption>
+        </figure>
+        <figure>
+          <img src={ruta("/img/trabajos/porton-villa-la-nata.webp")} alt="Portón doble de hierro pintado de negro" width="864" height="1080" loading="lazy" decoding="async" />
+          <figcaption>Portón de hierro. Villa La Ñata.</figcaption>
+        </figure>
+      </div>
+      <Pendiente texto="A confirmar con Diego: el permiso de los dueños para publicar estas fotos, la localidad del techo de madera, y si el portón de Villa La Ñata lo fabricó o solo lo pintó." />
     </div>
   </section>
 
@@ -135,8 +171,19 @@ const preguntas = [
   .tarjeta p { margin: 0; color: var(--tinta-suave); }
 
   .banda { background: var(--imprimacion); padding-block: var(--seccion); border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
-  .banda__fotos { display: grid; gap: 12px; margin-top: 12px; grid-template-columns: repeat(3, 1fr); }
-  @media (max-width: 600px) { .banda__fotos { grid-template-columns: 1fr; } }
+  .comparar,
+  .trabajos { display: grid; gap: 16px; margin-bottom: 16px; }
+  @media (min-width: 720px) { .comparar, .trabajos { grid-template-columns: repeat(3, 1fr); } }
+  .trabajos figure,
+  .proceso figure { margin: 0; }
+  .trabajos img,
+  .proceso img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radio); }
+  .trabajos figcaption,
+  .proceso figcaption { margin-top: 8px; color: var(--tinta-suave); font-size: var(--t-0); }
+
+  .proceso { display: grid; gap: 16px; margin-top: 24px; align-items: center; }
+  @media (min-width: 720px) { .proceso { grid-template-columns: 1fr 1fr 1.4fr; gap: 24px; } }
+  .proceso__texto { font-family: var(--fuente-titulo); font-weight: 700; font-size: var(--t-3); line-height: 1.1; margin: 0; max-width: 18ch; }
 
   .acordeon { border-top: 1px solid var(--linea); }
   .duda { border-bottom: 1px solid var(--linea); }

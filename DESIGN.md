@@ -185,8 +185,10 @@ Rules:
 
 ## 9. Open items
 
-- Real photos: finished jobs for the before/after and the gallery, a photo of
-  Diego for the painting hero.
+- Photos: the painting page uses eleven real job photos (WebP, metadata
+  stripped, in `public/img/trabajos/`). Still to confirm with Diego: the owners'
+  permission, the locality of the wooden ceiling, and whether he built or only
+  painted the Villa La Nata gate. A photo of Diego himself is still missing.
 - Diego's answers to the open questions marked with `<Pendiente>` on both
   service pages.
 - Drum lessons left the site on 2026-11-04. The layouts explored for it live in

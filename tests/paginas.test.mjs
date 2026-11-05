@@ -92,7 +92,7 @@ test("service pages show the trust facts before the photo placeholder", async ()
     const posicion = (re) => cuerpo.search(re);
     const hechos = posicion(/class="hechos[\s"]/);
     const placeholder = posicion(/class="pendiente pendiente--bloque"/);
-    const retrato = posicion(/class="(?:[^"]* )?retrato(?: [^"]*)?"/);
+    const retrato = posicion(/class="(?:[^"]* )?(?:retrato|trabajos|comparar)(?: [^"]*)?"/);
     const foto = placeholder === -1 ? retrato : placeholder;
     assert.ok(hechos !== -1 && foto !== -1, `${ruta} is missing facts or photo block`);
     assert.ok(hechos < foto, `${ruta}: facts (${hechos}) must come before the photo block (${foto}) in the DOM`);

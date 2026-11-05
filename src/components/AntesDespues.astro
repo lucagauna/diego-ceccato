@@ -21,10 +21,15 @@ interface Props {
   titulo: string;
   /** Starting position of the divider, 0 to 100. */
   inicio?: number;
+  /**
+   * The inline script wires every figure on the page, so only one instance has
+   * to ship it. Pass false on the second and later figures of a page.
+   */
+  script?: boolean;
   class?: string;
 }
 
-const { antes, despues, titulo, inicio = 50, class: extra = "" } = Astro.props;
+const { antes, despues, titulo, inicio = 50, script = true, class: extra = "" } = Astro.props;
 ---
 
 <figure class:list={["antes-despues", extra]} data-comparar style={`--pos: ${inicio}%`}>
@@ -47,17 +52,26 @@ const { antes, despues, titulo, inicio = 50, class: extra = "" } = Astro.props;
   <figcaption>{titulo}</figcaption>
 </figure>
 
+{script && (
 <script is:inline data-antes-despues>
-  document.querySelectorAll("[data-comparar]").forEach(function (figura) {
-    var control = figura.querySelector("input[type=range]");
-    if (!control) return;
-    var mover = function () { figura.style.setProperty("--pos", control.value + "%"); };
-    control.hidden = false;
-    figura.classList.add("antes-despues--activo");
-    control.addEventListener("input", mover);
-    mover();
-  });
+  (function () {
+    // Runs once the whole page is parsed, so figures placed after this script are wired too.
+    var iniciar = function () {
+      document.querySelectorAll("[data-comparar]").forEach(function (figura) {
+        var control = figura.querySelector("input[type=range]");
+        if (!control) return;
+        var mover = function () { figura.style.setProperty("--pos", control.value + "%"); };
+        control.hidden = false;
+        figura.classList.add("antes-despues--activo");
+        control.addEventListener("input", mover);
+        mover();
+      });
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
+    else iniciar();
+  })();
 </script>
+)}
 
 <style>
   .antes-despues {
