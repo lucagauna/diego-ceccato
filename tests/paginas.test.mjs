@@ -60,9 +60,11 @@ test("the home page links to both service pages", async () => {
   assert.ok(html.includes(`href="${BASE}arreglos-del-hogar/"`));
 });
 
-test("provisional content is marked visibly so nothing invented slips through", async () => {
-  const html = await leer("pintura/");
-  assert.match(html, /data-pendiente/);
+test("no provisional \"Pendiente\" notes ship to production", async () => {
+  for (const ruta of ["", "pintura/", "arreglos-del-hogar/"]) {
+    const html = await leer(ruta);
+    assert.doesNotMatch(html, /data-pendiente|class="pendiente/, `${ruta || "home"} still shows a pending note`);
+  }
 });
 
 test("every page carries the phone-only WhatsApp bar with its own origin", async () => {
@@ -86,7 +88,7 @@ test("the favicon is ours, not the Astro default", async () => {
   assert.equal(await existe("favicon.ico").catch(() => false), false, "the default favicon.ico must be gone");
 });
 
-test("service pages show the trust facts before the photo placeholder", async () => {
+test("service pages show the trust facts before the photos", async () => {
   for (const ruta of ["pintura/"]) {
     const cuerpo = (await leer(ruta)).split("<body")[1];
     const posicion = (re) => cuerpo.search(re);

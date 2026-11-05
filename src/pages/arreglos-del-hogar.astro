@@ -7,7 +7,6 @@
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Chat from "../components/Chat.astro";
-import Pendiente from "../components/Pendiente.astro";
 import { chatArreglos } from "../components/Conversaciones";
 import { rubros } from "../data/servicios";
 import { HORARIO, TELEFONO, linkTelefono, listarZonas } from "../data/contacto";
@@ -54,7 +53,6 @@ const zonas = listarZonas("y");
           </div>
         ))}
       </div>
-      <Pendiente texto="Dos o tres ejemplos concretos de cada rubro, con las palabras de Diego. Aire acondicionado y electricidad estaban en su flyer pero no los marcó: a confirmar antes de sumarlos." />
     </div>
   </section>
 

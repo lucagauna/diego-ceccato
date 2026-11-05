@@ -3,14 +3,12 @@
  * Main landing page: where the Google Business Profile and future ads point to.
  * Phone-framed chat hero, the four lines of the trade as cards, the before/after
  * as a band, the questions as an accordion, and a blue closing that repeats the
- * chat's last line. Every sentence comes from Diego's form answers; gaps are
- * marked with <Pendiente>.
+ * chat's last line. Every sentence comes from Diego's form answers.
  */
 import Base from "../layouts/Base.astro";
 import BotonWhatsApp from "../components/BotonWhatsApp.astro";
 import Chat from "../components/Chat.astro";
 import AntesDespues from "../components/AntesDespues.astro";
-import Pendiente from "../components/Pendiente.astro";
 import { chatPintura } from "../components/Conversaciones";
 import { HORARIO, TELEFONO, linkTelefono, listarZonas } from "../data/contacto";
 import { negocioHogar } from "../data/schema";
@@ -116,7 +114,6 @@ const preguntas = [
           <figcaption>Portón de hierro. Villa La Ñata.</figcaption>
         </figure>
       </div>
-      <Pendiente texto="A confirmar con Diego: el permiso de los dueños para publicar estas fotos, la localidad del techo de madera, y si el portón de Villa La Ñata lo fabricó o solo lo pintó." />
     </div>
   </section>
 

@@ -222,9 +222,6 @@ a {
     font-size: var(--t-1);
   }
 
-  .hero .pendiente--bloque {
-    aspect-ratio: 16 / 9;
-  }
 }
 
 /* Room for the fixed WhatsApp bar on phones (see BarraWhatsApp).
