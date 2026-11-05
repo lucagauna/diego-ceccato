@@ -18,11 +18,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # Provisional home until diegoceccato.com.ar is registered and pointed here.
-      # When the custom domain is live: PUBLIC_SITE_URL=https://diegoceccato.com.ar, BASE_PATH=/, drop PUBLIC_PREVIEW.
-      PUBLIC_SITE_URL: https://lucagauna.github.io
-      BASE_PATH: /diego-ceccato/
-      PUBLIC_PREVIEW: "1"
+      # Served from the custom domain diegoceccato.com.ar (DNS at DonWeb, set in Settings → Pages).
+      PUBLIC_SITE_URL: https://diegoceccato.com.ar
+      BASE_PATH: /
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
