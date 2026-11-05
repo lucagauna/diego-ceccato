@@ -1,10 +1,10 @@
 ---
 /**
  * The site footer: a cream chip with one row, the colour squares with their page
- * links, then WhatsApp, phone and hours. One line on desktop, two on phones.
+ * links, then WhatsApp, phone, Instagram and hours. One line on desktop, two on phones.
  */
 import BotonWhatsApp from "../BotonWhatsApp.astro";
-import { HORARIO, NOMBRE, TELEFONO, linkTelefono, type Origen } from "../../data/contacto";
+import { HORARIO, INSTAGRAM, NOMBRE, TELEFONO, linkTelefono, type Origen } from "../../data/contacto";
 import { muestras } from "../Muestras";
 
 interface Props {
@@ -28,6 +28,14 @@ const anio = new Date().getFullYear();
     <p class="pie__contacto">
       <BotonWhatsApp origen={contacto} variante="texto">WhatsApp</BotonWhatsApp>
       <a href={linkTelefono()}>{TELEFONO.visible}</a>
+      <a class="pie__red" href={INSTAGRAM} target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+          <rect x="3" y="3" width="18" height="18" rx="5" />
+          <circle cx="12" cy="12" r="4" />
+          <circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" stroke="none" />
+        </svg>
+        Instagram
+      </a>
       <span>{HORARIO}</span>
     </p>
   </div>
@@ -80,6 +88,12 @@ const anio = new Date().getFullYear();
   }
 
   .pie__contacto a { font-weight: 600; color: var(--tinta); }
+
+  .pie__red {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
 
   .pie__legal {
     margin-top: 16px;

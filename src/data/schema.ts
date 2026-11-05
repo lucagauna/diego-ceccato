@@ -2,7 +2,7 @@
  * schema.org structured data. Only facts Diego confirmed go here.
  * The home address is never published: the business is service-area only.
  */
-import { NOMBRE, TELEFONO, ZONAS } from "./contacto";
+import { INSTAGRAM, NOMBRE, TELEFONO, ZONAS } from "./contacto";
 import { urlAbsoluta } from "./sitio";
 
 const SITIO = urlAbsoluta("/").replace(/\/$/, "");
@@ -22,6 +22,7 @@ export function negocioHogar() {
     name: NOMBRE,
     url: `${SITIO}/pintura/`,
     telephone: `+${TELEFONO.e164}`,
+    sameAs: [INSTAGRAM],
     description:
       "Pintura de interiores, exteriores y frentes, hierro y madera, y arreglos para la casa en Tigre y Zona Norte. 30 años de oficio.",
     address: {
@@ -50,6 +51,7 @@ export function personaDiego() {
     name: NOMBRE,
     url: `${SITIO}/`,
     telephone: `+${TELEFONO.e164}`,
+    sameAs: [INSTAGRAM],
     jobTitle: "Pintor",
     address: {
       "@type": "PostalAddress",

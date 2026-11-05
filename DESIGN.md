@@ -150,7 +150,7 @@ Rules:
 | Component | Role | Rules |
 |---|---|---|
 | `muestrario/CabeceraPintada` | The header: near-black chip, the DC mark and the name, one link per page underlined in its colour, WhatsApp link on desktop | `seccion` marks the active page; the bar replaces the WhatsApp link on phones |
-| `muestrario/PieMuestra` | The footer: cream chip, colour squares with page links, WhatsApp, phone, hours, legal line | Takes the page's `contacto` origin |
+| `muestrario/PieMuestra` | The footer: cream chip, colour squares with page links, WhatsApp, phone, Instagram, hours, legal line | Takes the page's `contacto` origin |
 | `Muestras.ts` | The chip data: href, colour class, code, name, text, tone | The single source for header, footer and home. Adding a page means adding a chip |
 | `BotonWhatsApp` | The only contact control. `lleno` for the main action, `texto` elsewhere | `origen` picks the pre-filled message |
 | `BarraWhatsApp` | Fixed bottom bar on phones (<720px) | Carries the hero action; the hero's own button hides on phones |

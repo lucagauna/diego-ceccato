@@ -11,6 +11,9 @@ export const TELEFONO = {
 
 export const HORARIO = "Lunes a viernes de 8 a 17";
 
+/** Diego's Instagram profile, where he posts his jobs. */
+export const INSTAGRAM = "https://www.instagram.com/diegoceccato.pintura/";
+
 export const ZONAS = [
   "Vicente López",
   "San Isidro",

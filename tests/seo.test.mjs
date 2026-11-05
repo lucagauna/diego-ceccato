@@ -59,6 +59,17 @@ test("home: Person JSON-LD for Diego", async () => {
   assert.equal(datos[0].name, "Diego Ceccato");
 });
 
+for (const ruta of paginas) {
+  test(`${ruta || "home"}: JSON-LD names the Instagram profile as the same entity`, async () => {
+    const [datos] = jsonLd(await leer(`${ruta}index.html`));
+    assert.deepEqual(datos.sameAs, ["https://www.instagram.com/diegoceccato.pintura/"]);
+  });
+}
+
+test("llms.txt lists the Instagram profile with the contact data", async () => {
+  assert.match(await leer("llms.txt"), /- Instagram: https:\/\/www\.instagram\.com\/diegoceccato\.pintura\//);
+});
+
 test("robots.txt allows search and AI crawlers and points to the sitemap", { skip: PREVIEW && "preview builds close robots.txt" }, async () => {
   const robots = await leer("robots.txt");
   assert.match(robots, /User-agent: \*\s+Allow: \//);

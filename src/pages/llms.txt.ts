@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { HORARIO, TELEFONO, ZONAS } from "../data/contacto";
+import { HORARIO, INSTAGRAM, TELEFONO, ZONAS } from "../data/contacto";
 import { urlAbsoluta } from "../data/sitio";
 
 export const GET: APIRoute = () => {
@@ -18,6 +18,7 @@ export const GET: APIRoute = () => {
 
 - WhatsApp: +54 9 11 3488-3317
 - Horario: ${HORARIO}
+- Instagram: ${INSTAGRAM}
 - Sitio: ${urlAbsoluta("/")}
 `;
   return new Response(texto, { headers: { "Content-Type": "text/plain; charset=utf-8" } });

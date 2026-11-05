@@ -109,6 +109,18 @@ test("every page offers a phone call as well as WhatsApp, and the footer repeats
   }
 });
 
+test("the footer of every page links to Diego's Instagram profile in a new tab", async () => {
+  for (const ruta of ["", "pintura/", "arreglos-del-hogar/"]) {
+    const html = await leer(ruta);
+    const pie = html.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
+    const enlace = pie.match(/<a[^>]*href="https:\/\/www\.instagram\.com\/diegoceccato\.pintura\/"[^>]*>[\s\S]*?<\/a>/)?.[0] ?? "";
+    assert.ok(enlace, `${ruta || "home"} footer has no Instagram link`);
+    assert.match(enlace, /target="_blank"/, `${ruta || "home"}: Instagram must open in a new tab`);
+    assert.match(enlace, /rel="noopener"/, `${ruta || "home"}: Instagram link lacks rel="noopener"`);
+    assert.match(enlace, /Instagram/, `${ruta || "home"}: the link must say where it goes`);
+  }
+});
+
 test("closing buttons name the action, not the phone number", async () => {
   for (const ruta of ["pintura/", "arreglos-del-hogar/"]) {
     const html = await leer(ruta);
