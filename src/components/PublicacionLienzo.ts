@@ -186,15 +186,27 @@ function dibujarVacia(ctx: CanvasRenderingContext2D, celda: Rect, leyenda: strin
   ctx.textAlign = "left";
 }
 
-/** The handle at the bottom left and, unless it is the last slide, the cue to keep swiping. */
-function firmar(ctx: CanvasRenderingContext2D, lienzo: Lienzo, marca: Marca, color: string, ultima: boolean) {
+/**
+ * The handle at the bottom left and, unless it is the last slide, the cue to keep swiping.
+ * `conMarca` puts the DC mark before the handle; the mark is drawn for dark surfaces, so only ask for it there.
+ */
+function firmar(ctx: CanvasRenderingContext2D, lienzo: Lienzo, marca: Marca, color: string, ultima: boolean, conMarca = false) {
   const k = escala(lienzo);
+  const tamano = Math.round(28 * k);
   const y = lienzo.alto - Math.round(56 * k);
-  ctx.font = `600 ${Math.round(28 * k)}px ${TEXTO}`;
+  let x = MARGEN;
+  if (conMarca && marca.logo) {
+    const alto = Math.round(56 * k);
+    const ancho = (alto * marca.logo.naturalWidth) / marca.logo.naturalHeight;
+    // Centred on the handle's lowercase letters, so mark and handle read as one line.
+    ctx.drawImage(marca.logo, x, y - tamano * 0.36 - alto / 2, ancho, alto);
+    x += ancho + Math.round(16 * k);
+  }
+  ctx.font = `600 ${tamano}px ${TEXTO}`;
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = color;
   ctx.textAlign = "left";
-  ctx.fillText(marca.usuario, MARGEN, y);
+  ctx.fillText(marca.usuario, x, y);
   if (!ultima) {
     ctx.textAlign = "right";
     ctx.fillText("Deslizá →", lienzo.ancho - MARGEN, y);
@@ -229,7 +241,8 @@ function pintarFoto(ctx: CanvasRenderingContext2D, placa: Extract<Placa, { tipo:
 
   escribir(ctx, titulo, MARGEN, inicio);
   escribir(ctx, texto, MARGEN, inicio + titulo.alto + separacion);
-  firmar(ctx, lienzo, marca, TIZA, ultima);
+  // The gradient leaves the bottom of the photo dark, so the mark for dark surfaces fits here.
+  firmar(ctx, lienzo, marca, TIZA, ultima, true);
 }
 
 function pintarAntesDespues(ctx: CanvasRenderingContext2D, placa: Extract<Placa, { tipo: "antes-despues" }>, lienzo: Lienzo, marca: Marca) {
