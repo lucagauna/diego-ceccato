@@ -72,7 +72,6 @@ const usuario = `@${new URL(INSTAGRAM).pathname.replaceAll("/", "")}`;
       const ARCHIVO = "antes-y-despues.jpg";
       const ESCENARIO = "#101010";
       const TIZA = "#e8e6df";
-      const TIZA_SUAVE = "#aeb4bf";
       const NARANJA = "#ee7106";
       const TINTA_NARANJA = "#1a1405";
       const TITULO = '"Barlow Condensed", "Arial Narrow", Arial, sans-serif';
@@ -113,8 +112,12 @@ const usuario = `@${new URL(INSTAGRAM).pathname.replaceAll("/", "")}`;
 
       async function firmar() {
         const y = LIENZO.alto - PIE;
-        ctx.fillStyle = ESCENARIO;
-        ctx.fillRect(0, y, LIENZO.ancho, PIE);
+        // No solid band: the photos run to the bottom edge and a soft shade keeps the signature readable.
+        const sombra = ctx.createLinearGradient(0, LIENZO.alto - PIE * 2.2, 0, LIENZO.alto);
+        sombra.addColorStop(0, "rgba(16,16,16,0)");
+        sombra.addColorStop(1, "rgba(16,16,16,.72)");
+        ctx.fillStyle = sombra;
+        ctx.fillRect(0, LIENZO.alto - PIE * 2.2, LIENZO.ancho, PIE * 2.2);
         const marca = await logo.catch(() => null);
         const altoMarca = 60;
         const anchoMarca = marca ? (altoMarca * marca.naturalWidth) / marca.naturalHeight : 0;
@@ -123,7 +126,7 @@ const usuario = `@${new URL(INSTAGRAM).pathname.replaceAll("/", "")}`;
         ctx.fillStyle = TIZA;
         ctx.font = `700 46px ${TITULO}`;
         ctx.fillText(raiz.dataset.nombre!.toUpperCase(), 36 + anchoMarca + (marca ? 24 : 0), y + PIE / 2 + 2);
-        ctx.fillStyle = TIZA_SUAVE;
+        ctx.fillStyle = TIZA;
         ctx.font = `600 30px ${TEXTO}`;
         ctx.textAlign = "right";
         ctx.fillText(raiz.dataset.usuario!, LIENZO.ancho - 36, y + PIE / 2 + 2);
@@ -136,7 +139,7 @@ const usuario = `@${new URL(INSTAGRAM).pathname.replaceAll("/", "")}`;
         await fuentes.catch(() => null);
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, LIENZO.ancho, LIENZO.alto);
-        const lugares = celdas(disposicion());
+        const lugares = celdas(disposicion(), LIENZO, 0);
         ([["antes", antes], ["despues", despues]] as const).forEach(([momento, foto], i) => {
           const celda = lugares[i];
           const parte = recorte(foto.naturalWidth, foto.naturalHeight, celda);

@@ -79,7 +79,8 @@ const escala = (lienzo: Lienzo) => Math.min(1, lienzo.alto / 1200);
 export function huecos(placa: Placa, lienzo: Lienzo): { clave: Clave; celda: Rect }[] {
   if (placa.tipo === "foto") return [{ clave: "foto", celda: { x: 0, y: 0, ancho: lienzo.ancho, alto: lienzo.alto } }];
   if (placa.tipo === "antes-despues") {
-    const [antes, despues] = celdas(placa.disposicion, lienzo, altoBanda(lienzo));
+    // No band is reserved: the photos run to the bottom edge and the signature sits over them.
+    const [antes, despues] = celdas(placa.disposicion, lienzo, 0);
     return [
       { clave: "antes", celda: antes },
       { clave: "despues", celda: despues },
@@ -270,12 +271,16 @@ function pintarAntesDespues(ctx: CanvasRenderingContext2D, placa: Extract<Placa,
     ctx.fillText(etiqueta.texto, celda.x + 28 + tamano * 0.4, celda.y + 28 + tamano * 0.74);
   }
 
-  // The signature band: the mark is never alone, it sits next to the name.
+  // The signature: the mark is never alone, it sits next to the name. It lies over the photos,
+  // on a soft shade instead of a solid band, so the before and after are seen as whole as possible.
   const banda = altoBanda(lienzo);
   const y = lienzo.alto - banda;
   const b = banda / PIE;
-  ctx.fillStyle = ESCENARIO;
-  ctx.fillRect(0, y, lienzo.ancho, banda);
+  const sombra = ctx.createLinearGradient(0, lienzo.alto - banda * 2.2, 0, lienzo.alto);
+  sombra.addColorStop(0, "rgba(16,16,16,0)");
+  sombra.addColorStop(1, "rgba(16,16,16,.72)");
+  ctx.fillStyle = sombra;
+  ctx.fillRect(0, lienzo.alto - banda * 2.2, lienzo.ancho, banda * 2.2);
   const altoMarca = 60 * b;
   const anchoMarca = marca.logo ? (altoMarca * marca.logo.naturalWidth) / marca.logo.naturalHeight : 0;
   if (marca.logo) ctx.drawImage(marca.logo, 36, y + (banda - altoMarca) / 2, anchoMarca, altoMarca);
@@ -284,7 +289,8 @@ function pintarAntesDespues(ctx: CanvasRenderingContext2D, placa: Extract<Placa,
   ctx.fillStyle = TIZA;
   ctx.font = `700 ${Math.round(46 * b)}px ${TITULO}`;
   ctx.fillText(marca.nombre.toUpperCase(), 36 + anchoMarca + (marca.logo ? 24 * b : 0), y + banda / 2 + 2);
-  ctx.fillStyle = TIZA_SUAVE;
+  // Over a photo the soft chalk gets lost on light areas, so the handle takes the full chalk.
+  ctx.fillStyle = TIZA;
   ctx.font = `600 ${Math.round(30 * b)}px ${TEXTO}`;
   ctx.textAlign = "right";
   ctx.fillText(marca.usuario, lienzo.ancho - 36, y + banda / 2 + 2);
