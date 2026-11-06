@@ -1,0 +1,70 @@
+---
+/**
+ * Shell for Diego's own tools (the Instagram image builders). Not the public site:
+ * no shared chrome, never indexed, out of the sitemap, linked from nowhere.
+ *
+ * It carries its own few styles instead of importing global.css: sharing a stylesheet with the
+ * public pages would change how their CSS is bundled.
+ */
+import barlow400 from "@fontsource/barlow/files/barlow-latin-400-normal.woff2?url";
+import barlow600 from "@fontsource/barlow/files/barlow-latin-600-normal.woff2?url";
+import condensada700 from "@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url";
+import { NOMBRE } from "../data/contacto";
+import { ruta } from "../data/sitio";
+
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+
+const fuente = (familia: string, peso: number, url: string) =>
+  `@font-face{font-family:"${familia}";font-style:normal;font-weight:${peso};font-display:swap;src:url(${url}) format("woff2")}`;
+
+/* The same values as the site's design tokens in global.css. */
+const tokens = {
+  pared: "#ffffff",
+  imprimacion: "#efeee9",
+  "imprimacion-2": "#e9e7e0",
+  linea: "#d6d4ce",
+  tinta: "#23282d",
+  "tinta-suave": "#5a6168",
+  azul: "#1b4b86",
+  wa: "#0e7c3f",
+  escenario: "#101010",
+  tiza: "#e8e6df",
+  naranja: "#ee7106",
+  "naranja-texto": "#a84b00",
+  "tinta-naranja": "#1a1405",
+  radio: "6px",
+  "fuente-titulo": '"Barlow Condensed","Arial Narrow",Arial,sans-serif',
+};
+
+const base = [
+  fuente("Barlow", 400, barlow400),
+  fuente("Barlow", 600, barlow600),
+  fuente("Barlow Condensed", 700, condensada700),
+  `:root{${Object.entries(tokens).map(([nombre, valor]) => `--${nombre}:${valor}`).join(";")}}`,
+  "*,*::before,*::after{box-sizing:border-box}",
+  "html{font-size:112.5%;-webkit-text-size-adjust:100%}",
+  'body{margin:0;font-family:"Barlow","Helvetica Neue",Arial,sans-serif;line-height:1.55;color:var(--tinta);background:var(--pared)}',
+].join("");
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo} · {NOMBRE}</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href={ruta("/favicon-32.png")} type="image/png" sizes="32x32" />
+    <link rel="icon" href={ruta("/favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={ruta("/apple-touch-icon.png")} />
+    <meta name="theme-color" content="#101010" />
+    <style is:inline set:html={base}></style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

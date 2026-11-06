@@ -11,5 +11,6 @@ export default defineConfig({
   base,
   trailingSlash: "always",
   build: { format: "directory" },
-  integrations: [sitemap()],
+  // Diego's own tools (the /armar-… pages) are not public pages.
+  integrations: [sitemap({ filter: (pagina) => !pagina.includes("/armar-") })],
 });

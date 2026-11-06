@@ -1,0 +1,374 @@
+---
+/**
+ * Diego's own tool: pick a before photo and an after photo, get one image ready for Instagram.
+ * Everything happens in the browser; the photos never leave the phone.
+ */
+import Herramienta from "../layouts/Herramienta.astro";
+import { INSTAGRAM, NOMBRE } from "../data/contacto";
+import { LIENZO } from "../components/Composicion";
+import { ruta } from "../data/sitio";
+
+const usuario = `@${new URL(INSTAGRAM).pathname.replaceAll("/", "")}`;
+---
+
+<Herramienta titulo="Armar antes y después">
+    <main
+      class="armar"
+      data-armar
+      data-logo={ruta("/img/marca/isotipo-dc-sobre-oscuro.svg")}
+      data-nombre={NOMBRE}
+      data-usuario={usuario}
+    >
+      <h1>Antes y después para Instagram</h1>
+      <p class="armar__bajada">Elegí las dos fotos y te queda la imagen lista para publicar.</p>
+
+      <div class="armar__fotos">
+        <label class="armar__foto" data-foto="antes">
+          <input type="file" accept="image/*" />
+          <span class="armar__paso">1</span>
+          <span class="armar__nombre">Foto de antes</span>
+          <span class="armar__estado" data-estado>Tocá para elegir</span>
+        </label>
+        <label class="armar__foto" data-foto="despues">
+          <input type="file" accept="image/*" />
+          <span class="armar__paso">2</span>
+          <span class="armar__nombre">Foto de después</span>
+          <span class="armar__estado" data-estado>Tocá para elegir</span>
+        </label>
+      </div>
+
+      <p class="armar__error" data-error role="alert" hidden></p>
+
+      <section class="armar__resultado" data-resultado hidden>
+        <fieldset class="armar__disposicion">
+          <legend>Cómo van las fotos</legend>
+          <label><input type="radio" name="disposicion" value="lado" checked /> Lado a lado</label>
+          <label><input type="radio" name="disposicion" value="apilado" /> Una arriba de la otra</label>
+        </fieldset>
+
+        <canvas width={LIENZO.ancho} height={LIENZO.alto} aria-label="Vista previa del antes y después"></canvas>
+
+        <div class="armar__acciones">
+          <button type="button" class="armar__boton armar__boton--principal" data-compartir hidden>Compartir</button>
+          <button type="button" class="armar__boton" data-descargar>Guardar imagen</button>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      import { LIENZO, PIE, celdas, recorte, disposicionSugerida, type Disposicion, type Rect } from "../components/Composicion";
+
+      type Momento = "antes" | "despues";
+
+      const raiz = document.querySelector<HTMLElement>("[data-armar]")!;
+      const lienzo = raiz.querySelector("canvas")!;
+      const ctx = lienzo.getContext("2d")!;
+      const resultado = raiz.querySelector<HTMLElement>("[data-resultado]")!;
+      const error = raiz.querySelector<HTMLElement>("[data-error]")!;
+      const compartir = raiz.querySelector<HTMLButtonElement>("[data-compartir]")!;
+      const descargar = raiz.querySelector<HTMLButtonElement>("[data-descargar]")!;
+      const opciones = [...raiz.querySelectorAll<HTMLInputElement>('input[name="disposicion"]')];
+
+      const ARCHIVO = "antes-y-despues.jpg";
+      const ESCENARIO = "#101010";
+      const TIZA = "#e8e6df";
+      const TIZA_SUAVE = "#aeb4bf";
+      const NARANJA = "#ee7106";
+      const TINTA_NARANJA = "#1a1405";
+      const TITULO = '"Barlow Condensed", "Arial Narrow", Arial, sans-serif';
+      const TEXTO = '"Barlow", "Helvetica Neue", Arial, sans-serif';
+
+      const etiquetas: Record<Momento, { texto: string; fondo: string; color: string }> = {
+        antes: { texto: "ANTES", fondo: ESCENARIO, color: TIZA },
+        despues: { texto: "DESPUÉS", fondo: NARANJA, color: TINTA_NARANJA },
+      };
+
+      const fotos: Partial<Record<Momento, HTMLImageElement>> = {};
+      /** Once Diego picks a layout by hand, new photos stop changing it. */
+      let elegidaAMano = false;
+
+      const logo = cargarImagen(raiz.dataset.logo!);
+      const fuentes = Promise.all([document.fonts.load(`700 54px ${TITULO}`), document.fonts.load(`600 30px ${TEXTO}`)]);
+
+      function cargarImagen(src: string): Promise<HTMLImageElement> {
+        const img = new Image();
+        img.src = src;
+        return img.decode().then(() => img);
+      }
+
+      function disposicion(): Disposicion {
+        return opciones.find((o) => o.checked)!.value as Disposicion;
+      }
+
+      function etiquetar(momento: Momento, celda: Rect) {
+        const { texto, fondo, color } = etiquetas[momento];
+        ctx.font = `700 54px ${TITULO}`;
+        ctx.textBaseline = "middle";
+        const ancho = ctx.measureText(texto).width + 44;
+        ctx.fillStyle = fondo;
+        ctx.fillRect(celda.x + 28, celda.y + 28, ancho, 76);
+        ctx.fillStyle = color;
+        ctx.fillText(texto, celda.x + 50, celda.y + 28 + 40);
+      }
+
+      async function firmar() {
+        const y = LIENZO.alto - PIE;
+        ctx.fillStyle = ESCENARIO;
+        ctx.fillRect(0, y, LIENZO.ancho, PIE);
+        const marca = await logo.catch(() => null);
+        const altoMarca = 60;
+        const anchoMarca = marca ? (altoMarca * marca.naturalWidth) / marca.naturalHeight : 0;
+        if (marca) ctx.drawImage(marca, 36, y + (PIE - altoMarca) / 2, anchoMarca, altoMarca);
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = TIZA;
+        ctx.font = `700 46px ${TITULO}`;
+        ctx.fillText(raiz.dataset.nombre!.toUpperCase(), 36 + anchoMarca + (marca ? 24 : 0), y + PIE / 2 + 2);
+        ctx.fillStyle = TIZA_SUAVE;
+        ctx.font = `600 30px ${TEXTO}`;
+        ctx.textAlign = "right";
+        ctx.fillText(raiz.dataset.usuario!, LIENZO.ancho - 36, y + PIE / 2 + 2);
+        ctx.textAlign = "left";
+      }
+
+      async function dibujar() {
+        const { antes, despues } = fotos;
+        if (!antes || !despues) return;
+        await fuentes.catch(() => null);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, LIENZO.ancho, LIENZO.alto);
+        const lugares = celdas(disposicion());
+        ([["antes", antes], ["despues", despues]] as const).forEach(([momento, foto], i) => {
+          const celda = lugares[i];
+          const parte = recorte(foto.naturalWidth, foto.naturalHeight, celda);
+          ctx.drawImage(foto, parte.x, parte.y, parte.ancho, parte.alto, celda.x, celda.y, celda.ancho, celda.alto);
+          etiquetar(momento, celda);
+        });
+        await firmar();
+        resultado.hidden = false;
+      }
+
+      function imagen(): Promise<File> {
+        return new Promise((resolver, rechazar) =>
+          lienzo.toBlob((blob) => (blob ? resolver(new File([blob], ARCHIVO, { type: "image/jpeg" })) : rechazar(new Error("empty canvas"))), "image/jpeg", 0.92),
+        );
+      }
+
+      for (const campo of raiz.querySelectorAll<HTMLLabelElement>("[data-foto]")) {
+        const momento = campo.dataset.foto as Momento;
+        const entrada = campo.querySelector("input")!;
+        const estado = campo.querySelector<HTMLElement>("[data-estado]")!;
+        entrada.addEventListener("change", async () => {
+          const archivo = entrada.files?.[0];
+          if (!archivo) return;
+          error.hidden = true;
+          const url = URL.createObjectURL(archivo);
+          try {
+            const foto = await cargarImagen(url);
+            fotos[momento] = foto;
+            campo.classList.add("armar__foto--lista");
+            estado.textContent = "Lista. Tocá para cambiarla";
+            if (!elegidaAMano) {
+              const sugerida = disposicionSugerida(foto.naturalWidth, foto.naturalHeight);
+              for (const o of opciones) o.checked = o.value === sugerida;
+            }
+            await dibujar();
+          } catch {
+            error.textContent = "No pude abrir esa foto. Probá con otra.";
+            error.hidden = false;
+          } finally {
+            URL.revokeObjectURL(url);
+          }
+        });
+      }
+
+      for (const opcion of opciones) {
+        opcion.addEventListener("change", () => {
+          elegidaAMano = true;
+          dibujar();
+        });
+      }
+
+      // Sharing files only exists on phones; there it opens Instagram directly.
+      const prueba = new File([], ARCHIVO, { type: "image/jpeg" });
+      if (navigator.canShare?.({ files: [prueba] })) {
+        compartir.hidden = false;
+        compartir.addEventListener("click", async () => {
+          try {
+            await navigator.share({ files: [await imagen()] });
+          } catch (motivo) {
+            // Closing the share sheet is not an error.
+            if ((motivo as DOMException).name === "AbortError") return;
+            error.textContent = "No se pudo compartir. Guardá la imagen y subila desde Instagram.";
+            error.hidden = false;
+          }
+        });
+      } else {
+        descargar.classList.add("armar__boton--principal");
+      }
+
+      descargar.addEventListener("click", async () => {
+        const url = URL.createObjectURL(await imagen());
+        const enlace = Object.assign(document.createElement("a"), { href: url, download: ARCHIVO });
+        enlace.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+    </script>
+</Herramienta>
+
+<style>
+  .armar {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  .armar h1 {
+    font-family: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 2.3125rem;
+    line-height: 1.05;
+    margin: 0 0 8px;
+  }
+
+  .armar__bajada {
+    margin: 0 0 24px;
+    color: var(--tinta-suave);
+  }
+
+  .armar__fotos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .armar__foto {
+    display: grid;
+    gap: 4px;
+    padding: 16px;
+    min-height: 132px;
+    align-content: start;
+    background: var(--imprimacion);
+    border: 2px dashed var(--linea);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .armar__foto:hover {
+    background: var(--imprimacion-2);
+  }
+
+  .armar__foto:focus-within {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  .armar__foto--lista {
+    border-style: solid;
+    border-color: var(--wa);
+  }
+
+  /* The label is the button; the native control stays reachable by keyboard. */
+  .armar__foto input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .armar__paso {
+    font-family: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.8125rem;
+    line-height: 1;
+    color: var(--naranja-texto);
+  }
+
+  .armar__nombre {
+    font-weight: 600;
+  }
+
+  .armar__estado {
+    font-size: 0.8125rem;
+    color: var(--tinta-suave);
+  }
+
+  .armar__foto--lista .armar__estado {
+    color: var(--wa);
+  }
+
+  .armar__error {
+    margin: 16px 0 0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--naranja);
+    background: var(--imprimacion);
+  }
+
+  .armar__resultado {
+    margin-top: 24px;
+  }
+
+  .armar__disposicion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 0 0 16px;
+    padding: 0;
+    border: 0;
+  }
+
+  .armar__disposicion legend {
+    padding: 0;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .armar__disposicion label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    cursor: pointer;
+  }
+
+  .armar__disposicion input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--azul);
+  }
+
+  .armar canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--linea);
+  }
+
+  .armar__acciones {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .armar__boton {
+    min-height: 52px;
+    padding: 12px 20px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 2px solid var(--tinta);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .armar__boton--principal {
+    color: #ffffff;
+    background: var(--escenario);
+    border-color: var(--escenario);
+  }
+
+  .armar__boton:focus-visible {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+</style>

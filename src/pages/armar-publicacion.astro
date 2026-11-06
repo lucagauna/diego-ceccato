@@ -1,0 +1,586 @@
+---
+/**
+ * Diego's own tool: build an Instagram post slide by slide, with his photos and his brand.
+ * Everything happens in the browser; the photos never leave the phone.
+ */
+import Herramienta from "../layouts/Herramienta.astro";
+import { HORARIO, INSTAGRAM, NOMBRE, TELEFONO, listarZonas } from "../data/contacto";
+import { ruta } from "../data/sitio";
+
+const usuario = `@${new URL(INSTAGRAM).pathname.replaceAll("/", "")}`;
+
+/** The kinds of slide, each with a tiny drawing of its layout. */
+const tipos = [
+  { tipo: "foto", nombre: "Foto con título", texto: "Una foto entera, con o sin texto abajo." },
+  { tipo: "antes-despues", nombre: "Antes y después", texto: "Dos fotos del mismo lugar." },
+  { tipo: "texto", nombre: "Texto", texto: "Una idea sobre un color de fondo." },
+  { tipo: "cierre", nombre: "Cierre con WhatsApp", texto: "Tu número, horario y zonas." },
+];
+---
+
+<Herramienta titulo="Armar publicación">
+  <main
+    class="armador"
+    data-armador
+    data-logo={ruta("/img/marca/isotipo-dc-sobre-oscuro.svg")}
+    data-nombre={NOMBRE}
+    data-usuario={usuario}
+    data-telefono={TELEFONO.visible}
+    data-horario={HORARIO}
+    data-zonas={listarZonas()}
+  >
+    <header class="armador__cabecera">
+      <h1>Armar publicación</h1>
+      <p>Sumá placas, cargá tus fotos y bajá las imágenes listas para Instagram.</p>
+    </header>
+
+    <fieldset class="opciones opciones--formato">
+      <legend>Formato de la publicación</legend>
+      <label class="opcion"><input type="radio" name="formato" value="vertical" checked /><span>Vertical</span></label>
+      <label class="opcion"><input type="radio" name="formato" value="cuadrado" /><span>Cuadrado</span></label>
+      <label class="opcion"><input type="radio" name="formato" value="original" /><span>Original</span></label>
+    </fieldset>
+    <p class="ayuda ayuda--formato">Original respeta la forma de tu primera foto, sin recortarla. Instagram les da esa misma forma a todas las placas.</p>
+
+    <ol class="placas" data-placas></ol>
+    <p class="vacio" data-vacio hidden>Todavía no hay placas. Agregá la primera acá abajo.</p>
+
+    <section class="agregar" aria-labelledby="agregar-titulo">
+      <h2 id="agregar-titulo">Agregar una placa</h2>
+      <div class="agregar__tipos">
+        {
+          tipos.map(({ tipo, nombre, texto }) => (
+            <button type="button" class="tipo" data-agregar={tipo}>
+              <span class={`tipo__dibujo tipo__dibujo--${tipo}`} aria-hidden="true">
+                <i />
+                <i />
+              </span>
+              <span class="tipo__nombre">{nombre}</span>
+              <span class="tipo__texto">{texto}</span>
+            </button>
+          ))
+        }
+      </div>
+    </section>
+
+    <div class="acciones">
+      <p class="aviso" data-error role="alert" hidden></p>
+      <div class="acciones__botones">
+        <button type="button" class="boton boton--principal" data-compartir hidden>Compartir</button>
+        <button type="button" class="boton" data-guardar>Guardar imágenes</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    import { iniciar } from "../components/Armador";
+
+    iniciar(document.querySelector<HTMLElement>("[data-armador]")!);
+  </script>
+</Herramienta>
+
+<style is:global>
+  /* Global on purpose: the slides and their controls are built in the browser, where scoped styles do not reach. */
+  .armador {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 24px 16px 0;
+  }
+
+  .armador h1 {
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 2.3125rem;
+    line-height: 1.05;
+    margin: 0 0 6px;
+  }
+
+  .armador__cabecera p {
+    margin: 0 0 24px;
+    color: var(--tinta-suave);
+  }
+
+  .armador h2 {
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 1.4375rem;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .armador :focus-visible {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  /* ----- choices: format, layout, background ----- */
+  .opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .opciones legend {
+    padding: 0;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .opcion {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .opcion input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .opcion span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 2px solid var(--linea);
+    border-radius: var(--radio);
+    background: var(--pared);
+  }
+
+  .opcion input:checked + span {
+    border-color: var(--tinta);
+    font-weight: 600;
+  }
+
+  .opcion input:focus-visible + span {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  /* A background choice shows the colour itself, like a paint chip. */
+  .opcion--negro span::before,
+  .opcion--blanco span::before,
+  .opcion--azul span::before,
+  .opcion--naranja span::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--linea);
+    border-radius: 3px;
+  }
+
+  .opcion--negro span::before {
+    background: var(--escenario);
+  }
+
+  .opcion--blanco span::before {
+    background: var(--pared);
+  }
+
+  .opcion--azul span::before {
+    background: var(--azul);
+  }
+
+  .opcion--naranja span::before {
+    background: var(--naranja);
+  }
+
+  /* ----- the slides ----- */
+  .placas {
+    display: grid;
+    gap: 20px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .placa {
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: var(--pared);
+    scroll-margin-top: 12px;
+  }
+
+  .placa__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px 10px 16px;
+    border-bottom: 1px solid var(--linea);
+    background: var(--imprimacion);
+  }
+
+  .placa__botones {
+    display: flex;
+    gap: 6px;
+  }
+
+  .placa__orden {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 10px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .placa__orden:disabled {
+    color: var(--linea);
+    cursor: default;
+  }
+
+  .placa__cuerpo {
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .placa__lienzo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--linea);
+    cursor: grab;
+  }
+
+  .placa--texto .placa__lienzo,
+  .placa--cierre .placa__lienzo {
+    cursor: default;
+  }
+
+  /* While moving a photo with a finger, the canvas keeps the gesture instead of scrolling the page. */
+  .placa__lienzo--moviendo {
+    touch-action: none;
+    outline: 3px solid var(--naranja);
+    outline-offset: 2px;
+  }
+
+  .placa__controles {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    min-width: 0;
+  }
+
+  @media (min-width: 760px) {
+    .placa__cuerpo {
+      grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+
+  /* ----- fields ----- */
+  .campo {
+    display: grid;
+    gap: 4px;
+  }
+
+  .campo[hidden] {
+    display: none;
+  }
+
+  .campo__rotulo {
+    font-weight: 600;
+  }
+
+  .campo input[type="text"],
+  .campo textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font: inherit;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 1px solid var(--tinta-suave);
+    border-radius: var(--radio);
+    resize: vertical;
+  }
+
+  .campo input[type="range"] {
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    accent-color: var(--tinta);
+  }
+
+  .ayuda {
+    margin: -6px 0 0;
+    font-size: 0.8125rem;
+    color: var(--tinta-suave);
+  }
+
+  .ayuda--formato {
+    margin: 8px 0 0;
+  }
+
+  .foto {
+    display: grid;
+    gap: 8px;
+  }
+
+  .foto__boton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 52px;
+    padding: 10px 14px;
+    background: var(--imprimacion);
+    border: 2px dashed var(--linea);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .foto__boton:hover {
+    background: var(--imprimacion-2);
+  }
+
+  .foto__boton:focus-within {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  /* The label is the button; the native control stays reachable by keyboard. */
+  .foto__boton input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .foto__rotulo {
+    font-weight: 600;
+  }
+
+  .foto__estado {
+    color: var(--tinta-suave);
+  }
+
+  .mover {
+    min-height: 44px;
+    padding: 8px 14px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 2px solid var(--linea);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .mover[aria-pressed="true"] {
+    color: var(--tinta-naranja);
+    background: var(--naranja);
+    border-color: var(--naranja);
+  }
+
+  /* A mouse drags the photo directly; the switch is only for fingers. */
+  @media (hover: hover) and (pointer: fine) {
+    .mover {
+      display: none;
+    }
+  }
+
+  .vacio {
+    margin: 24px 0 0;
+    padding: 20px 16px;
+    border: 2px dashed var(--linea);
+    border-radius: var(--radio);
+    color: var(--tinta-suave);
+  }
+
+  /* ----- add a slide ----- */
+  .agregar {
+    margin-top: 32px;
+  }
+
+  .agregar__tipos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  @media (min-width: 760px) {
+    .agregar__tipos {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .tipo {
+    display: grid;
+    gap: 2px;
+    justify-items: start;
+    align-content: start;
+    padding: 12px;
+    font: inherit;
+    text-align: left;
+    color: var(--tinta);
+    background: var(--imprimacion);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .tipo:hover:not(:disabled) {
+    background: var(--imprimacion-2);
+  }
+
+  .tipo:disabled {
+    color: var(--tinta-suave);
+    cursor: default;
+  }
+
+  .tipo__nombre {
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .tipo__texto {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: var(--tinta-suave);
+  }
+
+  /* A tiny drawing of each layout, so the choice is seen before it is read. */
+  .tipo__dibujo {
+    position: relative;
+    display: block;
+    width: 40px;
+    height: 50px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background: var(--escenario);
+    border-radius: 3px;
+  }
+
+  .tipo__dibujo i {
+    position: absolute;
+    display: block;
+  }
+
+  .tipo__dibujo--foto {
+    background: var(--tinta-suave);
+  }
+
+  .tipo__dibujo--foto i:first-child {
+    inset: 60% 0 0;
+    background: var(--escenario);
+  }
+
+  .tipo__dibujo--foto i:last-child {
+    left: 6px;
+    right: 12px;
+    bottom: 8px;
+    height: 5px;
+    background: var(--tiza);
+  }
+
+  .tipo__dibujo--antes-despues {
+    background: var(--pared);
+  }
+
+  .tipo__dibujo--antes-despues i:first-child {
+    inset: 0 52% 16% 0;
+    background: var(--tinta-suave);
+  }
+
+  .tipo__dibujo--antes-despues i:last-child {
+    inset: 0 0 16% 52%;
+    background: var(--naranja);
+  }
+
+  .tipo__dibujo--antes-despues::after {
+    content: "";
+    position: absolute;
+    inset: 84% 0 0;
+    background: var(--escenario);
+  }
+
+  .tipo__dibujo--texto i:first-child {
+    left: 6px;
+    right: 10px;
+    top: 16px;
+    height: 7px;
+    background: var(--tiza);
+  }
+
+  .tipo__dibujo--texto i:last-child {
+    left: 6px;
+    right: 18px;
+    top: 27px;
+    height: 7px;
+    background: var(--naranja);
+  }
+
+  .tipo__dibujo--cierre i:first-child {
+    left: 14px;
+    right: 14px;
+    top: 10px;
+    height: 8px;
+    background: var(--naranja);
+  }
+
+  .tipo__dibujo--cierre i:last-child {
+    left: 6px;
+    right: 6px;
+    top: 26px;
+    height: 9px;
+    background: #4cc77a;
+  }
+
+  /* ----- actions: stay within reach under a long list of slides ----- */
+  .acciones {
+    position: sticky;
+    bottom: 0;
+    margin: 32px -16px 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: var(--pared);
+    border-top: 1px solid var(--linea);
+  }
+
+  .acciones__botones {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 10px;
+  }
+
+  .aviso {
+    margin: 0 0 10px;
+    padding: 10px 14px;
+    border-left: 4px solid var(--naranja);
+    background: var(--imprimacion);
+  }
+
+  .boton {
+    min-height: 52px;
+    padding: 12px 16px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 2px solid var(--tinta);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .boton--principal {
+    color: #fff;
+    background: var(--escenario);
+    border-color: var(--escenario);
+  }
+</style>
