@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Diego's posts live in the database, not in the repository: rebuild every hour to bring them in.
+  # GitHub switches a schedule off after 60 days without activity in the repository; it is re-enabled from the Actions tab.
+  schedule:
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
