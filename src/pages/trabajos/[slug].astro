@@ -1,0 +1,105 @@
+---
+/**
+ * One job: its title, the date, what Diego wrote and every photo, in the order he chose.
+ * Built from the database at build time; the photos are files of the site.
+ */
+import Base from "../../layouts/Base.astro";
+import BotonWhatsApp from "../../components/BotonWhatsApp.astro";
+import { trabajos } from "../../data/publicados";
+import { ruta } from "../../data/sitio";
+import type { Foto, Trabajo } from "../../data/trabajos";
+
+export function getStaticPaths() {
+  return trabajos.map((trabajo) => ({ params: { slug: trabajo.slug }, props: { trabajo } }));
+}
+
+interface Props {
+  trabajo: Trabajo<Foto>;
+}
+
+const { trabajo } = Astro.props;
+const parrafos = trabajo.texto.split(/\n+/).filter((parrafo) => parrafo.trim());
+const descripcion = trabajo.texto ? trabajo.texto.replace(/\s+/g, " ").slice(0, 155) : `${trabajo.titulo}. Fotos del trabajo terminado, ${trabajo.fechaLarga}.`;
+---
+
+<Base titulo={`${trabajo.titulo} · Diego Ceccato`} descripcion={descripcion} contacto="trabajos">
+  <article class="seccion">
+    <div class="contenedor obra">
+      <p class="obra__volver"><a href={ruta("/trabajos/")}>Todos los trabajos</a></p>
+      <h1>{trabajo.titulo}</h1>
+      <p class="obra__fecha"><time datetime={trabajo.fecha}>{trabajo.fechaLarga}</time></p>
+      {parrafos.map((parrafo) => <p class="obra__texto">{parrafo}</p>)}
+
+      <div class="obra__fotos">
+        {
+          trabajo.fotos.map((foto, i) => (
+            <img
+              src={ruta(`/img/publicados/${foto.archivo}`)}
+              alt={`${trabajo.titulo}, foto ${i + 1} de ${trabajo.fotos.length}`}
+              width={foto.ancho}
+              height={foto.alto}
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          ))
+        }
+      </div>
+
+      <div class="obra__cierre">
+        <p>¿Tenés algo parecido para hacer? Mandame una foto y te paso presupuesto.</p>
+        <BotonWhatsApp origen="trabajos">Pedir presupuesto</BotonWhatsApp>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .obra {
+    max-width: 760px;
+  }
+
+  .obra__volver {
+    margin: 0 0 16px;
+    font-weight: 600;
+  }
+
+  .obra__fecha {
+    margin: 8px 0 0;
+    color: var(--tinta-suave);
+  }
+
+  .obra__texto {
+    max-width: var(--medida);
+    margin: 16px 0 0;
+    font-size: var(--t-1);
+  }
+
+  .obra__fotos {
+    display: grid;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .obra__fotos img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    background: var(--imprimacion);
+  }
+
+  .obra__cierre {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--linea);
+  }
+
+  .obra__cierre p {
+    margin: 0 0 16px;
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: var(--t-2);
+    line-height: 1.1;
+    max-width: 24ch;
+  }
+</style>

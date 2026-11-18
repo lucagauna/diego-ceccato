@@ -1,8 +1,11 @@
 import type { APIRoute } from "astro";
 import { HORARIO, INSTAGRAM, TELEFONO, ZONAS } from "../data/contacto";
+import { hayTrabajos } from "../data/publicados";
 import { urlAbsoluta } from "../data/sitio";
 
 export const GET: APIRoute = () => {
+  // The jobs Diego publishes himself; listed only once there is one to show.
+  const trabajos = hayTrabajos ? `- [Trabajos](${urlAbsoluta("/trabajos/")}): fotos de trabajos terminados, del más nuevo al más viejo.\n` : "";
   const texto = `# Diego Ceccato
 
 > Pintor con 30 años de oficio en Tigre y Zona Norte del Gran Buenos Aires. Trabaja solo: el que presupuesta hace el trabajo. Atiende por WhatsApp al ${TELEFONO.visible} (https://wa.me/${TELEFONO.e164}), ${HORARIO.toLowerCase()}.
@@ -11,7 +14,7 @@ export const GET: APIRoute = () => {
 
 - [Pintura](${urlAbsoluta("/pintura/")}): interiores, exteriores y frentes, rejas, portones y aberturas de hierro y madera. Repara grietas y humedad antes de pintar.
 - [Arreglos del hogar](${urlAbsoluta("/arreglos-del-hogar/")}): plomería, carpintería, herrería, puertas y cerraduras, colocaciones, quinchos y parrillas.
-- Zonas: ${ZONAS.join(", ")}.
+${trabajos}- Zonas: ${ZONAS.join(", ")}.
 - Presupuesto: mandar una foto por WhatsApp. No publica precios.
 
 ## Datos de contacto

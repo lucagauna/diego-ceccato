@@ -3,6 +3,10 @@ dist/
 # generated types
 .astro/
 
+# Diego's posts, brought from the database before every build (scripts/traer-trabajos.mjs)
+src/data/trabajos.generado.json
+public/img/publicados/
+
 # dependencies
 node_modules/
 

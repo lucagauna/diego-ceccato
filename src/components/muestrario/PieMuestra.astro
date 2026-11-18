@@ -1,11 +1,13 @@
 ---
 /**
  * The site footer: a cream chip with one row, the colour squares with their page
- * links, then WhatsApp, phone, Instagram and hours. One line on desktop, two on phones.
+ * links and the link to the jobs, then WhatsApp, phone, Instagram and hours. One line on desktop, two on phones.
  */
 import BotonWhatsApp from "../BotonWhatsApp.astro";
 import { HORARIO, INSTAGRAM, NOMBRE, TELEFONO, linkTelefono, type Origen } from "../../data/contacto";
 import { muestras } from "../Muestras";
+import { hayTrabajos } from "../../data/publicados";
+import { ruta } from "../../data/sitio";
 
 interface Props {
   contacto?: Origen;
@@ -24,6 +26,8 @@ const anio = new Date().getFullYear();
           {m.nombre}
         </a>
       ))}
+      {/* The jobs Diego publishes himself; linked only once there is one to show. */}
+      {hayTrabajos && <a class="chip" href={ruta("/trabajos/")}>Trabajos</a>}
     </nav>
     <p class="pie__contacto">
       <BotonWhatsApp origen={contacto} variante="texto">WhatsApp</BotonWhatsApp>
