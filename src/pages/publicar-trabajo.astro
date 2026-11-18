@@ -1,0 +1,477 @@
+---
+/**
+ * Diego's own page for publishing a job on the site: sign in once, pick the photos,
+ * say what the job was and where, publish. Nobody reviews it, so the form is the only
+ * filter: it carries the privacy reminder and refuses an address as a neighbourhood.
+ */
+import Herramienta from "../layouts/Herramienta.astro";
+import { ZONAS } from "../data/contacto";
+import { MAX_FOTOS, MAX_TEXTO } from "../data/trabajos";
+
+/** The kinds of job in Diego's words; the values are the ones the database accepts. */
+const tipos = [
+  { valor: "interiores", nombre: "Pintura de interiores" },
+  { valor: "exteriores", nombre: "Pintura de exteriores o frentes" },
+  { valor: "hierro-madera", nombre: "Pintura de hierro o madera" },
+  { valor: "grietas-humedad", nombre: "Grietas o humedad" },
+  { valor: "arreglos", nombre: "Un arreglo del hogar" },
+];
+---
+
+<Herramienta titulo="Publicar un trabajo">
+  <main class="publicador" data-publicador>
+    <h1>Publicar un trabajo</h1>
+
+    <form class="entrar" data-entrar hidden>
+      <p>Entrá con tu mail y tu contraseña. El teléfono los puede recordar para la próxima.</p>
+      <label class="campo">
+        <span class="campo__rotulo">Mail</span>
+        <input type="email" name="email" autocomplete="username" inputmode="email" required />
+      </label>
+      <label class="campo">
+        <span class="campo__rotulo">Contraseña</span>
+        <input type="password" name="clave" autocomplete="current-password" required />
+      </label>
+      <button type="submit" class="boton boton--principal">Entrar</button>
+      <p class="aviso" data-entrar-aviso role="alert" hidden></p>
+    </form>
+
+    <div data-panel hidden>
+      <form class="nuevo" data-nuevo>
+        <fieldset class="paso">
+          <legend><span class="paso__num">1</span> Las fotos</legend>
+          <label class="elegir">
+            <input type="file" accept="image/*" multiple data-fotos />
+            <span class="elegir__titulo">Elegir fotos</span>
+            <span class="elegir__ayuda">Hasta {MAX_FOTOS}. La primera es la portada.</span>
+          </label>
+          <ul class="minis" data-miniaturas></ul>
+        </fieldset>
+
+        <fieldset class="paso">
+          <legend><span class="paso__num">2</span> Qué trabajo fue</legend>
+          <div class="opciones">
+            {
+              tipos.map(({ valor, nombre }) => (
+                <label class="opcion">
+                  <input type="radio" name="tipo" value={valor} required />
+                  <span>{nombre}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="paso">
+          <legend><span class="paso__num">3</span> Dónde</legend>
+          <div class="opciones">
+            {
+              ZONAS.map((zona) => (
+                <label class="opcion">
+                  <input type="radio" name="barrio" value={zona} required />
+                  <span>{zona}</span>
+                </label>
+              ))
+            }
+            <label class="opcion">
+              <input type="radio" name="barrio" value="otro" required />
+              <span>Otro lugar</span>
+            </label>
+          </div>
+          <label class="campo" data-otro hidden>
+            <span class="campo__rotulo">Barrio o localidad</span>
+            <input type="text" name="otro-barrio" maxlength="40" autocomplete="off" />
+            <span class="campo__ayuda">Solo el nombre del lugar. Sin calle ni número.</span>
+          </label>
+        </fieldset>
+
+        <fieldset class="paso">
+          <legend><span class="paso__num">4</span> Contá algo, si querés</legend>
+          <label class="campo">
+            <span class="campo__rotulo">Qué hiciste</span>
+            <textarea name="texto" rows="3" maxlength={MAX_TEXTO}></textarea>
+            <span class="campo__ayuda">Dos o tres líneas alcanzan. Por ejemplo: "Reparé la humedad y di dos manos de látex."</span>
+          </label>
+        </fieldset>
+
+        <label class="cuidado">
+          <input type="checkbox" name="privacidad" required />
+          <span>En las fotos no se ven caras ni números de casa, y el dueño está de acuerdo con que las publique.</span>
+        </label>
+
+        <button type="submit" class="boton boton--principal" data-publicar>Publicar</button>
+        <p class="aviso" data-estado role="status" hidden></p>
+      </form>
+
+      <section class="hechos" aria-labelledby="hechos-titulo">
+        <h2 id="hechos-titulo">Lo que ya publicaste</h2>
+        <p class="aviso" data-lista-aviso role="status" hidden></p>
+        <p class="hechos__vacio" data-lista-vacia>Todavía no publicaste ningún trabajo.</p>
+        <ul class="hechos__lista" data-lista></ul>
+      </section>
+
+      <button type="button" class="salir" data-salir>Salir de mi cuenta</button>
+    </div>
+  </main>
+
+  <script>
+    import { iniciar } from "../components/Publicador";
+
+    iniciar(document.querySelector<HTMLElement>("[data-publicador]")!);
+  </script>
+</Herramienta>
+
+<style is:global>
+  /* Global on purpose: the thumbnails and the list are built in the browser, where scoped styles do not reach. */
+  .publicador {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  .publicador h1 {
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 2.3125rem;
+    line-height: 1.05;
+    margin: 0 0 16px;
+  }
+
+  .publicador h2 {
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 1.4375rem;
+    line-height: 1.1;
+    margin: 0 0 12px;
+  }
+
+  .publicador [hidden] {
+    display: none;
+  }
+
+  .publicador :focus-visible {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  .entrar,
+  .nuevo {
+    display: grid;
+    gap: 20px;
+  }
+
+  .entrar p {
+    margin: 0;
+    color: var(--tinta-suave);
+  }
+
+  /* ----- the four steps ----- */
+  .paso {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .paso legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    margin-bottom: 10px;
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 1.4375rem;
+    line-height: 1.1;
+  }
+
+  .paso__num {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    color: var(--tiza);
+    background: var(--escenario);
+    border-radius: var(--radio);
+  }
+
+  /* ----- fields ----- */
+  .campo {
+    display: grid;
+    gap: 4px;
+  }
+
+  .campo__rotulo {
+    font-weight: 600;
+  }
+
+  .campo__ayuda {
+    font-size: 0.8125rem;
+    color: var(--tinta-suave);
+  }
+
+  .campo input,
+  .campo textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    font: inherit;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 1px solid var(--tinta-suave);
+    border-radius: var(--radio);
+    resize: vertical;
+  }
+
+  /* ----- photos ----- */
+  .elegir {
+    position: relative;
+    display: grid;
+    gap: 2px;
+    padding: 18px 16px;
+    background: var(--imprimacion);
+    border: 2px dashed var(--linea);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .elegir:hover {
+    background: var(--imprimacion-2);
+  }
+
+  .elegir:focus-within {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  /* The label is the button; the native control stays reachable by keyboard. */
+  .elegir input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .elegir__titulo {
+    font-weight: 600;
+    font-size: 1.1875rem;
+  }
+
+  .elegir__ayuda {
+    color: var(--tinta-suave);
+  }
+
+  .minis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .minis:empty {
+    display: none;
+  }
+
+  .mini {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+  }
+
+  .mini img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radio);
+    background: var(--imprimacion);
+  }
+
+  .mini__portada {
+    min-height: 40px;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    color: var(--tinta-naranja);
+    background: var(--naranja);
+    border-radius: var(--radio);
+  }
+
+  .mini__accion {
+    min-height: 40px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  /* ----- choices ----- */
+  .opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .opcion {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .opcion input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .opcion span {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 8px 14px;
+    background: var(--pared);
+    border: 2px solid var(--linea);
+    border-radius: var(--radio);
+  }
+
+  .opcion input:checked + span {
+    color: var(--tiza);
+    background: var(--escenario);
+    border-color: var(--escenario);
+    font-weight: 600;
+  }
+
+  .opcion input:focus-visible + span {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  /* ----- the privacy reminder ----- */
+  .cuidado {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 14px;
+    background: var(--imprimacion);
+    border-left: 4px solid var(--naranja);
+    cursor: pointer;
+  }
+
+  .cuidado input {
+    width: 24px;
+    height: 24px;
+    margin: 2px 0 0;
+    accent-color: var(--escenario);
+  }
+
+  /* ----- buttons and messages ----- */
+  .boton {
+    min-height: 52px;
+    padding: 12px 16px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--tinta);
+    background: var(--pared);
+    border: 2px solid var(--tinta);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+
+  .boton--principal {
+    color: #fff;
+    background: var(--escenario);
+    border-color: var(--escenario);
+  }
+
+  .boton--chico {
+    min-height: 44px;
+    padding: 8px 14px;
+  }
+
+  .boton:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .aviso {
+    margin: 0;
+    padding: 10px 14px;
+    background: var(--imprimacion);
+    border-left: 4px solid var(--tinta-suave);
+  }
+
+  .aviso[data-tono="bien"] {
+    border-left-color: var(--wa);
+  }
+
+  .aviso[data-tono="mal"] {
+    border-left-color: var(--naranja);
+  }
+
+  /* ----- what is already published ----- */
+  .hechos {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--linea);
+  }
+
+  .hechos__vacio {
+    margin: 0;
+    color: var(--tinta-suave);
+  }
+
+  .hechos__lista {
+    display: grid;
+    gap: 12px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hecho {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .hecho img {
+    display: block;
+    width: 64px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radio);
+    background: var(--imprimacion);
+  }
+
+  .hecho__datos {
+    display: grid;
+    min-width: 0;
+  }
+
+  .hecho__datos span {
+    font-size: 0.8125rem;
+    color: var(--tinta-suave);
+  }
+
+  .salir {
+    margin-top: 32px;
+    padding: 0;
+    font: inherit;
+    color: var(--tinta-suave);
+    background: none;
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>

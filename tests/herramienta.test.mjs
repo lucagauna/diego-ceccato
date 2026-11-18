@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, leer, existe } from "./entorno.mjs";
 
-/** Diego's own tools for building Instagram posts. They are not part of the public site. */
-const herramientas = ["armar-antes-despues/", "armar-publicacion/"];
+/** Diego's own tools: the Instagram image builders and the page where he publishes his jobs. Not part of the public site. */
+const herramientas = ["armar-antes-despues/", "armar-publicacion/", "publicar-trabajo/"];
 
 for (const ruta of herramientas) {
   test(`${ruta} is built`, async () => {

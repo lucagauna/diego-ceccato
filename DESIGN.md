@@ -158,6 +158,8 @@ Rules:
 | `data/servicios.ts` | The four painting lines and the six repair trades | The single source for the service cards |
 | `Pendiente` | Visible marker for content Diego still owes | Dashed border; counted by tests via `data-pendiente` |
 | `AntesDespues` | Before/after slider for finished jobs | Both photos in the HTML; the only inline script besides JSON-LD |
+| `pages/trabajos/` | The jobs Diego publishes himself: a grid of covers and one page per job | Built from the database at build time (`data/publicados.ts`); 4:5 covers, the title is the kind of job and the neighbourhood, never an address |
+| `Publicador.ts` + `pages/publicar-trabajo.astro` | Diego's hidden page to publish a job | Four numbered steps because they are a sequence; the privacy reminder must be ticked; uses the tool layout, not the public chrome |
 
 ## 6. Motion
 
